@@ -1,0 +1,39 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - DBUtil",
+            "request": "launch",
+            "mainClass": "lab.crazyspark.utils.DBUtil",
+            "projectName": "auditing"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Test",
+            "request": "launch",
+            "mainClass": "lab.crazyspark.aml.test.Test",
+            "projectName": "auditing"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestValidator",
+            "request": "launch",
+            "mainClass": "lab.crazyspark.validator.test.TestValidator",
+            "projectName": "auditing"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - ins_unit",
+            "request": "launch",
+            "mainClass": "lab.crazyspark.bean.ins_unit",
+            "projectName": "auditing"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - TestAnnotation",
+            "request": "launch",
+            "mainClass": "lab.crazyspark.annotation.TestAnnotation",
+            "projectName": "auditing"
+        }
+    ]
+}

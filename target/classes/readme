@@ -1,0 +1,8 @@
+在web.xml里指定 
+
+<context-param> 
+<param-name>contextConfigLocation</param-name> 
+<param-value>classpath*:resource/*.xml</param-value> 
+</context-param> 
+
+resource是src目录下的一个文件夹,名字你可随便取,这样就把resource目录下的把有.xml的文件加载进来了
