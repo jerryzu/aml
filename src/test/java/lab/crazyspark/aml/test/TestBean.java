@@ -10,7 +10,7 @@ import lab.crazyspark.broker.BeanBroker;
 public class TestBean {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(TestBean.class);
 
-    @Test
+    // @Test
     public void test() {
         logger.info("测试开始......");
         try {
@@ -43,7 +43,7 @@ public class TestBean {
         }
     }
 
-    @Test
+    // @Test
     public void test1() {
         logger.info("测试开始......");
         try {
@@ -58,7 +58,7 @@ public class TestBean {
         BeanBroker.FetchData(cls);
     }
 
-    @Test
+    // @Test
     public void test2() {
         logger.info("测试开始......");
         try {
@@ -73,7 +73,7 @@ public class TestBean {
         BeanBroker.Exp2Excel(cls);
     }
 
-    @Test
+    // @Test
     public void test3() {
         logger.info("测试开始......");
         try {

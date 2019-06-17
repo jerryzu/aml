@@ -60,7 +60,7 @@
       <artifactId>easyexcel</artifactId>
       <version>1.1.1</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
@@ -74,4 +74,31 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <outputDirectory>${project.build.directory}/lib</outputDirectory>
+          <excludeTransitive>false</excludeTransitive>
+          <stripVersion>false</stripVersion>
+        </configuration>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <excludeTransitive>false</excludeTransitive>
+              <stripVersion>false</stripVersion>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

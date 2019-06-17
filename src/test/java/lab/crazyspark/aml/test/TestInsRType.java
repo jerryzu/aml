@@ -18,7 +18,7 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
 public class TestInsRType {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(TestInsRType.class);
 
-    @Test
+    // @Test
     public void test() {
         logger.info("测试开始......");
         try {
