@@ -2,10 +2,12 @@ package lab.crazyspark.aml.test;
 
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.LoggerFactory;
 import lab.crazyspark.bean.*;
 import lab.crazyspark.broker.BeanBroker;
-
 
 public class TestBean {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(TestBean.class);
@@ -38,8 +40,8 @@ public class TestBean {
     }
 
     public static <T> void Check(Class<T> cls) {
-        if (BeanBroker.Table(cls)) {
-            BeanBroker.Check(cls);
+        if (BeanBroker.Table(cls, null)) {
+            BeanBroker.Check(cls, null);
         }
     }
 
@@ -58,7 +60,7 @@ public class TestBean {
         BeanBroker.FetchData(cls);
     }
 
-    // @Test
+    @Test
     public void test2() {
         logger.info("测试开始......");
         try {
@@ -70,7 +72,10 @@ public class TestBean {
     }
 
     public static <T> void Exp2Excel(Class<T> cls) {
-        BeanBroker.Exp2Excel(cls);
+
+        List<String> strList = new ArrayList<String>();
+        String filepath = "/app/work/aml/auditing/aml.xlsx";
+        BeanBroker.Exp2Excel(filepath, strList);
     }
 
     // @Test
