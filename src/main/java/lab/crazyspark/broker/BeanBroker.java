@@ -3,8 +3,12 @@ package lab.crazyspark.broker;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,9 +32,10 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 
 public class BeanBroker {
     private static String tablename;
-
+    private static BeanCfg beanCfg;
     private Set<String> companyList = new HashSet<String>();
 
+    /* */
     public void loadRulCompany(List<Company> companies) {
         for (Company company : companies) {
             companyList.add(company.getCompany_codel());
@@ -41,7 +46,37 @@ public class BeanBroker {
         return companyList.contains(company.getCompany_codel());
     }
 
-    public static <T> void Key(Class<T> cls, T iu) {
+    public static <T> String Key(Class<T> cls, T iu) {
+        List<String> Values = new ArrayList<String>();
+        for (Field field : cls.getDeclaredFields()) {
+            field.setAccessible(true);
+
+            Annotation[] annotations = field.getDeclaredAnnotations();
+            if (annotations.length <= 0)
+                continue;
+            if (annotations[0] instanceof lab.crazyspark.annotation.Key) {
+                try {
+                    String val = field.get(iu).toString();
+                    Values.add(val);
+                } catch (IllegalArgumentException | IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        for (Method mtd : cls.getDeclaredMethods()) {
+            Annotation[] annotations = mtd.getDeclaredAnnotations();
+            if (annotations.length <= 0)
+                continue;
+            if (annotations[0] instanceof lab.crazyspark.annotation.Key) {
+                try {
+                    Values.add(mtd.invoke(iu, null).toString());
+                } catch (IllegalArgumentException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return Values.toString();
     }
 
     public static <T> boolean Table(Class<T> cls, List<String> strList) {
@@ -70,10 +105,9 @@ public class BeanBroker {
                 List<String> messageList = ValidationUtils.validate(iu);
                 if (messageList.isEmpty()) {
                 } else {
-                    Key(cls, iu);
-                    System.out.println(String.format("%s ", messageList));
+                    System.out.println(String.format("记录: %s 出错信息: %s", Key(cls, iu), messageList));
                     if (strList != null) {
-                        strList.addAll(messageList);
+                        strList.add(String.format("记录: %s 出错信息: %s", Key(cls, iu), messageList));
                     }
                 }
             }
@@ -82,20 +116,17 @@ public class BeanBroker {
         }
     }
 
-    public static <T> BeanCfg GetBeanConfig(Class<T> cls) {
+    public static <T> void GetBeanConfig(Class<T> cls) {
         String sql = String.format("SELECT * FROM sys_bean_cfg WHERE objectname = '%s'", "Company");
         try {
             QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
-            BeanCfg beanCfg = runner.query(sql, new BeanHandler<BeanCfg>(BeanCfg.class));
-            return beanCfg;
+            beanCfg = runner.query(sql, new BeanHandler<BeanCfg>(BeanCfg.class));
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
     }
 
     public static <T> void FetchData(Class<T> cls) {
-        BeanCfg beanCfg = GetBeanConfig(cls);
         try {
             QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
             List<T> ius = runner.query(beanCfg.getSql_imp(), new BeanListHandler<T>(cls));
@@ -129,9 +160,9 @@ public class BeanBroker {
         // SusReportDAO.ConvertData(runner, targetqr);
     }
 
-    public static  void Exp2Excel(String file, List<String> strList) {
+    public static void Exp2Excel(String file, List<String> strList) {
         String StartSheetInfo = "开始导出%s";
-        String EndSheetInfo= "已导出%s";
+        String EndSheetInfo = "已导出%s";
 
         try {
             QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
