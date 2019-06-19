@@ -1,0 +1,2 @@
+1.末处理问题
+动态引用(InsPers引用company)validator的更新重新加载问题

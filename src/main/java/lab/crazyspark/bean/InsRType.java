@@ -3,6 +3,7 @@ package lab.crazyspark.bean;
 import java.sql.SQLException;
 import org.apache.commons.dbutils.QueryRunner;
 import lab.crazyspark.annotation.Entity;
+import lab.crazyspark.annotation.Key;
 import lab.crazyspark.validator.constraint.IDTypeCheck;
 
 @Entity(table = "tb_ins_rtype")
@@ -13,7 +14,8 @@ public class InsRType {
 
     @IDTypeCheck(message = "险种分类错误", IDType = "ins_type") // 暂无人身险
     private String ins_type;
-
+    
+    @Key
     private String ins_no;
 
     private String ins_name;

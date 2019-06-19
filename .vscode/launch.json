@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Test",
+            "request": "launch",
+            "mainClass": "lab.crazyspark.broker.Test",
+            "projectName": "auditing"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - DBUtil",
             "request": "launch",
             "mainClass": "lab.crazyspark.utils.DBUtil",
