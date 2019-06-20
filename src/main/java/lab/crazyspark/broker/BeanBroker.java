@@ -41,12 +41,12 @@ public class BeanBroker {
     /* */
     public void loadRulCompany(List<Company> companies) {
         for (Company company : companies) {
-            companyList.add(company.getcompany_code1());
+            companyList.add(company.getCompany_code1());
         }
     }
 
     public boolean ValidRulCompany(Company company) {
-        return companyList.contains(company.getcompany_code1());
+        return companyList.contains(company.getCompany_code1());
     }
 
     public static <T> String Key(Class<T> cls, T iu) {
