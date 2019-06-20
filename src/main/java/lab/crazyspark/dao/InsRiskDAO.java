@@ -18,10 +18,10 @@ public class InsRiskDAO {
         try {
             BeanCfg beanCfg = DBUtils.GetBeanConfig(InsRisk.class, "InsRisk");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_risk(company_codel, company_code2, company_code3, app_name, app_cst_no, app_id_no, risk_code, div_date, first_type, score, norm)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_risk(company_code1, company_code2, company_code3, app_name, app_cst_no, app_id_no, risk_code, div_date, first_type, score, norm)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsRisk> insRisks = runner.query(sql, new BeanListHandler<InsRisk>(InsRisk.class));
             for (InsRisk insRisk : insRisks) {
-                Object[] params = { insRisk.getCompany_codel(), insRisk.getCompany_code2(), insRisk.getCompany_code3(),
+                Object[] params = { insRisk.getcompany_code1(), insRisk.getCompany_code2(), insRisk.getCompany_code3(),
                         insRisk.getApp_name(), insRisk.getApp_cst_no(), insRisk.getApp_id_no(), insRisk.getRisk_code(),
                         insRisk.getDiv_date(), insRisk.getFirst_type(), insRisk.getScore(), insRisk.getNorm() };
                 targetqr.update(inssql, params);

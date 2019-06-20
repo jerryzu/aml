@@ -10,7 +10,7 @@ import lab.crazyspark.validator.constraint.IDTypeCheck;
 
 @Entity(table = "tb_ins_unit")
 public class InsUnit {
-    private String company_codel;
+    private String company_code1;
     private String company_code2;
     private String cst_no;
 
@@ -66,19 +66,19 @@ public class InsUnit {
 
     public void print() {
         System.out.println(String.format(
-                "InsUnit:  company_codel%s  company_code2%s  cst_no%s  open_time%s  close_time%s  acc_name%s  address%s  operate%s  set_file%s  license%s  id_deadline%s  org_no%s  tax_no%s  rep_name%s  id_type2%s  id_no2%s  id_deadline2%s  man_name%s  id_type3%s  id_no3%s  id_deadline3%s  ope_name%s  id_type4%s  id_no4%s  id_deadline4%s  industry_code%s  industry%s  reg_amt%s  code%s  sys_name%s",
-                company_codel, company_code2, cst_no, open_time, close_time, acc_name, address, operate, set_file,
+                "InsUnit:  company_code1%s  company_code2%s  cst_no%s  open_time%s  close_time%s  acc_name%s  address%s  operate%s  set_file%s  license%s  id_deadline%s  org_no%s  tax_no%s  rep_name%s  id_type2%s  id_no2%s  id_deadline2%s  man_name%s  id_type3%s  id_no3%s  id_deadline3%s  ope_name%s  id_type4%s  id_no4%s  id_deadline4%s  industry_code%s  industry%s  reg_amt%s  code%s  sys_name%s",
+                company_code1, company_code2, cst_no, open_time, close_time, acc_name, address, operate, set_file,
                 license, id_deadline, org_no, tax_no, rep_name, id_type2, id_no2, id_deadline2, man_name, id_type3,
                 id_no3, id_deadline3, ope_name, id_type4, id_no4, id_deadline4, industry_code, industry, reg_amt, code,
                 sys_name));
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

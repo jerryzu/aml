@@ -6,7 +6,7 @@ import lab.crazyspark.annotation.Entity;
 
 @Entity(table = "tb_ins_rpay")
 public class InsRpay {
-    private String company_codel;
+    private String company_code1;
     private String company_code2;
     private String company_code3;
     private String company_code4;
@@ -44,20 +44,20 @@ public class InsRpay {
 
     public void print() {
         System.out.println(String.format(
-                "InsRpay:  company_codel%s  company_code2%s  company_code3%s  company_code4%s  pol_no%s  app_no%s  ins_date%s  eff_date%s  cur_code1%s  pre_amt_all%s  usd_amt_all%s  app_name%s  app_cst_no%s  app_id_no%s  app_cus_pro%s  ins_name%s  ins_cst_no%s  ins_id_no%s  ins_cus_pro%s  benefit_name%s  benefit_id_no%s  benefit_pro%s  relation_1%s  relation_2%s  pay_type%s  rpay_date%s  pay_date%s  cur_code2%s  pay_amt%s  pay_usd_amt%s  tsf_flag%s  acc_name%s  acc_no%s  acc_bank%s  receipt_no%s",
-                company_codel, company_code2, company_code3, company_code4, pol_no, app_no, ins_date, eff_date,
+                "InsRpay:  company_code1%s  company_code2%s  company_code3%s  company_code4%s  pol_no%s  app_no%s  ins_date%s  eff_date%s  cur_code1%s  pre_amt_all%s  usd_amt_all%s  app_name%s  app_cst_no%s  app_id_no%s  app_cus_pro%s  ins_name%s  ins_cst_no%s  ins_id_no%s  ins_cus_pro%s  benefit_name%s  benefit_id_no%s  benefit_pro%s  relation_1%s  relation_2%s  pay_type%s  rpay_date%s  pay_date%s  cur_code2%s  pay_amt%s  pay_usd_amt%s  tsf_flag%s  acc_name%s  acc_no%s  acc_bank%s  receipt_no%s",
+                company_code1, company_code2, company_code3, company_code4, pol_no, app_no, ins_date, eff_date,
                 cur_code1, pre_amt_all, usd_amt_all, app_name, app_cst_no, app_id_no, app_cus_pro, ins_name, ins_cst_no,
                 ins_id_no, ins_cus_pro, benefit_name, benefit_id_no, benefit_pro, relation_1, relation_2, pay_type,
                 rpay_date, pay_date, cur_code2, pay_amt, pay_usd_amt, tsf_flag, acc_name, acc_no, acc_bank,
                 receipt_no));
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

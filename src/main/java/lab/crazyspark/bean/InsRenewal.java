@@ -6,7 +6,7 @@ import lab.crazyspark.annotation.Entity;
 
 @Entity(table = "tb_ins_renewal")
 public class InsRenewal {
-    private String company_codel;
+    private String company_code1;
     private String company_code2;
     private String company_code3;
     private String company_code4;
@@ -32,18 +32,18 @@ public class InsRenewal {
 
     public void print() {
         System.out.println(String.format(
-                "InsRenewal:  company_codel%s  company_code2%s  company_code3%s  company_code4%s  pol_no%s  app_no%s  ins_date%s  app_name%s  app_cst_no%s  app_id_type%s  app_id_no%s  ins_no%s  renew_date%s  pay_date%s  cur_code%s  pre_amt%s  usd_amt%s  tsf_flag%s  acc_name%s  acc_no%s  acc_bank%s  receipt_no%s  endorse_no%s",
-                company_codel, company_code2, company_code3, company_code4, pol_no, app_no, ins_date, app_name,
+                "InsRenewal:  company_code1%s  company_code2%s  company_code3%s  company_code4%s  pol_no%s  app_no%s  ins_date%s  app_name%s  app_cst_no%s  app_id_type%s  app_id_no%s  ins_no%s  renew_date%s  pay_date%s  cur_code%s  pre_amt%s  usd_amt%s  tsf_flag%s  acc_name%s  acc_no%s  acc_bank%s  receipt_no%s  endorse_no%s",
+                company_code1, company_code2, company_code3, company_code4, pol_no, app_no, ins_date, app_name,
                 app_cst_no, app_id_type, app_id_no, ins_no, renew_date, pay_date, cur_code, pre_amt, usd_amt, tsf_flag,
                 acc_name, acc_no, acc_bank, receipt_no, endorse_no));
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

@@ -12,8 +12,8 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 public class ExcelInsRsur extends BaseRowModel {
-    @ExcelProperty(value = "company_codel", index = 0)
-    private String company_codel;
+    @ExcelProperty(value = "company_code1", index = 0)
+    private String company_code1;
     @ExcelProperty(value = "company_code2", index = 1)
     private String company_code2;
     @ExcelProperty(value = "company_code3", index = 2)
@@ -77,8 +77,8 @@ public class ExcelInsRsur extends BaseRowModel {
 
     public void print() {
         System.out.println(String.format(
-                "InsRsur:  company_codel%s  company_code2%s  company_code3%s  company_code4%s  pay_type%s  pol_no%s  app_no%s  ins_date%s  eff_date%s  cur_code%s  pre_amt_all%s  usd_amt_all%s  pay_amt_all%s  usd_pay_amt_all%s  app_name%s  app_cst_no%s  id_no%s  cus_pro%s  sur_name%s  sur_id_no%s  sur_date%s  pay_date%s  cur_code2%s  sur_amt%s  usd_sur_amt%s  tsf_flag%s  acc_name%s  acc_no%s  acc_bank%s  receipt_no%s  endorse_no%s",
-                company_codel, company_code2, company_code3, company_code4, pay_type, pol_no, app_no, ins_date,
+                "InsRsur:  company_code1%s  company_code2%s  company_code3%s  company_code4%s  pay_type%s  pol_no%s  app_no%s  ins_date%s  eff_date%s  cur_code%s  pre_amt_all%s  usd_amt_all%s  pay_amt_all%s  usd_pay_amt_all%s  app_name%s  app_cst_no%s  id_no%s  cus_pro%s  sur_name%s  sur_id_no%s  sur_date%s  pay_date%s  cur_code2%s  sur_amt%s  usd_sur_amt%s  tsf_flag%s  acc_name%s  acc_no%s  acc_bank%s  receipt_no%s  endorse_no%s",
+                company_code1, company_code2, company_code3, company_code4, pay_type, pol_no, app_no, ins_date,
                 eff_date, cur_code, pre_amt_all, usd_amt_all, pay_amt_all, usd_pay_amt_all, app_name, app_cst_no, id_no,
                 cus_pro, sur_name, sur_id_no, sur_date, pay_date, cur_code2, sur_amt, usd_sur_amt, tsf_flag, acc_name,
                 acc_no, acc_bank, receipt_no, endorse_no));
@@ -92,12 +92,12 @@ public class ExcelInsRsur extends BaseRowModel {
         return result;
     }
 
-    public String getcompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setcompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getcompany_code2() {

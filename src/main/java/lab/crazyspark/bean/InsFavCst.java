@@ -4,7 +4,7 @@ import lab.crazyspark.annotation.Entity;
 
 @Entity(table = "tb_ins_fav_cst")
 public class InsFavCst {
-    private String company_codel;
+    private String company_code1;
     private String company_code2;
     private String company_code3;
     private String pol_no;
@@ -22,17 +22,17 @@ public class InsFavCst {
 
     public void print() {
         System.out.println(String.format(
-                "InsFavCst:  company_codel%s  company_code2%s  company_code3%s  pol_no%s  ins_date%s  app_name%s  app_cst_no%s  app_id_no%s  insfav_type%s  insbene_cus_pro%s  relation%s  fav_type%s  name%s  insbene_cst_no%s  insbene_id_no%s",
-                company_codel, company_code2, company_code3, pol_no, ins_date, app_name, app_cst_no, app_id_no,
+                "InsFavCst:  company_code1%s  company_code2%s  company_code3%s  pol_no%s  ins_date%s  app_name%s  app_cst_no%s  app_id_no%s  insfav_type%s  insbene_cus_pro%s  relation%s  fav_type%s  name%s  insbene_cst_no%s  insbene_id_no%s",
+                company_code1, company_code2, company_code3, pol_no, ins_date, app_name, app_cst_no, app_id_no,
                 insfav_type, insbene_cus_pro, relation, fav_type, name, insbene_cst_no, insbene_id_no));
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

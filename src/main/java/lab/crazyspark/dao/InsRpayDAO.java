@@ -18,10 +18,10 @@ public class InsRpayDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsRpay.class, "InsRpay");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_rpay(company_codel, company_code2, company_code3, company_code4, pol_no, app_no, ins_date, eff_date, cur_code1, pre_amt_all, usd_amt_all, app_name, app_cst_no, app_id_no, app_cus_pro, ins_name, ins_cst_no, ins_id_no, ins_cus_pro, benefit_name, benefit_id_no, benefit_pro, relation_1, relation_2, pay_type, rpay_date, pay_date, cur_code2, pay_amt, pay_usd_amt, tsf_flag, acc_name, acc_no, acc_bank, receipt_no)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_rpay(company_code1, company_code2, company_code3, company_code4, pol_no, app_no, ins_date, eff_date, cur_code1, pre_amt_all, usd_amt_all, app_name, app_cst_no, app_id_no, app_cus_pro, ins_name, ins_cst_no, ins_id_no, ins_cus_pro, benefit_name, benefit_id_no, benefit_pro, relation_1, relation_2, pay_type, rpay_date, pay_date, cur_code2, pay_amt, pay_usd_amt, tsf_flag, acc_name, acc_no, acc_bank, receipt_no)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsRpay> insRpays = runner.query(sql, new BeanListHandler<InsRpay>(InsRpay.class));
             for (InsRpay insRpay : insRpays) {
-                Object[] params = { insRpay.getCompany_codel(), insRpay.getCompany_code2(), insRpay.getCompany_code3(),
+                Object[] params = { insRpay.getcompany_code1(), insRpay.getCompany_code2(), insRpay.getCompany_code3(),
                         insRpay.getCompany_code4(), insRpay.getPol_no(), insRpay.getApp_no(), insRpay.getIns_date(),
                         insRpay.getEff_date(), insRpay.getCur_code1(), insRpay.getPre_amt_all(),
                         insRpay.getUsd_amt_all(), insRpay.getApp_name(), insRpay.getApp_cst_no(),

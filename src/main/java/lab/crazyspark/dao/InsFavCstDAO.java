@@ -18,10 +18,10 @@ public class InsFavCstDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsFavCst.class, "InsFavCst");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_fav_cst(company_codel, company_code2, company_code3, pol_no, ins_date, app_name, app_cst_no, app_id_no, insfav_type, insbene_cus_pro, relation, fav_type, name, insbene_cst_no, insbene_id_no)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_fav_cst(company_code1, company_code2, company_code3, pol_no, ins_date, app_name, app_cst_no, app_id_no, insfav_type, insbene_cus_pro, relation, fav_type, name, insbene_cst_no, insbene_id_no)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsFavCst> insFavCsts = runner.query(sql, new BeanListHandler<InsFavCst>(InsFavCst.class));
             for (InsFavCst insFavCst : insFavCsts) {
-                Object[] params = { insFavCst.getCompany_codel(), insFavCst.getCompany_code2(),
+                Object[] params = { insFavCst.getcompany_code1(), insFavCst.getCompany_code2(),
                         insFavCst.getCompany_code3(), insFavCst.getPol_no(), insFavCst.getIns_date(),
                         insFavCst.getApp_name(), insFavCst.getApp_cst_no(), insFavCst.getApp_id_no(),
                         insFavCst.getInsfav_type(), insFavCst.getInsbene_cus_pro(), insFavCst.getRelation(),

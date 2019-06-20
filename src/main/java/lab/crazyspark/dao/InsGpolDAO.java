@@ -18,10 +18,10 @@ public class InsGpolDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsGpol.class, "InsGpol");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_gpol(company_codel, company_code2, company_code3, pol_no, app_no, ins_state, app_type, sale_type, sale_name, ins_date, eff_date, app_name, app_cst_no, app_id_type, app_id_no, state_owned, ins_num, ins_no, cur_code, pre_amt, usd_amt, del_way, del_period, limit, subject, tsf_flag, acc_name, acc_no, acc_bank)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_gpol(company_code1, company_code2, company_code3, pol_no, app_no, ins_state, app_type, sale_type, sale_name, ins_date, eff_date, app_name, app_cst_no, app_id_type, app_id_no, state_owned, ins_num, ins_no, cur_code, pre_amt, usd_amt, del_way, del_period, limit_, subject, tsf_flag, acc_name, acc_no, acc_bank)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsGpol> insGpols = runner.query(sql, new BeanListHandler<InsGpol>(InsGpol.class));
             for (InsGpol insGpol : insGpols) {
-                Object[] params = { insGpol.getCompany_codel(), insGpol.getCompany_code2(), insGpol.getCompany_code3(),
+                Object[] params = { insGpol.getcompany_code1(), insGpol.getCompany_code2(), insGpol.getCompany_code3(),
                         insGpol.getPol_no(), insGpol.getApp_no(), insGpol.getIns_state(), insGpol.getApp_type(),
                         insGpol.getSale_type(), insGpol.getSale_name(), insGpol.getIns_date(), insGpol.getEff_date(),
                         insGpol.getApp_name(), insGpol.getApp_cst_no(), insGpol.getApp_id_type(),

@@ -18,10 +18,10 @@ public class InsRclaDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsRcla.class, "InsRcla");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_rcla(company_codel, company_code2, company_code3, company_code4, pol_no, app_no, ins_date, eff_date, app_name, app_cst_no, app_id_no, app_cus_pro, ins_name, ins_cst_no, ins_id_no, ins_cus_pro, benefit_name, benefit_id_no, benefit_type, relation_1, relation_2, cla_app_name, cla_id_type, cla_id_no, cla_pro, cla_date, cur_code, cla_amt, cla_usd_amt, cla_no, tsf_flag, acc_name, acc_no, acc_bank, acc_type, acc_id_type, acc_id_no)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_rcla(company_code1, company_code2, company_code3, company_code4, pol_no, app_no, ins_date, eff_date, app_name, app_cst_no, app_id_no, app_cus_pro, ins_name, ins_cst_no, ins_id_no, ins_cus_pro, benefit_name, benefit_id_no, benefit_type, relation_1, relation_2, cla_app_name, cla_id_type, cla_id_no, cla_pro, cla_date, cur_code, cla_amt, cla_usd_amt, cla_no, tsf_flag, acc_name, acc_no, acc_bank, acc_type, acc_id_type, acc_id_no)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsRcla> insRclas = runner.query(sql, new BeanListHandler<InsRcla>(InsRcla.class));
             for (InsRcla insRcla : insRclas) {
-                Object[] params = { insRcla.getCompany_codel(), insRcla.getCompany_code2(), insRcla.getCompany_code3(),
+                Object[] params = { insRcla.getcompany_code1(), insRcla.getCompany_code2(), insRcla.getCompany_code3(),
                         insRcla.getCompany_code4(), insRcla.getPol_no(), insRcla.getApp_no(), insRcla.getIns_date(),
                         insRcla.getEff_date(), insRcla.getApp_name(), insRcla.getApp_cst_no(), insRcla.getApp_id_no(),
                         insRcla.getApp_cus_pro(), insRcla.getIns_name(), insRcla.getIns_cst_no(),

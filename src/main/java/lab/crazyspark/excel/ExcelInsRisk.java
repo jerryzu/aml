@@ -12,8 +12,8 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 public class ExcelInsRisk extends BaseRowModel {
-    @ExcelProperty(value = "company_codel", index = 0)
-    private String company_codel;
+    @ExcelProperty(value = "company_code1", index = 0)
+    private String company_code1;
     @ExcelProperty(value = "company_code2", index = 1)
     private String company_code2;
     @ExcelProperty(value = "company_code3", index = 2)
@@ -37,8 +37,8 @@ public class ExcelInsRisk extends BaseRowModel {
 
     public void print() {
         System.out.println(String.format(
-                "InsRisk:  company_codel%s  company_code2%s  company_code3%s  app_name%s  app_cst_no%s  app_id_no%s  risk_code%s  div_date%s  first_type%s  score%s  norm%s",
-                company_codel, company_code2, company_code3, app_name, app_cst_no, app_id_no, risk_code, div_date,
+                "InsRisk:  company_code1%s  company_code2%s  company_code3%s  app_name%s  app_cst_no%s  app_id_no%s  risk_code%s  div_date%s  first_type%s  score%s  norm%s",
+                company_code1, company_code2, company_code3, app_name, app_cst_no, app_id_no, risk_code, div_date,
                 first_type, score, norm));
     }
 
@@ -50,12 +50,12 @@ public class ExcelInsRisk extends BaseRowModel {
         return result;
     }
 
-    public String getcompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setcompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getcompany_code2() {

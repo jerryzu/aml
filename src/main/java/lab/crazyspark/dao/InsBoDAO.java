@@ -18,10 +18,10 @@ public class InsBoDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsBo.class, "InsBo");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_bo(company_codel, company_code2, acc_name, cst_no, license, bnf_name, bnf_type, shareholding_ratio, bnf_address, id_type5, id_no5, id_deadline5, sys_name)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_bo(company_code1, company_code2, acc_name, cst_no, license, bnf_name, bnf_type, shareholding_ratio, bnf_address, id_type5, id_no5, id_deadline5, sys_name)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsBo> insBos = runner.query(sql, new BeanListHandler<InsBo>(InsBo.class));
             for (InsBo insBo : insBos) {
-                Object[] params = { insBo.getCompany_codel(), insBo.getCompany_code2(), insBo.getAcc_name(),
+                Object[] params = { insBo.getcompany_code1(), insBo.getCompany_code2(), insBo.getAcc_name(),
                         insBo.getCst_no(), insBo.getLicense(), insBo.getBnf_name(), insBo.getBnf_type(),
                         insBo.getShareholding_ratio(), insBo.getBnf_address(), insBo.getId_type5(), insBo.getId_no5(),
                         insBo.getId_deadline5(), insBo.getSys_name() };

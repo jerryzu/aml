@@ -7,7 +7,7 @@ import lab.crazyspark.validator.constraint.IDTypeCheck;
 
 @Entity(table = "tb_ins_bo")
 public class InsBo {
-    private String company_codel;
+    private String company_code1;
 
     private String company_code2;
 
@@ -33,17 +33,17 @@ public class InsBo {
 
     public void print() {
         System.out.println(String.format(
-                "InsBo:  company_codel%s  company_code2%s  acc_name%s  cst_no%s  license%s  bnf_name%s  bnf_type%s  shareholding_ratio%s  bnf_address%s  id_type5%s  id_no5%s  id_deadline5%s  sys_name%s",
-                company_codel, company_code2, acc_name, cst_no, license, bnf_name, bnf_type, shareholding_ratio,
+                "InsBo:  company_code1%s  company_code2%s  acc_name%s  cst_no%s  license%s  bnf_name%s  bnf_type%s  shareholding_ratio%s  bnf_address%s  id_type5%s  id_no5%s  id_deadline5%s  sys_name%s",
+                company_code1, company_code2, acc_name, cst_no, license, bnf_name, bnf_type, shareholding_ratio,
                 bnf_address, id_type5, id_no5, id_deadline5, sys_name));
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

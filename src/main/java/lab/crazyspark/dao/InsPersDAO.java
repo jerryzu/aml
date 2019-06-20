@@ -18,10 +18,10 @@ public class InsPersDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsPers.class, "InsPers");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_pers(company_codel, company_code2, cst_no, open_time, close_time, acc_name, cst_sex, nation, id_type, id_no, id_deadline, occupation_code, occupation, income, contact1, contact2, contact3, address1, address2, address3, company, sys_name)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_pers(company_code1, company_code2, cst_no, open_time, close_time, acc_name, cst_sex, nation, id_type, id_no, id_deadline, occupation_code, occupation, income, contact1, contact2, contact3, address1, address2, address3, company, sys_name)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsPers> insPerss = runner.query(sql, new BeanListHandler<InsPers>(InsPers.class));
             for (InsPers insPers : insPerss) {
-                Object[] params = { insPers.getCompany_codel(), insPers.getCompany_code2(), insPers.getCst_no(),
+                Object[] params = { insPers.getcompany_code1(), insPers.getCompany_code2(), insPers.getCst_no(),
                         insPers.getOpen_time(), insPers.getClose_time(), insPers.getAcc_name(), insPers.getCst_sex(),
                         insPers.getNation(), insPers.getId_type(), insPers.getId_no(), insPers.getId_deadline(),
                         insPers.getOccupation_code(), insPers.getOccupation(), insPers.getIncome(),

@@ -6,7 +6,7 @@ import lab.crazyspark.annotation.Entity;
 
 @Entity(table = "tb_ins_rpol")
 public class InsRpol {
-    private String company_codel;
+    private String company_code1;
     private String company_code2;
     private String company_code3;
     private String pol_no;
@@ -47,20 +47,20 @@ public class InsRpol {
 
     public void print() {
         System.out.println(String.format(
-                "InsRpol:  company_codel%s  company_code2%s  company_code3%s  pol_no%s  app_no%s  ins_state%s  sale_type%s  sale_name%s  ins_date%s  eff_date%s  app_name%s  app_cst_no%s  app_id_type%s  app_id_no%s  ins_name%s  ins_cst_no%s  ins_id_no%s  ins_cus_pro%s  relation%s  legal_type%s  benefit_cus_pro%s  benefit_name%s  benefit_cst_no%s  benefit_id_no%s  ins_no%s  cur_code%s  pre_amt%s  usd_amt%s  prof_type%s  del_way%s  del_period%s  limit%s  subject%s  tsf_flag%s  acc_name%s  acc_no%s  acc_bank%s  receipt_no%s",
-                company_codel, company_code2, company_code3, pol_no, app_no, ins_state, sale_type, sale_name, ins_date,
+                "InsRpol:  company_code1%s  company_code2%s  company_code3%s  pol_no%s  app_no%s  ins_state%s  sale_type%s  sale_name%s  ins_date%s  eff_date%s  app_name%s  app_cst_no%s  app_id_type%s  app_id_no%s  ins_name%s  ins_cst_no%s  ins_id_no%s  ins_cus_pro%s  relation%s  legal_type%s  benefit_cus_pro%s  benefit_name%s  benefit_cst_no%s  benefit_id_no%s  ins_no%s  cur_code%s  pre_amt%s  usd_amt%s  prof_type%s  del_way%s  del_period%s  limit%s  subject%s  tsf_flag%s  acc_name%s  acc_no%s  acc_bank%s  receipt_no%s",
+                company_code1, company_code2, company_code3, pol_no, app_no, ins_state, sale_type, sale_name, ins_date,
                 eff_date, app_name, app_cst_no, app_id_type, app_id_no, ins_name, ins_cst_no, ins_id_no, ins_cus_pro,
                 relation, legal_type, benefit_cus_pro, benefit_name, benefit_cst_no, benefit_id_no, ins_no, cur_code,
                 pre_amt, usd_amt, prof_type, del_way, del_period, limit, subject, tsf_flag, acc_name, acc_no, acc_bank,
                 receipt_no));
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

@@ -18,10 +18,10 @@ public class InsRpolDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsRpol.class, "InsRpol");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_rpol(company_codel, company_code2, company_code3, pol_no, app_no, ins_state, sale_type, sale_name, ins_date, eff_date, app_name, app_cst_no, app_id_type, app_id_no, ins_name, ins_cst_no, ins_id_no, ins_cus_pro, relation, legal_type, benefit_cus_pro, benefit_name, benefit_cst_no, benefit_id_no, ins_no, cur_code, pre_amt, usd_amt, prof_type, del_way, del_period, limit, subject, tsf_flag, acc_name, acc_no, acc_bank, receipt_no)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_rpol(company_code1, company_code2, company_code3, pol_no, app_no, ins_state, sale_type, sale_name, ins_date, eff_date, app_name, app_cst_no, app_id_type, app_id_no, ins_name, ins_cst_no, ins_id_no, ins_cus_pro, relation, legal_type, benefit_cus_pro, benefit_name, benefit_cst_no, benefit_id_no, ins_no, cur_code, pre_amt, usd_amt, prof_type, del_way, del_period, limit_, subject, tsf_flag, acc_name, acc_no, acc_bank, receipt_no)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsRpol> insRpols = runner.query(sql, new BeanListHandler<InsRpol>(InsRpol.class));
             for (InsRpol insRpol : insRpols) {
-                Object[] params = { insRpol.getCompany_codel(), insRpol.getCompany_code2(), insRpol.getCompany_code3(),
+                Object[] params = { insRpol.getcompany_code1(), insRpol.getCompany_code2(), insRpol.getCompany_code3(),
                         insRpol.getPol_no(), insRpol.getApp_no(), insRpol.getIns_state(), insRpol.getSale_type(),
                         insRpol.getSale_name(), insRpol.getIns_date(), insRpol.getEff_date(), insRpol.getApp_name(),
                         insRpol.getApp_cst_no(), insRpol.getApp_id_type(), insRpol.getApp_id_no(),

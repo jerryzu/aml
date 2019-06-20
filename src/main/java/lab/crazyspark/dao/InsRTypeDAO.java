@@ -18,10 +18,10 @@ public class InsRTypeDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsRType.class, "InsRType");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_rtype(head_no, company_codel, ins_type, ins_no, ins_name)VALUES(?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_rtype(head_no, company_code1, ins_type, ins_no, ins_name)VALUES(?, ?, ?, ?, ?)";
             List<InsRType> insRTypes = runner.query(sql, new BeanListHandler<InsRType>(InsRType.class));
             for (InsRType insRType : insRTypes) {
-                Object[] params = { insRType.getHead_no(), insRType.getCompany_codel(), insRType.getIns_type(),
+                Object[] params = { insRType.getHead_no(), insRType.getcompany_code1(), insRType.getIns_type(),
                         insRType.getIns_no(), insRType.getIns_name() };
                 targetqr.update(inssql, params);
             }

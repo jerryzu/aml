@@ -10,7 +10,7 @@ import lab.crazyspark.validator.constraint.IDTypeCheck;
 public class InsRType {
     private String head_no;
 
-    private String company_codel;
+    private String company_code1;
 
     @IDTypeCheck(message = "险种分类错误", IDType = "ins_type") // 暂无人身险
     private String ins_type;
@@ -21,8 +21,8 @@ public class InsRType {
     private String ins_name;
 
     public void print() {
-        System.out.println(String.format("InsRType: head_no%s company_codel%s ins_type%s ins_no%s ins_name%s", head_no,
-                company_codel, ins_type, ins_no, ins_name));
+        System.out.println(String.format("InsRType: head_no%s company_code1%s ins_type%s ins_no%s ins_name%s", head_no,
+                company_code1, ins_type, ins_no, ins_name));
     }
 
     public String getHead_no() {
@@ -33,12 +33,12 @@ public class InsRType {
         this.head_no = head_no;
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getIns_type() {

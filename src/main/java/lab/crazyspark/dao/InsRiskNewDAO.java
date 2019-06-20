@@ -18,10 +18,10 @@ public class InsRiskNewDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsRiskNew.class, "InsRiskNew");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_risk_new(company_codel, company_code2, company_code3, app_name, app_cst_no, app_id_no, risk_code, div_date, score, norm)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_risk_new(company_code1, company_code2, company_code3, app_name, app_cst_no, app_id_no, risk_code, div_date, score, norm)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsRiskNew> insRiskNews = runner.query(sql, new BeanListHandler<InsRiskNew>(InsRiskNew.class));
             for (InsRiskNew insRiskNew : insRiskNews) {
-                Object[] params = { insRiskNew.getCompany_codel(), insRiskNew.getCompany_code2(),
+                Object[] params = { insRiskNew.getcompany_code1(), insRiskNew.getCompany_code2(),
                         insRiskNew.getCompany_code3(), insRiskNew.getApp_name(), insRiskNew.getApp_cst_no(),
                         insRiskNew.getApp_id_no(), insRiskNew.getRisk_code(), insRiskNew.getDiv_date(),
                         insRiskNew.getScore(), insRiskNew.getNorm() };

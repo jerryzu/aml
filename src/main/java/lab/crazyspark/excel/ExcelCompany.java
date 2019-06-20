@@ -15,8 +15,8 @@ public class ExcelCompany extends BaseRowModel {
     @ExcelProperty(value = "head_no", index = 0)
     private String head_no;
 
-    @ExcelProperty(value = "company_codel", index = 1)
-    private String company_codel;
+    @ExcelProperty(value = "company_code1", index = 1)
+    private String company_code1;
 
     @ExcelProperty(value = "company_code2", index = 2)
     private String company_code2;
@@ -29,8 +29,8 @@ public class ExcelCompany extends BaseRowModel {
 
     public void print() {
         System.out
-                .println(String.format("Company: head_no%s company_codel%s company_code2%s company_name%s bord_flag%s",
-                        head_no, company_codel, company_code2, company_name, bord_flag));
+                .println(String.format("Company: head_no%s company_code1%s company_code2%s company_name%s bord_flag%s",
+                        head_no, company_code1, company_code2, company_name, bord_flag));
     }
 
     // public static List<ExcelCompany> Exp2Excel(QueryRunner runner, ExcelWriter
@@ -51,12 +51,12 @@ public class ExcelCompany extends BaseRowModel {
         this.head_no = head_no;
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getCompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setCompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

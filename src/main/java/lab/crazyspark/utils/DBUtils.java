@@ -15,20 +15,30 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import lab.crazyspark.aml.BeanCfg;
 
 public class DBUtils {
-    private static ComboPooledDataSource ds = null;
+    private static ComboPooledDataSource dssrc = null;
+    private static ComboPooledDataSource dstarget = null;
 
     static {
-        ds = new ComboPooledDataSource("mysql");
+        dssrc = new ComboPooledDataSource("src");
+        dstarget = new ComboPooledDataSource("target");
     }
 
-    public synchronized static DataSource getDataSource() {
-        return ds;
+    public synchronized static DataSource getDataSource(String ds) {
+        if (ds.equals("src")) {
+            return dssrc;
+        } else {
+            return dstarget;
+        }
     }
 
-    public synchronized static Connection getConnection() {
+    public synchronized static Connection getConnection(String ds) {
         Connection con = null;
         try {
-            con = ds.getConnection();
+            if (ds.equals("src")) {
+                con = dssrc.getConnection();
+            } else {
+                con = dstarget.getConnection();
+            }
         } catch (SQLException e) {
             System.out.println("获取数据库连接失败！");
         }
@@ -53,13 +63,13 @@ public class DBUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(getConnection());
+        System.out.println(getConnection("mysql"));
     }
 
     public static <T> BeanCfg GetBeanConfig(Class<T> cls, String objectname) {
         String sql = String.format("SELECT * FROM sys_bean_cfg WHERE objectname = '%s'", objectname);
         try {
-            QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
+            QueryRunner runner = new QueryRunner(DBUtils.getDataSource("mysql"));
             BeanCfg beanCfg = runner.query(sql, new BeanHandler<BeanCfg>(BeanCfg.class));
             return beanCfg;
         } catch (SQLException e) {

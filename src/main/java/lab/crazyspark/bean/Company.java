@@ -12,7 +12,7 @@ public class Company {
     private String head_no;
 
     @Key
-    public String company_codel;
+    public String company_code1;
 
     private String company_code2;
 
@@ -23,8 +23,8 @@ public class Company {
 
     public void print() {
         System.out
-                .println(String.format("Company: head_no%s company_codel%s company_code2%s company_name%s bord_flag%s",
-                        head_no, company_codel, company_code2, company_name, bord_flag));
+                .println(String.format("Company: head_no%s company_code1%s company_code2%s company_name%s bord_flag%s",
+                        head_no, company_code1, company_code2, company_name, bord_flag));
     }
 
     public String getHead_no() {
@@ -35,12 +35,12 @@ public class Company {
         this.head_no = head_no;
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getCompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setCompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

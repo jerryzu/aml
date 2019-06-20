@@ -18,10 +18,10 @@ public class CompanyDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(Company.class, "Company");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_company(head_no,company_codel,company_code2,company_name,bord_flag)VALUES(?,?,?,?,?)";
+            String inssql = "INSERT INTO tb_company(head_no,company_code1,company_code2,company_name,bord_flag)VALUES(?,?,?,?,?)";
             List<Company> companys = runner.query(sql, new BeanListHandler<Company>(Company.class));
             for (Company company : companys) {
-                Object[] params = { company.getHead_no(), company.getCompany_codel(), company.getCompany_code2(),
+                Object[] params = { company.getHead_no(), company.getCompany_code1(), company.getCompany_code2(),
                         company.getCompany_name(), company.getBord_flag() };
                         targetqr.update(inssql, params);
             }

@@ -41,12 +41,12 @@ public class BeanBroker {
     /* */
     public void loadRulCompany(List<Company> companies) {
         for (Company company : companies) {
-            companyList.add(company.getCompany_codel());
+            companyList.add(company.getcompany_code1());
         }
     }
 
     public boolean ValidRulCompany(Company company) {
-        return companyList.contains(company.getCompany_codel());
+        return companyList.contains(company.getcompany_code1());
     }
 
     public static <T> String Key(Class<T> cls, T iu) {
@@ -103,7 +103,7 @@ public class BeanBroker {
         System.out.println("tablename" + tablename);
         String sql = String.format("SELECT * FROM %s", tablename);
         try {
-            QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
+            QueryRunner runner = new QueryRunner(DBUtils.getDataSource("mysql"));
             List<T> ius = runner.query(sql, new BeanListHandler<T>(cls));
             for (T iu : ius) {
                 List<String> messageList = ValidationUtils.validate(iu);
@@ -120,7 +120,7 @@ public class BeanBroker {
     public static <T> void GetBeanConfig(Class<T> cls) {
         String sql = String.format("SELECT * FROM sys_bean_cfg WHERE objectname = '%s'", "Company");
         try {
-            QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
+            QueryRunner runner = new QueryRunner(DBUtils.getDataSource("mysql"));
             beanCfg = runner.query(sql, new BeanHandler<BeanCfg>(BeanCfg.class));
         } catch (SQLException e) {
             e.printStackTrace();
@@ -129,7 +129,7 @@ public class BeanBroker {
 
     public static <T> void FetchData(Class<T> cls) {
         try {
-            QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
+            QueryRunner runner = new QueryRunner(DBUtils.getDataSource("mysql"));
             List<T> ius = runner.query(beanCfg.getSql_imp(), new BeanListHandler<T>(cls));
             for (T t : ius) {
                 System.out.println(t.toString());
@@ -140,25 +140,62 @@ public class BeanBroker {
     }
 
     public static void ConvertData() {
-        QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
-        QueryRunner targetqr = new QueryRunner(DBUtils.getDataSource());
-        // CompanyDAO.ConvertData(runner, targetqr);
-        InsRTypeDAO.ConvertData(runner, targetqr);
-        // InsPersDAO.ConvertData(runner, targetqr);
-        // InsUnitDAO.ConvertData(runner, targetqr);
-        // InsBoDAO.ConvertData(runner, targetqr);
-        // InsRpolDAO.ConvertData(runner, targetqr);
-        // InsGpolDAO.ConvertData(runner, targetqr);
-        // InsFavCstDAO.ConvertData(runner, targetqr);
-        // InsRenewalDAO.ConvertData(runner, targetqr);
-        // InsRsurDAO.ConvertData(runner, targetqr);
-        // InsRpayDAO.ConvertData(runner, targetqr);
-        // InsRclaDAO.ConvertData(runner, targetqr);
-        // InsRchgDAO.ConvertData(runner, targetqr);
-        // InsRiskNewDAO.ConvertData(runner, targetqr);
-        // InsRiskDAO.ConvertData(runner, targetqr);
+        String StartSheetInfo = "开始导入%s";
+        String EndSheetInfo = "已导入%s";
+        QueryRunner runner = new QueryRunner(DBUtils.getDataSource("src"));
+        QueryRunner targetqr = new QueryRunner(DBUtils.getDataSource("target"));
+
+        notifier.doWork(String.format(StartSheetInfo, "company"));
+        CompanyDAO.ConvertData(runner, targetqr);
+
+        notifier.doWork(String.format(StartSheetInfo, "company"));
+        // InsRTypeDAO.ConvertData(runner, targetqr); --出错
+        notifier.doWork(String.format(EndSheetInfo, "company"));
+        notifier.doWork(String.format(StartSheetInfo, "InsPers"));
+        InsPersDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsPers"));
+        notifier.doWork(String.format(StartSheetInfo, "InsUnit"));
+        InsUnitDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsUnit"));
+        notifier.doWork(String.format(StartSheetInfo, "InsBo"));
+        InsBoDAO.ConvertData(runner, targetqr); //无数据
+        notifier.doWork(String.format(EndSheetInfo, "InsBo"));
+        notifier.doWork(String.format(StartSheetInfo, "InsRpol"));
+        InsRpolDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsRpol"));
+        notifier.doWork(String.format(StartSheetInfo, "InsGpol"));
+        InsGpolDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsGpol"));
+        notifier.doWork(String.format(StartSheetInfo, "InsFavCst"));
+        // InsFavCstDAO.ConvertData(runner, targetqr); --出错
+        notifier.doWork(String.format(EndSheetInfo, "InsFavCst"));
+        notifier.doWork(String.format(StartSheetInfo, "InsRenewal"));
+        InsRenewalDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsRenewal"));
+        notifier.doWork(String.format(StartSheetInfo, "InsRsur"));
+        InsRsurDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsRsur"));
+        notifier.doWork(String.format(StartSheetInfo, "InsRpay"));
+        // InsRpayDAO.ConvertData(runner, targetqr); --出错
+        notifier.doWork(String.format(EndSheetInfo, "InsRpay"));
+        notifier.doWork(String.format(StartSheetInfo, "InsRcla"));
+        // InsRclaDAO.ConvertData(runner, targetqr); --出错
+        notifier.doWork(String.format(EndSheetInfo, "InsRcla"));
+        notifier.doWork(String.format(StartSheetInfo, "InsRchg"));
+        InsRchgDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsRchg"));
+        notifier.doWork(String.format(StartSheetInfo, "InsRiskNew"));
+        InsRiskNewDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsRiskNew"));
+        notifier.doWork(String.format(StartSheetInfo, "InsRisk"));
+        InsRiskDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "InsRisk"));
+        notifier.doWork(String.format(StartSheetInfo, "LarReport"));
         // LarReportDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "LarReport"));
+        notifier.doWork(String.format(StartSheetInfo, "SusReport"));
         // SusReportDAO.ConvertData(runner, targetqr);
+        notifier.doWork(String.format(EndSheetInfo, "SusReport"));
     }
 
     public static void Exp2Excel(String file) {
@@ -166,7 +203,7 @@ public class BeanBroker {
         String EndSheetInfo = "已导出%s";
 
         try {
-            QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
+            QueryRunner runner = new QueryRunner(DBUtils.getDataSource("mysql"));
             OutputStream os = new FileOutputStream(new File(file));
             ExcelWriter writer = new ExcelWriter(os, ExcelTypeEnum.XLSX, true);
 

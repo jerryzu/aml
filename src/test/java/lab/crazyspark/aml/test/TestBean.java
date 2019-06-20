@@ -8,17 +8,28 @@ import java.util.List;
 import org.slf4j.LoggerFactory;
 import lab.crazyspark.bean.*;
 import lab.crazyspark.broker.BeanBroker;
+import lab.crazyspark.broker.Event;
+import lab.crazyspark.broker.Notifier;
 
-public class TestBean {
+public class TestBean implements Event {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(TestBean.class);
 
-    // @Test
+    // @Tests
     public void test() {
         logger.info("测试开始......");
+
+        Notifier notifier = new Notifier();
+        notifier.regist(this);
+        BeanBroker.setNotifier(notifier);
+
         try {
-            Check(Company.class);
+            // Check(Company.class);
             // Check(InsRType.class);
-            // Check(InsPers.class);
+            do {
+                Check(InsPers.class);
+                Thread.sleep(2000);
+            } while (true);
+
             // Check(InsUnit.class);
             // Check(InsBo.class);
             // Check(InsRpol.class);
@@ -40,8 +51,8 @@ public class TestBean {
     }
 
     public static <T> void Check(Class<T> cls) {
-        if (BeanBroker.Table(cls, null)) {
-            BeanBroker.Check(cls, null);
+        if (BeanBroker.Table(cls)) {
+            BeanBroker.Check(cls);
         }
     }
 
@@ -73,9 +84,8 @@ public class TestBean {
 
     public static <T> void Exp2Excel(Class<T> cls) {
 
-        List<String> strList = new ArrayList<String>();
         String filepath = "/app/work/aml/auditing/aml.xlsx";
-        BeanBroker.Exp2Excel(filepath, strList);
+        BeanBroker.Exp2Excel(filepath);
     }
 
     // @Test
@@ -91,5 +101,9 @@ public class TestBean {
 
     public static <T> void ConvertData(Class<T> cls) {
         BeanBroker.ConvertData();
-    }   
+    }
+
+    public void processEvent(String EventInfo) {
+        // System.out.println(String.format("%s", EventInfo));
+    }
 }

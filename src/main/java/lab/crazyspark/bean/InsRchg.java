@@ -5,7 +5,7 @@ import lab.crazyspark.annotation.Entity;
 
 @Entity(table = "tb_ins_rchg")
 public class InsRchg {
-    private String company_codel;
+    private String company_code1;
     private String company_code2;
     private String company_code3;
     private String company_code4;
@@ -21,17 +21,17 @@ public class InsRchg {
 
     public void print() {
         System.out.println(String.format(
-                "InsRchg:  company_codel%s  company_code2%s  company_code3%s  company_code4%s  pol_no%s  app_no%s  app_name%s  app_cst_no%s  app_date%s  chg_date%s  chg_no%s  item%s  con_bef%s",
-                company_codel, company_code2, company_code3, company_code4, pol_no, app_no, app_name, app_cst_no,
+                "InsRchg:  company_code1%s  company_code2%s  company_code3%s  company_code4%s  pol_no%s  app_no%s  app_name%s  app_cst_no%s  app_date%s  chg_date%s  chg_no%s  item%s  con_bef%s",
+                company_code1, company_code2, company_code3, company_code4, pol_no, app_no, app_name, app_cst_no,
                 app_date, chg_date, chg_no, item, con_bef));
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getCompany_code2() {

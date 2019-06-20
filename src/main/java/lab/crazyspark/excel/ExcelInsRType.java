@@ -16,8 +16,8 @@ public class ExcelInsRType extends BaseRowModel {
     @ExcelProperty(value = "head_no", index = 0)
     private String head_no;
 
-    @ExcelProperty(value = "company_codel", index = 0)
-    private String company_codel;
+    @ExcelProperty(value = "company_code1", index = 0)
+    private String company_code1;
 
     @ExcelProperty(value = "ins_type", index = 0)
     private String ins_type;
@@ -29,8 +29,8 @@ public class ExcelInsRType extends BaseRowModel {
     private String ins_name;
 
     public void print() {
-        System.out.println(String.format("InsRType: head_no%s company_codel%s ins_type%s ins_no%s ins_name%s", head_no,
-                company_codel, ins_type, ins_no, ins_name));
+        System.out.println(String.format("InsRType: head_no%s company_code1%s ins_type%s ins_no%s ins_name%s", head_no,
+                company_code1, ins_type, ins_no, ins_name));
     }
 
     public static List<ExcelInsRType> Exp2Excel(QueryRunner runner, ExcelWriter writer, Sheet sheet)
@@ -49,12 +49,12 @@ public class ExcelInsRType extends BaseRowModel {
         this.head_no = head_no;
     }
 
-    public String getCompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setCompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getIns_type() {

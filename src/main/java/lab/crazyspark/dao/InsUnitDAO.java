@@ -18,10 +18,10 @@ public class InsUnitDAO {
         try {
             BeanCfg beanCfg  = DBUtils.GetBeanConfig(InsUnit.class, "InsUnit");
             String sql = beanCfg.getSql_imp();
-            String inssql = "INSERT INTO tb_ins_unit(company_codel, company_code2, cst_no, open_time, close_time, acc_name, address, operate, set_file, license, id_deadline, org_no, tax_no, rep_name, id_type2, id_no2, id_deadline2, man_name, id_type3, id_no3, id_deadline3, ope_name, id_type4, id_no4, id_deadline4, industry_code, industry, reg_amt, code, sys_name)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String inssql = "INSERT INTO tb_ins_unit(company_code1, company_code2, cst_no, open_time, close_time, acc_name, address, operate, set_file, license, id_deadline, org_no, tax_no, rep_name, id_type2, id_no2, id_deadline2, man_name, id_type3, id_no3, id_deadline3, ope_name, id_type4, id_no4, id_deadline4, industry_code, industry, reg_amt, code, sys_name)VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             List<InsUnit> insUnits = runner.query(sql, new BeanListHandler<InsUnit>(InsUnit.class));
             for (InsUnit insUnit : insUnits) {
-                Object[] params = { insUnit.getCompany_codel(), insUnit.getCompany_code2(), insUnit.getCst_no(),
+                Object[] params = { insUnit.getcompany_code1(), insUnit.getCompany_code2(), insUnit.getCst_no(),
                         insUnit.getOpen_time(), insUnit.getClose_time(), insUnit.getAcc_name(), insUnit.getAddress(),
                         insUnit.getOperate(), insUnit.getSet_file(), insUnit.getLicense(), insUnit.getId_deadline(),
                         insUnit.getOrg_no(), insUnit.getTax_no(), insUnit.getRep_name(), insUnit.getId_type2(),

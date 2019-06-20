@@ -12,8 +12,8 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 public class ExcelInsUnit extends BaseRowModel {
-    @ExcelProperty(value = "company_codel", index = 0)
-    private String company_codel;
+    @ExcelProperty(value = "company_code1", index = 0)
+    private String company_code1;
     @ExcelProperty(value = "company_code2", index = 1)
     private String company_code2;
     @ExcelProperty(value = "cst_no", index = 2)
@@ -75,8 +75,8 @@ public class ExcelInsUnit extends BaseRowModel {
 
     public void print() {
         System.out.println(String.format(
-                "InsUnit:  company_codel%s  company_code2%s  cst_no%s  open_time%s  close_time%s  acc_name%s  address%s  operate%s  set_file%s  license%s  id_deadline%s  org_no%s  tax_no%s  rep_name%s  id_type2%s  id_no2%s  id_deadline2%s  man_name%s  id_type3%s  id_no3%s  id_deadline3%s  ope_name%s  id_type4%s  id_no4%s  id_deadline4%s  industry_code%s  industry%s  reg_amt%s  code%s  sys_name%s",
-                company_codel, company_code2, cst_no, open_time, close_time, acc_name, address, operate, set_file,
+                "InsUnit:  company_code1%s  company_code2%s  cst_no%s  open_time%s  close_time%s  acc_name%s  address%s  operate%s  set_file%s  license%s  id_deadline%s  org_no%s  tax_no%s  rep_name%s  id_type2%s  id_no2%s  id_deadline2%s  man_name%s  id_type3%s  id_no3%s  id_deadline3%s  ope_name%s  id_type4%s  id_no4%s  id_deadline4%s  industry_code%s  industry%s  reg_amt%s  code%s  sys_name%s",
+                company_code1, company_code2, cst_no, open_time, close_time, acc_name, address, operate, set_file,
                 license, id_deadline, org_no, tax_no, rep_name, id_type2, id_no2, id_deadline2, man_name, id_type3,
                 id_no3, id_deadline3, ope_name, id_type4, id_no4, id_deadline4, industry_code, industry, reg_amt, code,
                 sys_name));
@@ -90,12 +90,12 @@ public class ExcelInsUnit extends BaseRowModel {
         return result;
     }
 
-    public String getcompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setcompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getcompany_code2() {

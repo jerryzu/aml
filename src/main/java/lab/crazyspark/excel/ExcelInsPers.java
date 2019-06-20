@@ -12,8 +12,8 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 public class ExcelInsPers extends BaseRowModel {
-    @ExcelProperty(value = "company_codel", index = 0)
-    private String company_codel;
+    @ExcelProperty(value = "company_code1", index = 0)
+    private String company_code1;
     @ExcelProperty(value = "company_code2", index = 1)
     private String company_code2;
     @ExcelProperty(value = "cst_no", index = 2)
@@ -59,8 +59,8 @@ public class ExcelInsPers extends BaseRowModel {
 
     public void print() {
         System.out.println(String.format(
-                "InsPers:  company_codel%s  company_code2%s  cst_no%s  open_time%s  close_time%s  acc_name%s  cst_sex%s  nation%s  id_type%s  id_no%s  id_deadline%s  occupation_code%s  occupation%s  income%s  contact1%s  contact2%s  contact3%s  address1%s  address2%s  address3%s  company%s  sys_name%s",
-                company_codel, company_code2, cst_no, open_time, close_time, acc_name, cst_sex, nation, id_type, id_no,
+                "InsPers:  company_code1%s  company_code2%s  cst_no%s  open_time%s  close_time%s  acc_name%s  cst_sex%s  nation%s  id_type%s  id_no%s  id_deadline%s  occupation_code%s  occupation%s  income%s  contact1%s  contact2%s  contact3%s  address1%s  address2%s  address3%s  company%s  sys_name%s",
+                company_code1, company_code2, cst_no, open_time, close_time, acc_name, cst_sex, nation, id_type, id_no,
                 id_deadline, occupation_code, occupation, income, contact1, contact2, contact3, address1, address2,
                 address3, company, sys_name));
     }
@@ -73,12 +73,12 @@ public class ExcelInsPers extends BaseRowModel {
         return result;
     }
 
-    public String getcompany_codel() {
-        return company_codel;
+    public String getcompany_code1() {
+        return company_code1;
     }
 
-    public void setcompany_codel(String company_codel) {
-        this.company_codel = company_codel;
+    public void setcompany_code1(String company_code1) {
+        this.company_code1 = company_code1;
     }
 
     public String getcompany_code2() {
