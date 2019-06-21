@@ -31,7 +31,7 @@ public class DBUtils {
         }
     }
 
-    public synchronized static Connection getConnection(String ds) {
+    public synchronized static Connection getConnection(String ds)  {
         Connection con = null;
         try {
             if (ds.equals("src")) {
@@ -45,7 +45,7 @@ public class DBUtils {
         return con;
     }
 
-    public static void closeResource(ResultSet rs, Statement stmt, Connection con) {
+    public static void closeResource(ResultSet rs, Statement stmt, Connection con)  {
         try {
             if (rs != null) {
                 rs.close();
@@ -62,7 +62,7 @@ public class DBUtils {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  {
         System.out.println(getConnection("mysql"));
     }
 

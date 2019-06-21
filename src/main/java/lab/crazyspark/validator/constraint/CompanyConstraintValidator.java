@@ -13,9 +13,6 @@ public class CompanyConstraintValidator implements ConstraintValidator<CompanyCh
 
     public void initialize(CompanyCheck  constraintAnnotation) {
         Companies = Setting.getCompanies();
-        for (Company com : Companies) {
-            System.out.println("company_code1:" + com.getcompany_code1());            
-        }
     }
 
     public boolean isValid(String company, ConstraintValidatorContext constraintValidatorContext) {
@@ -24,7 +21,7 @@ public class CompanyConstraintValidator implements ConstraintValidator<CompanyCh
         }
 
         for (Company compan : Companies) {
-            if (compan.getcompany_code1().equals(company)) {
+            if (compan.getCompany_code1().equals(company)) {
                 return true;
             }
         }

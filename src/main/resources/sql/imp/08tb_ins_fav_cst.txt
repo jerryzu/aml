@@ -1,0 +1,22 @@
+/*
+nvhlpcis.web_app_insured --出错
+*/
+select
+'' as Company_codel,-- 机构网点代码
+'' as Company_code2,-- 金融机构编码
+'' as Company_code3,-- 保单归属机构网点代码
+a.C_PLY_NO as Pol_no,-- 保单号
+a.T_APP_TM as Ins_date,-- 投保日期
+b.C_INSURED_NME as App_name,-- 投保人名称
+b.C_INSURED_CDE as App_cst_no,-- 投保人客户号
+b.C_CERTF_CDE as App_id_no,-- 投保人证件号码
+'11' as Insfav_type,-- 被保人或受益人标识
+c.C_CLNT_MRK as Insbene_cus_pro,-- 被保人或受益人类型
+c.C_APP_RELATION as Relation,-- 投保人、被保人之间的关系
+'' as Fav_type,-- 受益人标识
+c.C_INSURED_NME as Name,-- 被保人或受益人名称
+c.C_INSURED_CDE as InsBene_cst_no,-- 被保险人或受益人客户号
+c.C_CERTF_CDE as Insbene_id_no-- 被保险人或受益人身份证件号码
+from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
+left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.c_ply_no=b.c_ply_no
+left join nvhlpcis.web_app_insured PARTITION(pt20190609000000) c on a.c_ply_no=c.c_ply_no

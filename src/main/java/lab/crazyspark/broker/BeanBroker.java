@@ -17,7 +17,6 @@ import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.apache.commons.lang3.ObjectUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import lab.crazyspark.aml.BeanCfg;
 import lab.crazyspark.annotation.Entity;
@@ -144,13 +143,13 @@ public class BeanBroker {
         String EndSheetInfo = "已导入%s";
         QueryRunner runner = new QueryRunner(DBUtils.getDataSource("src"));
         QueryRunner targetqr = new QueryRunner(DBUtils.getDataSource("target"));
-
+        
         notifier.doWork(String.format(StartSheetInfo, "company"));
         CompanyDAO.ConvertData(runner, targetqr);
-
-        notifier.doWork(String.format(StartSheetInfo, "company"));
-        // InsRTypeDAO.ConvertData(runner, targetqr); --出错
         notifier.doWork(String.format(EndSheetInfo, "company"));
+        notifier.doWork(String.format(StartSheetInfo, "rtype"));
+        // InsRTypeDAO.ConvertData(runner, targetqr); --出错
+        notifier.doWork(String.format(EndSheetInfo, "rtype"));
         notifier.doWork(String.format(StartSheetInfo, "InsPers"));
         InsPersDAO.ConvertData(runner, targetqr);
         notifier.doWork(String.format(EndSheetInfo, "InsPers"));
@@ -207,7 +206,6 @@ public class BeanBroker {
             OutputStream os = new FileOutputStream(new File(file));
             ExcelWriter writer = new ExcelWriter(os, ExcelTypeEnum.XLSX, true);
 
-            // notifier.doWork();
             notifier.doWork(String.format(StartSheetInfo, "company"));
             Sheet company = new Sheet(1, 5, ExcelCompany.class);
             List<ExcelCompany> companyresult = CompanyDAO.Exp2Excel(runner, writer, company);

@@ -1,0 +1,15 @@
+/*
+RIGHT(a.C_CUST_RISK_RANK, 2) as Risk_code,-- 风险等级
+*/
+select 
+'' as Company_codel,-- 机构网点代码
+'' as Company_code2,-- 金融机构编码
+'' as Company_code3,-- 保单归属机构网点代码
+a.C_APP_NME as App_name,-- 投保人名称
+a.C_APP_CDE as App_cst_no,-- 投保人客户号
+a.C_CERTF_CDE as App_id_no,-- 投保人证件号码
+RIGHT(a.C_CUST_RISK_RANK, 2) as Risk_code,-- 风险等级
+'' as Div_date,-- 划分日期
+'' as Score,-- 评分分值
+'' as Norm-- 划分依据
+from ods_cthx_web_ply_applicant PARTITION(pt20190609000000) a

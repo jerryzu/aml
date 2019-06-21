@@ -1,5 +1,7 @@
 package lab.crazyspark.validator.constraint;
-
+/**
+ * @AtLeastOneNotEmpty(fields = { "company_code2", "company_name" }, message = "金融机构编码,机构名称不能同时为空")
+ */
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.Documented;

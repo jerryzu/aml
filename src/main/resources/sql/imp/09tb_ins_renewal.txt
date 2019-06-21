@@ -1,0 +1,30 @@
+/*
+date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- 投保日期
+RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- 投保人身份证件类型
+*/
+select
+'' as Company_codel,-- 机构网点代码
+'' as Company_code2,-- 金融机构编码
+'' as Company_code3,-- 保单归属机构网点代码
+'' as Company_code4,-- 受理业务机构网点代码
+a.C_PLY_NO as Pol_no,-- 保单号
+a.C_APP_NO as App_no,-- 投保单号
+date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- 投保日期
+b.C_APP_NME as App_name,-- 投保人名称
+b.C_APP_CDE as App_cst_no,-- 投保人客户号
+RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- 投保人身份证件类型
+b.C_CERTF_CDE as App_id_no,-- 投保人证件号码
+a.C_PROD_NO as Ins_no,-- 险种代码
+'' as Renew_date,-- 业务发生日期
+'' as Pay_date,-- 资金交易日期
+'' as Cur_code,-- 币种
+'' as Pre_amt,-- 本期交保费金额
+'' as Usd_amt,-- 折合美元金额
+'' as Tsf_flag,-- 现转标识
+'' as Acc_name,-- 交费账号名称
+'' as Acc_no,-- 交费账号
+'' as Acc_bank,-- 交费账户开户机构名称
+'' as Receipt_no,-- 作业流水号,唯一标识号
+a.C_EDR_NO as Endorse_no-- 批单号
+from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
+left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.c_ply_no=b.c_ply_no

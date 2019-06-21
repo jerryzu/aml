@@ -1,0 +1,31 @@
+/*
+tb_ins_pers问题
+open_time不是YYYYMMDD
+id_type需要映射,暂时右取二
+
+*/
+select b.C_DPT_CDE as Company_code1, -- 机构网点代码，内部的机构编码
+       '@N' as Company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
+       a.C_APP_CDE as Cst_no, -- 客户号
+       a.T_CRT_TM as Open_time,-- 客户号创建日期
+       '' as Close_time, -- 结束业务日期，如果尚有有效保单就填 @N
+       a.C_APP_NME as Acc_name, -- 客户名称
+       a.C_SEX as Cst_sex,-- 性别
+       a.C_COUNTRY as Nation, -- 国籍
+       a.C_CERTF_CLS as Id_type, -- 身份证件类型
+			 a.C_CERTF_CDE as Id_no , -- 身份证件号码
+			 a.T_CERTF_END_DATE as Id_deadline,-- 身份有效期限，到期日
+       a.C_OCCUP_CDE as Occupation_code, -- 职业代码
+       '@N' as Occupation, -- 职业
+       '-9999' as Income, -- 年收入
+       a.C_MOBILE as Contact1,-- 联系方式
+       a.C_TEL as Contact2,-- 其他联系方式1
+       a.C_FAX as Contact3,-- 其他联系方式2
+       a.C_CLNT_ADDR as Address1,-- 地址1
+			 '@N' as Address2,-- 地址2
+			 '@N' as Address3,-- 地址3
+       a.C_WORK_DPT as Company,-- 工作单位名称
+       '' as Sys_name -- 系统名称
+  from ods_cthx_web_ply_applicant PARTITION(pt20190609000000) a
+  left join ods_cthx_web_ply_base PARTITION(pt20190609000000) b on a.C_PLY_NO=b.C_PLY_NO
+where a.C_CLNT_MRK='1'

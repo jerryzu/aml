@@ -12,13 +12,11 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 
 import lab.crazyspark.annotation.Entity;
-import lab.crazyspark.validator.constraint.CompanyCheck;
 import lab.crazyspark.validator.constraint.IDTypeCheck;
 import lab.crazyspark.validator.constraint.SexCheck;
 
 @Entity(table = "tb_ins_pers")
 public class InsPers {
-    @CompanyCheck
     private String company_code1;
 
     private String company_code2;

@@ -1,0 +1,57 @@
+/*
+异常不报的原因
+                targetqr.update(inssql, params);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+	date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- 投保日期
+	date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- 合同生效日期
+	RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- 投保人身份证件类型
+	RIGHT(c.C_APP_RELATION, 2) as Relation,-- 投保人、被保险人之间的关系
+  RIGHT(a.C_PROD_NO, 2) as  Prof_type,-- 业务种类
+字段limit为mysql保留字
+*/
+select 
+	'' as Company_codel,-- 机构网点代码
+	'' as Company_code2,-- 金融机构编码
+	'' as Company_code3,-- 保单归属机构网点代码
+	a.C_PLY_NO as  Pol_no,-- 保单号
+	a.C_APP_NO as App_no,-- 投保单号
+	a.C_PLY_STS as Ins_state,-- 保单状态
+	a.C_BSNS_TYP as Sale_type,-- 销售渠道
+	a.C_BSNS_SUBTYP as Sale_name,-- 销售渠道名称
+	a.T_APP_TM as Ins_date,-- 投保日期
+	a.T_INSRNC_BGN_TM as Eff_date,-- 合同生效日期
+	b.C_APP_NME as App_name,-- 投保人名称
+	b.C_APP_CDE as App_cst_no,-- 投保人客户号
+	b.C_CERTF_CLS as App_id_type,-- 投保人身份证件类型
+	b.C_CERTF_CDE as App_id_no,-- 投保人证件号码
+	c.C_INSURED_NME as Ins_name,-- 被保险人名称
+	c.C_INSURED_CDE as Ins_cst_no,-- 被保险人客户号
+	c.C_CERTF_CDE as Ins_id_no,-- 被保险人证件号码
+	c.C_CLNT_MRK as Ins_cus_pro,-- 被保险人客户类型
+	c.C_APP_RELATION as Relation,-- 投保人、被保险人之间的关系
+  '' as Legal_type,-- 受益人标识
+  '' as Benefit_cus_pro,-- 受益人类型
+	d.C_BNFC_NME as  Benefit_name,-- 受益人名称
+	d.C_BNFC_CDE as  Benefit_cst_no,-- 受益人客户号
+	d.C_CERTF_CDE as Benefit_id_no,-- 受益人身份证号码
+  a.C_PROD_NO as Ins_no,-- 险种代码
+  'CNY' as Cur_code,-- 币种
+  '' as Pre_amt,-- 本期交保费金额
+  '' as Usd_amt,-- 折合美元金额
+  a.C_PROD_NO as  Prof_type,-- 业务种类
+  '' as Del_way,-- 交费方式
+  '' as Del_period,-- 缴费间隔
+  '' as `Limit`,-- 交费期数
+  '' as Subject,-- 保险标的物
+  '' as Tsf_flag,-- 现转标识
+  '' as Acc_name,-- 交费账号名称
+  '' as Acc_no,-- 交费账号
+  '' as Acc_bank,-- 交费账户开户机构名称
+  a.C_APP_NO  as Receipt_n-- 作业流水号,唯一标识号
+  from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
+  left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.C_PLY_NO=b.C_PLY_NO
+  left join ods_cthx_web_ply_INSURED PARTITION(pt20190609000000) c on a.C_PLY_NO=c.C_PLY_NO
+  left join ods_cthx_web_ply_bnfc PARTITION(pt20190609000000) d on a.C_PLY_NO=d.C_PLY_NO

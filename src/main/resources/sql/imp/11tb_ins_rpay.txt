@@ -1,0 +1,46 @@
+/*
+date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- 投保日期
+date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- 合同生效日期
+WEB_PLY_BNFC表不可用
+*/
+
+select
+'' as Company_codel,-- 机构网点代码
+'' as Company_code2,-- 金融机构编码
+'' as Company_code3,-- 保单归属机构网点代码
+'' as Company_code4,-- 受理业务机构网点代码
+a.C_PLY_NO as Pol_no,-- 保单号
+a.C_APP_NO as App_no,-- 投保单号
+date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- 投保日期
+date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- 合同生效日期
+'' as Cur_code1,-- 币种
+'' as Pre_amt_all,-- 累计保费金额
+'' as Usd_amt_all,-- 累计保费折合美元金额
+b.C_INSURED_NME as App_name,-- 投保人名称
+b.C_INSURED_CDE as App_cst_no,-- 投保人客户号
+b.C_CERTF_CDE as App_id_no,-- 投保人证件号码
+b.C_CLNT_MRK as App_cus_pro,-- 投保人客户类型
+c.C_INSURED_NME as Ins_name,-- 被保险人客户名称
+c.C_INSURED_CDE as Ins_cst_no,-- 被保险人客户号
+c.C_CERTF_CDE as Ins_id_no,-- 被保险人证件号码
+c.C_CLNT_MRK as Ins_cus_pro,-- 被保险人客户类型
+d.C_BNFC_NME as Benefit_name,-- 受益人名称
+d.C_BNFC_CERT_NO as Benefit_id_no,-- 受益人身份证件号码
+'' as Benefit_pro,-- 受益人类型
+d.C_APP_RELATION as Relation_1,-- 投保人被保人之间的关系
+'' as Relation_2,-- 受益人被保人之间的关系
+'' as Pay_type,-- 给付类型
+'' as Rpay_date,-- 给付业务办理日期
+'' as Pay_date,-- 资金交易日期
+'' as Cur_code2,-- 币种
+'' as Pay_amt,-- 给付金额
+'' as Pay_usd_amt,-- 折合美元金额
+'' as Tsf_flag,-- 给付方式
+'' as Acc_name,-- 收款账号名称
+'' as Acc_no,-- 收款账号
+'' as Acc_bank,-- 收款账户开户机构名称
+'' as Receipt_no-- 作业流水号,唯一标识号
+from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
+left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.c_ply_no=b.c_ply_no
+left join nvhlpcis.web_app_insured PARTITION(pt20190609000000) c on a.c_ply_no=c.c_ply_no
+left join WEB_PLY_BNFC PARTITION(pt20190609000000) d on  a.c_ply_no=d.c_ply_no

@@ -1,0 +1,6 @@
+select '' as Head_no, -- 法人机构报告机构编码，央行统一分配
+       a.C_DPT_CDE as Company_code1, -- 机构网点代码，内部的机构编码
+       a.C_DPT_OUT_CDE as Company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
+			 a.c_dpt_cnm as Company_name, -- 机构名称
+			 '10' as  Bord_flag -- 制定经营地点，10境内、11境外
+  from ods_cthx_web_org_dpt PARTITION(pt20190609000000) a

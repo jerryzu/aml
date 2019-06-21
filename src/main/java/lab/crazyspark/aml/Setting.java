@@ -14,7 +14,7 @@ public class Setting {
     private static List<Item> Items;
 
     static {
-        QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
+        QueryRunner runner = new QueryRunner(DBUtils.getDataSource("target"));
         // String sql = String.format("SELECT company_code1 FROM tb_company");
         String itemsql = String.format("SELECT * FROM web_commcode_sjsb");
         try {
@@ -26,7 +26,7 @@ public class Setting {
     }
 
     public static List<Company> getCompanies() {
-        QueryRunner runner = new QueryRunner(DBUtils.getDataSource());
+        QueryRunner runner = new QueryRunner(DBUtils.getDataSource("target"));
         String sql = String.format("SELECT company_code1 FROM tb_company");
         try {
             Companies = runner.query(sql, new BeanListHandler<Company>(Company.class));

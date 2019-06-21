@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
+
+import lab.crazyspark.aml.Setting;
 import lab.crazyspark.bean.*;
 import lab.crazyspark.broker.BeanBroker;
 import lab.crazyspark.broker.Event;
@@ -14,7 +16,7 @@ import lab.crazyspark.broker.Notifier;
 public class TestBean implements Event {
     private static org.slf4j.Logger logger = LoggerFactory.getLogger(TestBean.class);
 
-    // @Tests
+    @Test
     public void test() {
         logger.info("测试开始......");
 
@@ -23,13 +25,17 @@ public class TestBean implements Event {
         BeanBroker.setNotifier(notifier);
 
         try {
+            Integer i = 1;
+
+            do {
+                i += 1;
+                Check(InsRType.class);
+                Thread.sleep(2000);
+            } while (i < 10);
+
             // Check(Company.class);
             // Check(InsRType.class);
-            do {
-                Check(InsPers.class);
-                Thread.sleep(2000);
-            } while (true);
-
+            // Check(InsPers.class);
             // Check(InsUnit.class);
             // Check(InsBo.class);
             // Check(InsRpol.class);
@@ -105,5 +111,12 @@ public class TestBean implements Event {
 
     public void processEvent(String EventInfo) {
         // System.out.println(String.format("%s", EventInfo));
+    }
+
+    // @Test
+    public void test4() {
+        List<Company> Companies = new ArrayList<>();
+        Companies = Setting.getCompanies();
+        Companies = Setting.getCompanies();
     }
 }

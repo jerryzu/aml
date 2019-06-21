@@ -1,0 +1,41 @@
+/*
+RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- 投保人身份证件类型
+date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- 投保日期
+date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- 合同生效日期
+RIGHT(c.C_TGT_ADDR, 100) as Subject,-- 保险标的物
+字段limit为mysql保留字
+*/
+select
+'' as Company_code1,-- 机构网点代码
+'' as Company_code2,-- 金融机构编码
+'' as Company_code3,-- 保单归属机构网点代码
+a.C_PLY_NO as Pol_no,-- 保单号
+a.C_APP_NO as App_no,-- 投保单号
+a.C_PLY_STS as Ins_state,-- 保单状态
+a.C_GRP_MRK as App_type,-- 保单类型
+a.C_BSNS_TYP as Sale_type,-- 销售渠道
+a.C_BSNS_SUBTYP as Sale_name,-- 销售渠道名称
+date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- 投保日期
+date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- 合同生效日期
+b.C_APP_NME as App_name,-- 投保人名称
+b.C_APP_CDE as App_cst_no,-- 投保人客户号
+RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- 投保人身份证件类型
+b.C_CERTF_CDE as App_id_no,-- 投保人证件号码
+'' as State_owned,-- 国有属性
+'' as Ins_num,-- 被保险人数量
+a.C_PROD_NO as Ins_no,-- 险种代码
+ '' as ur_code,-- 币种
+'' as Pre_amt,-- 本期交保费金额
+'' as Usd_amt,-- 折合美元金额
+'' as Del_way,-- 交费方式
+'' as Del_period,-- 缴费间隔
+'' as `Limit`,-- 交费期数
+RIGHT(c.C_TGT_ADDR, 100) as Subject,-- 保险标的物
+'' as Tsf_flag,-- 现转标识
+'' as Acc_name,-- 交费账号名称
+'' as Acc_no,-- 交费账号
+'' as Acc_bank,-- 交费账户开户机构名称
+'' as Receipt_no-- 作业流水号,唯一标识号
+from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
+left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.c_ply_no=b.c_ply_no
+left join ods_cthx_web_ply_ent_tgt PARTITION(pt20190609000000) c on a.c_ply_no=c.c_ply_no

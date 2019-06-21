@@ -1,0 +1,19 @@
+/*
+
+*/
+select
+'' as Company_codel,-- 机构网点代码
+'' as Company_code2,-- 金融机构编码
+'' as Company_code3,-- 保单归属机构网点代码
+'' as Company_code4,-- 受理业务机构网点代码
+a.C_PLY_NO as Pol_no,-- 保单号
+a.C_APP_NO as App_no,-- 投保单号
+b.C_APP_NME as App_name,-- 投保人名称
+b.C_APP_CDE as App_cst_no,-- 投保人客户号
+date_format(a.T_EDR_APP_TM,'%Y%m%d') as App_date,-- 申请日期
+date_format(a.T_EDR_BGN_TM,'%Y%m%d') as Chg_date,-- 变更或批改日期
+a.C_EDR_NO as Chg_no,-- 批单号
+a.C_EDR_RSN_BUNDLE_CDE as Item,-- 保全/批改项目
+a.C_EDR_CTNT as Con_bef-- 变更内容摘要
+from ods_cthx_web_ply_base partition(pt20190609000000) a
+left join ods_cthx_web_ply_applicant partition(pt20190609000000) b on a.c_ply_no=b.c_ply_no

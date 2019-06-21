@@ -7,7 +7,6 @@ import lab.crazyspark.validator.constraint.BordFlag;
 import lab.crazyspark.validator.constraint.BordFlagCheck;
 
 @Entity(table = "tb_company")
-@AtLeastOneNotEmpty(fields = { "company_code2", "company_name" }, message = "金融机构编码,机构名称不能同时为空")
 public class Company {
     private String head_no;
 

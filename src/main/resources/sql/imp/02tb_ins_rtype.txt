@@ -1,0 +1,21 @@
+/*
+语句错误
+*/
+select '' as Head_no, -- 法人机构报告机构编码，央行统一分配
+       a.C_DPT_CDE as Company_code1, -- 机构网点代码，内部的机构编码
+       case when d.C_NME_CN='机动车辆保险' then '10' -- 车险
+            when d.C_NME_CN in ('企业财产险','家庭财产险') then '11' -- 财产险
+					  when d.C_NME_CN in ('货物运输险','船舶保险','特殊风险保险') then '12' -- 船货特险
+						when d.C_NME_CN='责任险' then '13' -- 责任保险
+						when d.C_NME_CN in('短期健康保险','意外险') then '14' -- 短期健康、意外保险
+            when d.C_NME_CN in('信用保险','保证保险') then '15'  -- 信用保证保险
+						when d.C_NME_CN in('农业险','农业保险') then '16'  -- 农业保险
+						when d.C_NME_CN in('工程险','综合险','养殖业','林业险') then '17'  -- 其他
+            else '15'  -- 其他
+            end as Ins_type, -- 险种分类
+			 c.C_PROD_NO as Ins_no, -- 险种代码
+			 c.C_NME_CN as  Ins_name -- 险种名称
+  from ods_cthx_web_org_dpt PARTITION(20190609000000) a 
+  left join WEB_ORG_DPT_MAP PARTITION(20190609000000) b on a.c_dpt_cde=b.c_dpt_cde
+  left join ods_cthx_web_prd_prod PARTITION(20190609000000) c b.c_kind_no=c.c_kind_no
+  left join ods_cthx_web_prd_kind PARTITION(20190609000000) d on c.C_KIND_NO=d.C_KIND_NO
