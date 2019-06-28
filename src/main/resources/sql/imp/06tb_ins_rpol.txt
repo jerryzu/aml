@@ -1,57 +1,86 @@
 /*
-Òì³£²»±¨µÄÔ­Òò
-                targetqr.update(inssql, params);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-	date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- Í¶±£ÈÕÆÚ
-	date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- ºÏÍ¬ÉúĞ§ÈÕÆÚ
-	RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- Í¶±£ÈËÉí·İÖ¤¼şÀàĞÍ
-	RIGHT(c.C_APP_RELATION, 2) as Relation,-- Í¶±£ÈË¡¢±»±£ÏÕÈËÖ®¼äµÄ¹ØÏµ
-  RIGHT(a.C_PROD_NO, 2) as  Prof_type,-- ÒµÎñÖÖÀà
-×Ö¶ÎlimitÎªmysql±£Áô×Ö
+date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- æŠ•ä¿æ—¥æœŸ
+date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- åˆåŒç”Ÿæ•ˆæ—¥æœŸ
+RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- æŠ•ä¿äººèº«ä»½è¯ä»¶ç±»å‹
+RIGHT(c.C_APP_RELATION, 2) as Relation,-- æŠ•ä¿äººã€è¢«ä¿é™©äººä¹‹é—´çš„å…³ç³»
+RIGHT(a.C_PROD_NO, 2) as  Prof_type,-- ä¸šåŠ¡ç§ç±»
+å­—æ®µlimitä¸ºmysqlä¿ç•™å­—
+a.C_PLY_STS as Ins_state,-- ä¿å•çŠ¶æ€ 11:æœ‰æ•ˆ;12:ç»ˆæ­¢;13:ä¸­æ­¢;14:å…¶ä»–;
+a.C_BSNS_TYP as Sale_type,-- é”€å”®æ¸ é“    äººèº«ä¿é™©é”€å”®æ¸ é“:11:ä¸ªäººä»£ç†;12:ä¿é™©ä»£ç†æœºæ„æˆ–ç»æµæœºæ„;13:é“¶é‚®ä»£ç†;14:ç½‘é”€(æœ¬æœºæ„);15:ç”µé”€;16:ç¬¬ä¸‰æ–¹å¹³å°;19:å…¶ä»–; è´¢äº§ä¿é™©é”€å”®æ¸ é“:11:ä¸ªäººä»£ç†;12:ä¿é™©ä»£ç†æœºæ„æˆ–ç»æµæœºæ„;13:é“¶é‚®ä»£ç†;14:ç½‘é”€(æœ¬æœºæ„);15:ç”µé”€;16:å†œæ‘ç½‘ç‚¹;17:è¥ä¸šç½‘ç‚¹;18:ç¬¬ä¸‰æ–¹å¹³å°;19:å…¶ä»–;
+
+App_id_type	NVARCHAR2(2) not null,	æŠ•ä¿äººèº«ä»½è¯ä»¶ç±»å‹
+REF
+SELECT distinct C_CDE, C_CNM, 'codeKind' FROM WEB_BAS_CODELIST WHERE C_PAR_CDE = 'policyCertificateTyp' ORDER BY C_CDE 
+
+Relation
+REF
+SELECT C_CDE, C_CNM, 'codeKind' FROM WEB_BAS_COMM_CODE WHERE C_PAR_CDE = '601' ORDER BY C_CDE 
+
+Cur_code
+REF
+é»˜è®¤CNY
+Usd_amt
+REF
+é»˜è®¤é»˜è®¤-9999
+
+ins_state	ä¿å•çŠ¶æ€	mapping
+sale_type	é”€å”®æ¸ é“	mapping
+ins_date	æŠ•ä¿æ—¥æœŸ	YYYYMMDD
+eff_date	åˆåŒç”Ÿæ•ˆæ—¥æœŸ	YYYYMMDD
+app_id_type	æŠ•ä¿äººèº«ä»½è¯ä»¶ç±»å‹	mapping
+ins_cus_pro	è¢«ä¿é™©äººå®¢æˆ·ç±»å‹	mapping
+relation	æŠ•ä¿äººã€è¢«ä¿é™©äººä¹‹é—´çš„å…³ç³»	mapping
+legal_type	å—ç›Šäººæ ‡è¯†	mapping
+benefit_cus_pro	å—ç›Šäººç±»å‹	mapping
+benefit_cst_no	å—ç›Šäººå®¢æˆ·å·	@N
+cur_code	å¸ç§	mapping
+prof_type	ä¸šåŠ¡ç§ç±»	mapping
+del_way	äº¤è´¹æ–¹å¼	mapping
+del_period	ç¼´è´¹é—´éš”	mapping
+subject	ä¿é™©æ ‡çš„ç‰©	@N
+tsf_flag	ç°è½¬æ ‡è¯†	mapping
+
 */
 select 
-	'' as Company_codel,-- »ú¹¹Íøµã´úÂë
-	'' as Company_code2,-- ½ğÈÚ»ú¹¹±àÂë
-	'' as Company_code3,-- ±£µ¥¹éÊô»ú¹¹Íøµã´úÂë
-	a.C_PLY_NO as  Pol_no,-- ±£µ¥ºÅ
-	a.C_APP_NO as App_no,-- Í¶±£µ¥ºÅ
-	a.C_PLY_STS as Ins_state,-- ±£µ¥×´Ì¬
-	a.C_BSNS_TYP as Sale_type,-- ÏúÊÛÇşµÀ
-	a.C_BSNS_SUBTYP as Sale_name,-- ÏúÊÛÇşµÀÃû³Æ
-	a.T_APP_TM as Ins_date,-- Í¶±£ÈÕÆÚ
-	a.T_INSRNC_BGN_TM as Eff_date,-- ºÏÍ¬ÉúĞ§ÈÕÆÚ
-	b.C_APP_NME as App_name,-- Í¶±£ÈËÃû³Æ
-	b.C_APP_CDE as App_cst_no,-- Í¶±£ÈË¿Í»§ºÅ
-	b.C_CERTF_CLS as App_id_type,-- Í¶±£ÈËÉí·İÖ¤¼şÀàĞÍ
-	b.C_CERTF_CDE as App_id_no,-- Í¶±£ÈËÖ¤¼şºÅÂë
-	c.C_INSURED_NME as Ins_name,-- ±»±£ÏÕÈËÃû³Æ
-	c.C_INSURED_CDE as Ins_cst_no,-- ±»±£ÏÕÈË¿Í»§ºÅ
-	c.C_CERTF_CDE as Ins_id_no,-- ±»±£ÏÕÈËÖ¤¼şºÅÂë
-	c.C_CLNT_MRK as Ins_cus_pro,-- ±»±£ÏÕÈË¿Í»§ÀàĞÍ
-	c.C_APP_RELATION as Relation,-- Í¶±£ÈË¡¢±»±£ÏÕÈËÖ®¼äµÄ¹ØÏµ
-  '' as Legal_type,-- ÊÜÒæÈË±êÊ¶
-  '' as Benefit_cus_pro,-- ÊÜÒæÈËÀàĞÍ
-	d.C_BNFC_NME as  Benefit_name,-- ÊÜÒæÈËÃû³Æ
-	d.C_BNFC_CDE as  Benefit_cst_no,-- ÊÜÒæÈË¿Í»§ºÅ
-	d.C_CERTF_CDE as Benefit_id_no,-- ÊÜÒæÈËÉí·İÖ¤ºÅÂë
-  a.C_PROD_NO as Ins_no,-- ÏÕÖÖ´úÂë
-  'CNY' as Cur_code,-- ±ÒÖÖ
-  '' as Pre_amt,-- ±¾ÆÚ½»±£·Ñ½ğ¶î
-  '' as Usd_amt,-- ÕÛºÏÃÀÔª½ğ¶î
-  a.C_PROD_NO as  Prof_type,-- ÒµÎñÖÖÀà
-  '' as Del_way,-- ½»·Ñ·½Ê½
-  '' as Del_period,-- ½É·Ñ¼ä¸ô
-  '' as `Limit`,-- ½»·ÑÆÚÊı
-  '' as Subject,-- ±£ÏÕ±êµÄÎï
-  '' as Tsf_flag,-- ÏÖ×ª±êÊ¶
-  '' as Acc_name,-- ½»·ÑÕËºÅÃû³Æ
-  '' as Acc_no,-- ½»·ÑÕËºÅ
-  '' as Acc_bank,-- ½»·ÑÕË»§¿ª»§»ú¹¹Ãû³Æ
-  a.C_APP_NO  as Receipt_n-- ×÷ÒµÁ÷Ë®ºÅ,Î¨Ò»±êÊ¶ºÅ
-  from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
-  left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.C_PLY_NO=b.C_PLY_NO
-  left join ods_cthx_web_ply_INSURED PARTITION(pt20190609000000) c on a.C_PLY_NO=c.C_PLY_NO
-  left join ods_cthx_web_ply_bnfc PARTITION(pt20190609000000) d on a.C_PLY_NO=d.C_PLY_NO
+	'' as Company_codel,-- æœºæ„ç½‘ç‚¹ä»£ç 
+	'' as Company_code2,-- é‡‘èæœºæ„ç¼–ç 
+	'' as Company_code3,-- ä¿å•å½’å±æœºæ„ç½‘ç‚¹ä»£ç 
+	a.C_PLY_NO as  Pol_no,-- ä¿å•å·
+	a.C_APP_NO as App_no,-- æŠ•ä¿å•å·
+	a.C_PLY_STS as Ins_state,-- ä¿å•çŠ¶æ€
+	a.C_BSNS_TYP as Sale_type,-- é”€å”®æ¸ é“
+	a.C_BSNS_SUBTYP as Sale_name,-- é”€å”®æ¸ é“åç§°
+	date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- æŠ•ä¿æ—¥æœŸ
+	date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- åˆåŒç”Ÿæ•ˆæ—¥æœŸ
+	b.C_APP_NME as App_name,-- æŠ•ä¿äººåç§°
+	b.C_APP_CDE as App_cst_no,-- æŠ•ä¿äººå®¢æˆ·å·
+	RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- æŠ•ä¿äººèº«ä»½è¯ä»¶ç±»å‹
+	b.C_CERTF_CDE as App_id_no,-- æŠ•ä¿äººè¯ä»¶å·ç 
+	c.C_INSURED_NME as Ins_name,-- è¢«ä¿é™©äººåç§°
+	c.C_INSURED_CDE as Ins_cst_no,-- è¢«ä¿é™©äººå®¢æˆ·å·
+	c.C_CERTF_CDE as Ins_id_no,-- è¢«ä¿é™©äººè¯ä»¶å·ç 
+	c.C_CLNT_MRK as Ins_cus_pro,-- è¢«ä¿é™©äººå®¢æˆ·ç±»å‹
+	RIGHT(c.C_APP_RELATION, 2) as Relation,-- æŠ•ä¿äººã€è¢«ä¿é™©äººä¹‹é—´çš„å…³ç³»
+  '' as Legal_type,-- å—ç›Šäººæ ‡è¯†
+  '' as Benefit_cus_pro,-- å—ç›Šäººç±»å‹
+	d.C_BNFC_NME as  Benefit_name,-- å—ç›Šäººåç§°
+	d.C_BNFC_CDE as  Benefit_cst_no,-- å—ç›Šäººå®¢æˆ·å·
+	d.C_CERTF_CDE as Benefit_id_no,-- å—ç›Šäººèº«ä»½è¯å·ç 
+  a.C_PROD_NO as Ins_no,-- é™©ç§ä»£ç 
+  'CNY' as Cur_code,-- å¸ç§
+  '' as Pre_amt,-- æœ¬æœŸäº¤ä¿è´¹é‡‘é¢
+  '' as Usd_amt,-- æŠ˜åˆç¾å…ƒé‡‘é¢
+  RIGHT(a.C_PROD_NO, 2) as  Prof_type,-- ä¸šåŠ¡ç§ç±»
+  '' as Del_way,-- äº¤è´¹æ–¹å¼
+  '' as Del_period,-- ç¼´è´¹é—´éš”
+  '' as `Limit`,-- äº¤è´¹æœŸæ•°
+  '' as Subject,-- ä¿é™©æ ‡çš„ç‰©
+  '' as Tsf_flag,-- ç°è½¬æ ‡è¯†
+  '' as Acc_name,-- äº¤è´¹è´¦å·åç§°
+  '' as Acc_no,-- äº¤è´¹è´¦å·
+  '' as Acc_bank,-- äº¤è´¹è´¦æˆ·å¼€æˆ·æœºæ„åç§°
+  a.C_APP_NO  as Receipt_n-- ä½œä¸šæµæ°´å·,å”¯ä¸€æ ‡è¯†å·
+from ods_cthx_web_ply_base PARTITION(pt20190625000000) a
+  left join ods_cthx_web_ply_applicant PARTITION(pt20190625000000) b on a.C_PLY_NO=b.C_PLY_NO
+  left join ods_cthx_web_ply_INSURED PARTITION(pt20190625000000) c on a.C_PLY_NO=c.C_PLY_NO
+  left join ods_cthx_web_ply_bnfc PARTITION(pt20190625000000) d on a.C_PLY_NO=d.C_PLY_NO

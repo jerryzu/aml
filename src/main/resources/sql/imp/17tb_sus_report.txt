@@ -1,0 +1,13 @@
+/*
+detr	报告紧急程度	mapping
+dorp	报送方向	mapping
+tptr	可疑交易触发点	mapping
+istp	保险种类	mapping
+isps	保险期间	YYYYMMDDYYYYMMDD
+ispt	交费方式	mapping
+tstm	交易时间	YYYYMMDDHHMMSS
+ittp	交易类型	mapping
+crdr	资金进出方向	mapping
+cstp	资金进出方式	mapping
+mirs	人工补正标识	mapping@N
+*/

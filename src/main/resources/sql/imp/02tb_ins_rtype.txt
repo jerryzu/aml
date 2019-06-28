@@ -1,21 +1,21 @@
 /*
-Óï¾ä´íÎó
+ins_type	é™©ç§åˆ†ç±»	mapping
 */
-select '' as Head_no, -- ·¨ÈË»ú¹¹±¨¸æ»ú¹¹±àÂë£¬ÑëĞĞÍ³Ò»·ÖÅä
-       a.C_DPT_CDE as Company_code1, -- »ú¹¹Íøµã´úÂë£¬ÄÚ²¿µÄ»ú¹¹±àÂë
-       case when d.C_NME_CN='»ú¶¯³µÁ¾±£ÏÕ' then '10' -- ³µÏÕ
-            when d.C_NME_CN in ('ÆóÒµ²Æ²úÏÕ','¼ÒÍ¥²Æ²úÏÕ') then '11' -- ²Æ²úÏÕ
-					  when d.C_NME_CN in ('»õÎïÔËÊäÏÕ','´¬²°±£ÏÕ','ÌØÊâ·çÏÕ±£ÏÕ') then '12' -- ´¬»õÌØÏÕ
-						when d.C_NME_CN='ÔğÈÎÏÕ' then '13' -- ÔğÈÎ±£ÏÕ
-						when d.C_NME_CN in('¶ÌÆÚ½¡¿µ±£ÏÕ','ÒâÍâÏÕ') then '14' -- ¶ÌÆÚ½¡¿µ¡¢ÒâÍâ±£ÏÕ
-            when d.C_NME_CN in('ĞÅÓÃ±£ÏÕ','±£Ö¤±£ÏÕ') then '15'  -- ĞÅÓÃ±£Ö¤±£ÏÕ
-						when d.C_NME_CN in('Å©ÒµÏÕ','Å©Òµ±£ÏÕ') then '16'  -- Å©Òµ±£ÏÕ
-						when d.C_NME_CN in('¹¤³ÌÏÕ','×ÛºÏÏÕ','ÑøÖ³Òµ','ÁÖÒµÏÕ') then '17'  -- ÆäËû
-            else '15'  -- ÆäËû
-            end as Ins_type, -- ÏÕÖÖ·ÖÀà
-			 c.C_PROD_NO as Ins_no, -- ÏÕÖÖ´úÂë
-			 c.C_NME_CN as  Ins_name -- ÏÕÖÖÃû³Æ
-  from ods_cthx_web_org_dpt PARTITION(20190609000000) a 
-  left join WEB_ORG_DPT_MAP PARTITION(20190609000000) b on a.c_dpt_cde=b.c_dpt_cde
-  left join ods_cthx_web_prd_prod PARTITION(20190609000000) c b.c_kind_no=c.c_kind_no
-  left join ods_cthx_web_prd_kind PARTITION(20190609000000) d on c.C_KIND_NO=d.C_KIND_NO
+select '' as Head_no, -- æ³•äººæœºæ„æŠ¥å‘Šæœºæ„ç¼–ç ï¼Œå¤®è¡Œç»Ÿä¸€åˆ†é…
+       a.C_DPT_CDE as Company_code1, -- æœºæ„ç½‘ç‚¹ä»£ç ï¼Œå†…éƒ¨çš„æœºæ„ç¼–ç 
+       case when d.C_NME_CN='æœºåŠ¨è½¦è¾†ä¿é™©' then '10' -- è½¦é™©
+            when d.C_NME_CN in ('ä¼ä¸šè´¢äº§é™©','å®¶åº­è´¢äº§é™©') then '11' -- è´¢äº§é™©
+					  when d.C_NME_CN in ('è´§ç‰©è¿è¾“é™©','èˆ¹èˆ¶ä¿é™©','ç‰¹æ®Šé£é™©ä¿é™©') then '12' -- èˆ¹è´§ç‰¹é™©
+						when d.C_NME_CN='è´£ä»»é™©' then '13' -- è´£ä»»ä¿é™©
+						when d.C_NME_CN in('çŸ­æœŸå¥åº·ä¿é™©','æ„å¤–é™©') then '14' -- çŸ­æœŸå¥åº·ã€æ„å¤–ä¿é™©
+            when d.C_NME_CN in('ä¿¡ç”¨ä¿é™©','ä¿è¯ä¿é™©') then '15'  -- ä¿¡ç”¨ä¿è¯ä¿é™©
+						when d.C_NME_CN in('å†œä¸šé™©','å†œä¸šä¿é™©') then '16'  -- å†œä¸šä¿é™©
+						when d.C_NME_CN in('å·¥ç¨‹é™©','ç»¼åˆé™©','å…»æ®–ä¸š','æ—ä¸šé™©') then '17'  -- å…¶ä»–
+            else '15'  -- å…¶ä»–
+            end as Ins_type, -- é™©ç§åˆ†ç±» --REF
+			 c.C_PROD_NO as Ins_no, -- é™©ç§ä»£ç 
+			 c.C_NME_CN as  Ins_name -- é™©ç§åç§°
+  from ods_cthx_web_org_dpt PARTITION(pt20190625000000) a 
+  left join ods_cthx_web_org_dpt_map PARTITION(pt20190625000000) b on a.c_dpt_cde=b.c_dpt_cde
+  left join ods_cthx_web_prd_prod PARTITION(pt20190625000000) c on b.c_kind_no=c.c_kind_no
+  left join ods_cthx_web_prd_kind PARTITION(pt20190625000000) d on c.C_KIND_NO=d.C_KIND_NO

@@ -1,46 +1,63 @@
 /*
-date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- Í¶±£ÈÕÆÚ
-date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- ºÏÍ¬ÉúĞ§ÈÕÆÚ
-WEB_PLY_BNFC±í²»¿ÉÓÃ
-*/
+date_format(a.t_app_tm,'%y%m%d') as ins_date,-- æŠ•ä¿æ—¥æœŸ
+date_format(a.t_insrnc_bgn_tm,'%y%m%d') as eff_date,-- åˆåŒç”Ÿæ•ˆæ—¥æœŸ
+Cur_code1	é»˜è®¤CNY
+Usd_amt_all	é»˜è®¤-9999
+Cur_code2	é»˜è®¤CNY
+Pay_usd_amt	é»˜è®¤-9999
 
+ins_date	æŠ•ä¿æ—¥æœŸ	YYYYMMDD
+eff_date	åˆåŒç”Ÿæ•ˆæ—¥æœŸ	YYYYMMDD
+cur_code1	å¸ç§	mapping
+app_cus_pro	æŠ•ä¿äººå®¢æˆ·ç±»å‹	mapping
+ins_cus_pro	è¢«ä¿é™©äººå®¢æˆ·ç±»å‹	mapping
+benefit_pro	å—ç›Šäººç±»å‹	mapping
+relation_1	æŠ•ä¿äººè¢«ä¿äººä¹‹é—´çš„å…³ç³»	mapping
+relation_2	å—ç›Šäººè¢«ä¿äººä¹‹é—´çš„å…³ç³»	mapping
+pay_type	ç»™ä»˜ç±»å‹	mapping
+cur_code2	å¸ç§	mapping
+tsf_flag	ç»™ä»˜æ–¹å¼	mapping
+*/
 select
-'' as Company_codel,-- »ú¹¹Íøµã´úÂë
-'' as Company_code2,-- ½ğÈÚ»ú¹¹±àÂë
-'' as Company_code3,-- ±£µ¥¹éÊô»ú¹¹Íøµã´úÂë
-'' as Company_code4,-- ÊÜÀíÒµÎñ»ú¹¹Íøµã´úÂë
-a.C_PLY_NO as Pol_no,-- ±£µ¥ºÅ
-a.C_APP_NO as App_no,-- Í¶±£µ¥ºÅ
-date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- Í¶±£ÈÕÆÚ
-date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- ºÏÍ¬ÉúĞ§ÈÕÆÚ
-'' as Cur_code1,-- ±ÒÖÖ
-'' as Pre_amt_all,-- ÀÛ¼Æ±£·Ñ½ğ¶î
-'' as Usd_amt_all,-- ÀÛ¼Æ±£·ÑÕÛºÏÃÀÔª½ğ¶î
-b.C_INSURED_NME as App_name,-- Í¶±£ÈËÃû³Æ
-b.C_INSURED_CDE as App_cst_no,-- Í¶±£ÈË¿Í»§ºÅ
-b.C_CERTF_CDE as App_id_no,-- Í¶±£ÈËÖ¤¼şºÅÂë
-b.C_CLNT_MRK as App_cus_pro,-- Í¶±£ÈË¿Í»§ÀàĞÍ
-c.C_INSURED_NME as Ins_name,-- ±»±£ÏÕÈË¿Í»§Ãû³Æ
-c.C_INSURED_CDE as Ins_cst_no,-- ±»±£ÏÕÈË¿Í»§ºÅ
-c.C_CERTF_CDE as Ins_id_no,-- ±»±£ÏÕÈËÖ¤¼şºÅÂë
-c.C_CLNT_MRK as Ins_cus_pro,-- ±»±£ÏÕÈË¿Í»§ÀàĞÍ
-d.C_BNFC_NME as Benefit_name,-- ÊÜÒæÈËÃû³Æ
-d.C_BNFC_CERT_NO as Benefit_id_no,-- ÊÜÒæÈËÉí·İÖ¤¼şºÅÂë
-'' as Benefit_pro,-- ÊÜÒæÈËÀàĞÍ
-d.C_APP_RELATION as Relation_1,-- Í¶±£ÈË±»±£ÈËÖ®¼äµÄ¹ØÏµ
-'' as Relation_2,-- ÊÜÒæÈË±»±£ÈËÖ®¼äµÄ¹ØÏµ
-'' as Pay_type,-- ¸ø¸¶ÀàĞÍ
-'' as Rpay_date,-- ¸ø¸¶ÒµÎñ°ìÀíÈÕÆÚ
-'' as Pay_date,-- ×Ê½ğ½»Ò×ÈÕÆÚ
-'' as Cur_code2,-- ±ÒÖÖ
-'' as Pay_amt,-- ¸ø¸¶½ğ¶î
-'' as Pay_usd_amt,-- ÕÛºÏÃÀÔª½ğ¶î
-'' as Tsf_flag,-- ¸ø¸¶·½Ê½
-'' as Acc_name,-- ÊÕ¿îÕËºÅÃû³Æ
-'' as Acc_no,-- ÊÕ¿îÕËºÅ
-'' as Acc_bank,-- ÊÕ¿îÕË»§¿ª»§»ú¹¹Ãû³Æ
-'' as Receipt_no-- ×÷ÒµÁ÷Ë®ºÅ,Î¨Ò»±êÊ¶ºÅ
-from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
-left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.c_ply_no=b.c_ply_no
-left join nvhlpcis.web_app_insured PARTITION(pt20190609000000) c on a.c_ply_no=c.c_ply_no
-left join WEB_PLY_BNFC PARTITION(pt20190609000000) d on  a.c_ply_no=d.c_ply_no
+'' as company_codel,-- æœºæ„ç½‘ç‚¹ä»£ç 
+'' as company_code2,-- é‡‘èæœºæ„ç¼–ç 
+'' as company_code3,-- ä¿å•å½’å±æœºæ„ç½‘ç‚¹ä»£ç 
+'' as company_code4,-- å—ç†ä¸šåŠ¡æœºæ„ç½‘ç‚¹ä»£ç 
+a.c_ply_no as pol_no,-- ä¿å•å·
+a.c_app_no as app_no,-- æŠ•ä¿å•å·
+date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- æŠ•ä¿æ—¥æœŸ
+date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- åˆåŒç”Ÿæ•ˆæ—¥æœŸ
+'' as cur_code1,-- å¸ç§
+'' as pre_amt_all,-- ç´¯è®¡ä¿è´¹é‡‘é¢
+'' as usd_amt_all,-- ç´¯è®¡ä¿è´¹æŠ˜åˆç¾å…ƒé‡‘é¢
+ b.c_app_nme as app_name,-- æŠ•ä¿äººåç§°
+ b.c_app_cde as app_cst_no,-- æŠ•ä¿äººå®¢æˆ·å·
+b.c_certf_cde as app_id_no,-- æŠ•ä¿äººè¯ä»¶å·ç 
+b.c_clnt_mrk as app_cus_pro,-- æŠ•ä¿äººå®¢æˆ·ç±»å‹
+c.c_insured_nme as ins_name,-- è¢«ä¿é™©äººå®¢æˆ·åç§°
+c.c_insured_cde as ins_cst_no,-- è¢«ä¿é™©äººå®¢æˆ·å·
+c.c_certf_cde as ins_id_no,-- è¢«ä¿é™©äººè¯ä»¶å·ç 
+c.c_clnt_mrk as ins_cus_pro,-- è¢«ä¿é™©äººå®¢æˆ·ç±»å‹
+d.c_bnfc_nme as benefit_name,-- å—ç›Šäººåç§°
+-- d.c_bnfc_cert_no   as benefit_id_no,-- å—ç›Šäººèº«ä»½è¯ä»¶å·ç 
+''   as benefit_id_no,-- å—ç›Šäººèº«ä»½è¯ä»¶å·ç 
+'' as benefit_pro,-- å—ç›Šäººç±»å‹
+-- d.c_app_relation as relation_1,-- æŠ•ä¿äººè¢«ä¿äººä¹‹é—´çš„å…³ç³»
+'' as relation_1,-- æŠ•ä¿äººè¢«ä¿äººä¹‹é—´çš„å…³ç³»
+'' as relation_2,-- å—ç›Šäººè¢«ä¿äººä¹‹é—´çš„å…³ç³»
+'' as pay_type,-- ç»™ä»˜ç±»å‹
+'' as rpay_date,-- ç»™ä»˜ä¸šåŠ¡åŠç†æ—¥æœŸ
+'' as pay_date,-- èµ„é‡‘äº¤æ˜“æ—¥æœŸ
+'' as cur_code2,-- å¸ç§
+'' as pay_amt,-- ç»™ä»˜é‡‘é¢
+'' as pay_usd_amt,-- æŠ˜åˆç¾å…ƒé‡‘é¢
+'' as tsf_flag,-- ç»™ä»˜æ–¹å¼
+'' as acc_name,-- æ”¶æ¬¾è´¦å·åç§°
+'' as acc_no,-- æ”¶æ¬¾è´¦å·
+'' as acc_bank,-- æ”¶æ¬¾è´¦æˆ·å¼€æˆ·æœºæ„åç§°
+'' as receipt_no-- ä½œä¸šæµæ°´å·,å”¯ä¸€æ ‡è¯†å·
+from ods_cthx_web_ply_base partition(pt20190625000000) a
+left join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+left join ods_cthx_web_app_insured partition(pt20190625000000) c on a.C_APP_NO=c.C_APP_NO
+left join ods_cthx_web_ply_bnfc partition(pt20190625000000) d on  a.c_ply_no=d.c_ply_no
+

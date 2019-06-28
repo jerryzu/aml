@@ -1,15 +1,17 @@
 /*
-RIGHT(a.C_CUST_RISK_RANK, 2) as Risk_code,-- ·çÏÕµÈ¼¶
+RIGHT(a.C_CUST_RISK_RANK, 2) as Risk_code,-- é£é™©ç­‰çº§
+risk_code	é£é™©ç­‰çº§	mapping
+first_type	é¦–æ¬¡æ ‡è¯†	mapping
 */
 select 
-'' as Company_codel,-- »ú¹¹Íøµã´úÂë
-'' as Company_code2,-- ½ğÈÚ»ú¹¹±àÂë
-'' as Company_code3,-- ±£µ¥¹éÊô»ú¹¹Íøµã´úÂë
-a.C_APP_NME as App_name,-- Í¶±£ÈËÃû³Æ
-a.C_APP_CDE as App_cst_no,-- Í¶±£ÈË¿Í»§ºÅ
-a.C_CERTF_CDE as App_id_no,-- Í¶±£ÈËÖ¤¼şºÅÂë
-RIGHT(a.C_CUST_RISK_RANK, 2) as Risk_code,-- ·çÏÕµÈ¼¶
-'' as Div_date,-- »®·ÖÈÕÆÚ
-'' as Score,-- ÆÀ·Ö·ÖÖµ
-'' as Norm-- »®·ÖÒÀ¾İ
-from ods_cthx_web_ply_applicant PARTITION(pt20190609000000) a
+'' as Company_codel,-- æœºæ„ç½‘ç‚¹ä»£ç 
+'' as Company_code2,-- é‡‘èæœºæ„ç¼–ç 
+'' as Company_code3,-- ä¿å•å½’å±æœºæ„ç½‘ç‚¹ä»£ç 
+a.C_APP_NME as App_name,-- æŠ•ä¿äººåç§°
+a.C_APP_CDE as App_cst_no,-- æŠ•ä¿äººå®¢æˆ·å·
+a.C_CERTF_CDE as App_id_no,-- æŠ•ä¿äººè¯ä»¶å·ç 
+RIGHT(a.C_CUST_RISK_RANK, 2) as Risk_code,-- é£é™©ç­‰çº§
+'' as Div_date,-- åˆ’åˆ†æ—¥æœŸ
+'' as Score,-- è¯„åˆ†åˆ†å€¼
+'' as Norm-- åˆ’åˆ†ä¾æ®
+from ods_cthx_web_ply_applicant PARTITION(pt20190625000000) a

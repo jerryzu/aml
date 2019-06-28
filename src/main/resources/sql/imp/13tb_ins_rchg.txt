@@ -1,19 +1,21 @@
 /*
-
+app_date	ç”³è¯·æ—¥æœŸ	YYYYMMDD
+chg_date	å˜æ›´æˆ–æ‰¹æ”¹æ—¥æœŸ	YYYYMMDD
+item	ä¿å…¨/æ‰¹æ”¹é¡¹ç›®	mapping
 */
 select
-'' as Company_codel,-- »ú¹¹Íøµã´úÂë
-'' as Company_code2,-- ½ğÈÚ»ú¹¹±àÂë
-'' as Company_code3,-- ±£µ¥¹éÊô»ú¹¹Íøµã´úÂë
-'' as Company_code4,-- ÊÜÀíÒµÎñ»ú¹¹Íøµã´úÂë
-a.C_PLY_NO as Pol_no,-- ±£µ¥ºÅ
-a.C_APP_NO as App_no,-- Í¶±£µ¥ºÅ
-b.C_APP_NME as App_name,-- Í¶±£ÈËÃû³Æ
-b.C_APP_CDE as App_cst_no,-- Í¶±£ÈË¿Í»§ºÅ
-date_format(a.T_EDR_APP_TM,'%Y%m%d') as App_date,-- ÉêÇëÈÕÆÚ
-date_format(a.T_EDR_BGN_TM,'%Y%m%d') as Chg_date,-- ±ä¸ü»òÅú¸ÄÈÕÆÚ
-a.C_EDR_NO as Chg_no,-- Åúµ¥ºÅ
-a.C_EDR_RSN_BUNDLE_CDE as Item,-- ±£È«/Åú¸ÄÏîÄ¿
-a.C_EDR_CTNT as Con_bef-- ±ä¸üÄÚÈİÕªÒª
-from ods_cthx_web_ply_base partition(pt20190609000000) a
-left join ods_cthx_web_ply_applicant partition(pt20190609000000) b on a.c_ply_no=b.c_ply_no
+'' as Company_codel,-- æœºæ„ç½‘ç‚¹ä»£ç 
+'' as Company_code2,-- é‡‘èæœºæ„ç¼–ç 
+'' as Company_code3,-- ä¿å•å½’å±æœºæ„ç½‘ç‚¹ä»£ç 
+'' as Company_code4,-- å—ç†ä¸šåŠ¡æœºæ„ç½‘ç‚¹ä»£ç 
+a.C_PLY_NO as Pol_no,-- ä¿å•å·
+a.C_APP_NO as App_no,-- æŠ•ä¿å•å·
+b.C_APP_NME as App_name,-- æŠ•ä¿äººåç§°
+b.C_APP_CDE as App_cst_no,-- æŠ•ä¿äººå®¢æˆ·å·
+date_format(a.T_EDR_APP_TM,'%Y%m%d') as App_date,-- ç”³è¯·æ—¥æœŸ
+date_format(a.T_EDR_BGN_TM,'%Y%m%d') as Chg_date,-- å˜æ›´æˆ–æ‰¹æ”¹æ—¥æœŸ
+a.C_EDR_NO as Chg_no,-- æ‰¹å•å·
+a.C_EDR_RSN_BUNDLE_CDE as Item,-- ä¿å…¨/æ‰¹æ”¹é¡¹ç›®
+a.C_EDR_CTNT as Con_bef-- å˜æ›´å†…å®¹æ‘˜è¦
+from ods_cthx_web_ply_base partition(pt20190625000000) a
+left join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no

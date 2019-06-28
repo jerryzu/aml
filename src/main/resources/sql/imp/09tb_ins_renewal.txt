@@ -1,30 +1,38 @@
 /*
-date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- Í¶±£ÈÕÆÚ
-RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- Í¶±£ÈËÉí·İÖ¤¼şÀàĞÍ
+date_format(a.t_app_tm,'%y%m%d') as ins_date,-- æŠ•ä¿æ—¥æœŸ
+right(b.c_certf_cls, 2) as app_id_type,-- æŠ•ä¿äººèº«ä»½è¯ä»¶ç±»å‹
+
+Cur_code	é»˜è®¤CNY
+Usd_amt	é»˜è®¤-9999
+
+ins_date	æŠ•ä¿æ—¥æœŸ	YYYYMMDD
+app_id_type	æŠ•ä¿äººèº«ä»½è¯ä»¶ç±»å‹	mapping
+cur_code	å¸ç§	mapping
+tsf_flag	ç°è½¬æ ‡è¯†	mapping
 */
 select
-'' as Company_codel,-- »ú¹¹Íøµã´úÂë
-'' as Company_code2,-- ½ğÈÚ»ú¹¹±àÂë
-'' as Company_code3,-- ±£µ¥¹éÊô»ú¹¹Íøµã´úÂë
-'' as Company_code4,-- ÊÜÀíÒµÎñ»ú¹¹Íøµã´úÂë
-a.C_PLY_NO as Pol_no,-- ±£µ¥ºÅ
-a.C_APP_NO as App_no,-- Í¶±£µ¥ºÅ
-date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- Í¶±£ÈÕÆÚ
-b.C_APP_NME as App_name,-- Í¶±£ÈËÃû³Æ
-b.C_APP_CDE as App_cst_no,-- Í¶±£ÈË¿Í»§ºÅ
-RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- Í¶±£ÈËÉí·İÖ¤¼şÀàĞÍ
-b.C_CERTF_CDE as App_id_no,-- Í¶±£ÈËÖ¤¼şºÅÂë
-a.C_PROD_NO as Ins_no,-- ÏÕÖÖ´úÂë
-'' as Renew_date,-- ÒµÎñ·¢ÉúÈÕÆÚ
-'' as Pay_date,-- ×Ê½ğ½»Ò×ÈÕÆÚ
-'' as Cur_code,-- ±ÒÖÖ
-'' as Pre_amt,-- ±¾ÆÚ½»±£·Ñ½ğ¶î
-'' as Usd_amt,-- ÕÛºÏÃÀÔª½ğ¶î
-'' as Tsf_flag,-- ÏÖ×ª±êÊ¶
-'' as Acc_name,-- ½»·ÑÕËºÅÃû³Æ
-'' as Acc_no,-- ½»·ÑÕËºÅ
-'' as Acc_bank,-- ½»·ÑÕË»§¿ª»§»ú¹¹Ãû³Æ
-'' as Receipt_no,-- ×÷ÒµÁ÷Ë®ºÅ,Î¨Ò»±êÊ¶ºÅ
-a.C_EDR_NO as Endorse_no-- Åúµ¥ºÅ
-from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
-left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.c_ply_no=b.c_ply_no
+'' as company_codel,-- æœºæ„ç½‘ç‚¹ä»£ç 
+'' as company_code2,-- é‡‘èæœºæ„ç¼–ç 
+'' as company_code3,-- ä¿å•å½’å±æœºæ„ç½‘ç‚¹ä»£ç 
+'' as company_code4,-- å—ç†ä¸šåŠ¡æœºæ„ç½‘ç‚¹ä»£ç 
+a.c_ply_no as pol_no,-- ä¿å•å·
+a.c_app_no as app_no,-- æŠ•ä¿å•å·
+date_format(a.t_app_tm,'%y%m%d') as ins_date,-- æŠ•ä¿æ—¥æœŸ
+b.c_app_nme as app_name,-- æŠ•ä¿äººåç§°
+b.c_app_cde as app_cst_no,-- æŠ•ä¿äººå®¢æˆ·å·
+right(b.c_certf_cls, 2) as app_id_type,-- æŠ•ä¿äººèº«ä»½è¯ä»¶ç±»å‹
+b.c_certf_cde as app_id_no,-- æŠ•ä¿äººè¯ä»¶å·ç 
+a.c_prod_no as ins_no,-- é™©ç§ä»£ç 
+'' as renew_date,-- ä¸šåŠ¡å‘ç”Ÿæ—¥æœŸ
+'' as pay_date,-- èµ„é‡‘äº¤æ˜“æ—¥æœŸ
+'' as cur_code,-- å¸ç§
+'' as pre_amt,-- æœ¬æœŸäº¤ä¿è´¹é‡‘é¢
+'' as usd_amt,-- æŠ˜åˆç¾å…ƒé‡‘é¢
+'' as tsf_flag,-- ç°è½¬æ ‡è¯†
+'' as acc_name,-- äº¤è´¹è´¦å·åç§°
+'' as acc_no,-- äº¤è´¹è´¦å·
+'' as acc_bank,-- äº¤è´¹è´¦æˆ·å¼€æˆ·æœºæ„åç§°
+'' as receipt_no,-- ä½œä¸šæµæ°´å·,å”¯ä¸€æ ‡è¯†å·
+a.c_edr_no as endorse_no-- æ‰¹å•å·
+from ods_cthx_web_ply_base partition(pt20190625000000) a
+left join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no

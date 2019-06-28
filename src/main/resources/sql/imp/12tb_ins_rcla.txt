@@ -1,46 +1,68 @@
+/**
+error
+Relation_1
+REF
+SELECT C_CDE, C_CNM, 'codeKind' FROM WEB_BAS_COMM_CODE WHERE C_PAR_CDE = '601' ORDER BY C_CDE 
+Cur_code	é»˜è®¤CNY
+Cla_usd_amt	é»˜è®¤-9999
+
+ins_date	æŠ•ä¿æ—¥æœŸ	YYYYMMDD
+eff_date	åˆåŒç”Ÿæ•ˆæ—¥æœŸ	YYYYMMDD
+app_cus_pro	æŠ•ä¿äººå®¢æˆ·ç±»å‹	mapping
+ins_cus_pro	è¢«ä¿é™©äººå®¢æˆ·ç±»å‹	mapping
+benefit_type	å—ç›Šäººç±»å‹	mapping
+relation_1	æŠ•ä¿äººè¢«ä¿äººä¹‹é—´çš„å…³ç³»	mapping
+relation_2	å—ç›Šäººè¢«ä¿äººä¹‹é—´çš„å…³ç³»	mapping
+cla_id_type	ç†èµ”ç”³è¯·äººèº«ä»½è¯ä»¶ç±»å‹	mapping
+cla_pro	ç†èµ”ç”³è¯·äººç±»å‹	mapping
+cur_code	å¸ç§	mapping
+tsf_flag	æ”¯ä»˜æ–¹å¼	mapping
+acc_type	å®é™…é¢†æ¬¾äººç±»å‹	mapping
+acc_id_type	å®é™…é¢†æ¬¾äººèº«ä»½è¯ä»¶ç±»å‹	mapping
+*/
 select 
-'' as Company_codel,-- »ú¹¹Íøµã´úÂë
-'' as Company_code2,-- ½ğÈÚ»ú¹¹±àÂë
-'' as Company_code3,-- ±£µ¥¹éÊô»ú¹¹Íøµã´úÂë
-'' as Company_code4,-- ÊÜÀíÒµÎñ»ú¹¹Íøµã´úÂë
-a.C_PLY_NO as Pol_no,-- ±£µ¥ºÅ
-a.C_APP_NO as App_no,-- Í¶±£µ¥ºÅ
-a.T_APP_TM as Ins_date,-- Í¶±£ÈÕÆÚ
-a.T_INSRNC_BGN_TM as Eff_date,-- ºÏÍ¬ÉúĞ§ÈÕÆÚ
-b.C_INSURED_NME as App_name,-- Í¶±£ÈËÃû³Æ
-b.C_INSURED_CDE as App_cst_no,-- Í¶±£ÈË¿Í»§ºÅ
-b.C_CERTF_CDE as App_id_no,-- Í¶±£ÈËÖ¤¼şºÅÂë
-b.C_CLNT_MRK as App_cus_pro,-- Í¶±£ÈË¿Í»§ÀàĞÍ
-c.C_INSURED_NME as Ins_name,-- ±»±£ÏÕÈË¿Í»§Ãû³Æ
-c.C_INSURED_CDE as Ins_cst_no,-- ±»±£ÏÕÈË¿Í»§ºÅ
-c.C_CERTF_CDE as Ins_id_no,-- ±»±£ÏÕÈËÖ¤¼şºÅÂë
-c.C_CLNT_MRK as Ins_cus_pro,-- ±»±£ÏÕÈË¿Í»§ÀàĞÍ
-d.C_BNFC_NME as Benefit_name,-- ÊÜÒæÈËÃû³Æ
-d.C_BNFC_CERT_NO as Benefit_id_no,-- ÊÜÒæÈËÉí·İÖ¤¼şºÅÂë
-'' as Benefit_type,-- ÊÜÒæÈËÀàĞÍ
-c.C_APP_RELATION as Relation_1,-- Í¶±£ÈË±»±£ÈËÖ®¼äµÄ¹ØÏµ
-'' as Relation_2,-- ÊÜÒæÈË±»±£ÈËÖ®¼äµÄ¹ØÏµ
-e.C_RPTMAN_NME as Cla_app_name,-- ÀíÅâÉêÇëÈËÃû³Æ
-'' as  Cla_id_type,-- ÀíÅâÉêÇëÈËÉí·İÖ¤¼şÀàĞÍ
-'' as  Cla_id_no,-- ÀíÅâÉêÇëÈËÉí·İÖ¤¼şºÅÂë
-e.C_INSURED_REL as Cla_pro,-- ÀíÅâÉêÇëÈËÀàĞÍ
-f.t_endcase_tm as Cla_date,-- ÀíÅâÈÕÆÚ
-'' as Cur_code,-- ±ÒÖÖ
-g.N_AMT as Cla_amt,-- ÀíÅâ½ğ¶î
-'' as Cla_usd_amt,-- ÕÛºÏÃÀÔª½ğ¶î
-f.c_clm_no Cla_no,-- Åâ°¸ºÅ
-'' as Tsf_flag,-- Ö§¸¶·½Ê½
-g.C_PAYEE_NME as Acc_name,-- Êµ¼ÊÁì¿îÈËÃû³Æ
-g.C_BANK_NUM as Acc_no,-- Êµ¼ÊÁì¿îÈËÕËºÅ
-g.C_BANK_CDE as Acc_bank,-- Êµ¼ÊÁì¿îÈË¿ª»§»ú¹¹
-g.C_PUB_PIV as Acc_type,-- Êµ¼ÊÁì¿îÈËÀàĞÍ
-g.C_CARD_TYPE as Acc_id_type,-- Êµ¼ÊÁì¿îÈËÉí·İÖ¤¼şÀàĞÍ
-g.C_ID_CARD as Acc_id_no,-- Êµ¼ÊÁì¿îÈËÉí·İÖ¤¼şºÅÂë
-'' as Receipt_no-- ×÷ÒµÁ÷Ë®ºÅ,Î¨Ò»±êÊ¶ºÅ
+'' as Company_codel,-- æœºæ„ç½‘ç‚¹ä»£ç 
+'' as Company_code2,-- é‡‘èæœºæ„ç¼–ç 
+'' as Company_code3,-- ä¿å•å½’å±æœºæ„ç½‘ç‚¹ä»£ç 
+'' as Company_code4,-- å—ç†ä¸šåŠ¡æœºæ„ç½‘ç‚¹ä»£ç 
+a.C_PLY_NO as Pol_no,-- ä¿å•å·
+a.C_APP_NO as App_no,-- æŠ•ä¿å•å·
+date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- æŠ•ä¿æ—¥æœŸ
+date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- åˆåŒç”Ÿæ•ˆæ—¥æœŸ
+b.C_INSURED_NME as App_name,-- æŠ•ä¿äººåç§°
+b.C_INSURED_CDE as App_cst_no,-- æŠ•ä¿äººå®¢æˆ·å·
+b.C_CERTF_CDE as App_id_no,-- æŠ•ä¿äººè¯ä»¶å·ç 
+b.C_CLNT_MRK as App_cus_pro,-- æŠ•ä¿äººå®¢æˆ·ç±»å‹
+c.C_INSURED_NME as Ins_name,-- è¢«ä¿é™©äººå®¢æˆ·åç§°
+c.C_INSURED_CDE as Ins_cst_no,-- è¢«ä¿é™©äººå®¢æˆ·å·
+c.C_CERTF_CDE as Ins_id_no,-- è¢«ä¿é™©äººè¯ä»¶å·ç 
+c.C_CLNT_MRK as Ins_cus_pro,-- è¢«ä¿é™©äººå®¢æˆ·ç±»å‹
+d.C_BNFC_NME as Benefit_name,-- å—ç›Šäººåç§°
+d.C_BNFC_CERT_NO as Benefit_id_no,-- å—ç›Šäººèº«ä»½è¯ä»¶å·ç 
+'' as Benefit_type,-- å—ç›Šäººç±»å‹
+c.C_APP_RELATION as Relation_1,-- æŠ•ä¿äººè¢«ä¿äººä¹‹é—´çš„å…³ç³»
+'' as Relation_2,-- å—ç›Šäººè¢«ä¿äººä¹‹é—´çš„å…³ç³»
+e.C_RPTMAN_NME as Cla_app_name,-- ç†èµ”ç”³è¯·äººåç§°
+'' as  Cla_id_type,-- ç†èµ”ç”³è¯·äººèº«ä»½è¯ä»¶ç±»å‹
+'' as  Cla_id_no,-- ç†èµ”ç”³è¯·äººèº«ä»½è¯ä»¶å·ç 
+e.C_INSURED_REL as Cla_pro,-- ç†èµ”ç”³è¯·äººç±»å‹
+date_format(f.t_endcase_tm,'%Y%m%d') as Cla_date,-- ç†èµ”æ—¥æœŸ
+'' as Cur_code,-- å¸ç§
+g.N_AMT as Cla_amt,-- ç†èµ”é‡‘é¢
+'' as Cla_usd_amt,-- æŠ˜åˆç¾å…ƒé‡‘é¢
+f.c_clm_no Cla_no,-- èµ”æ¡ˆå·
+'' as Tsf_flag,-- æ”¯ä»˜æ–¹å¼
+g.C_PAYEE_NME as Acc_name,-- å®é™…é¢†æ¬¾äººåç§°
+g.C_BANK_NUM as Acc_no,-- å®é™…é¢†æ¬¾äººè´¦å·
+g.C_BANK_CDE as Acc_bank,-- å®é™…é¢†æ¬¾äººå¼€æˆ·æœºæ„
+g.C_PUB_PIV as Acc_type,-- å®é™…é¢†æ¬¾äººç±»å‹
+g.C_CARD_TYPE as Acc_id_type,-- å®é™…é¢†æ¬¾äººèº«ä»½è¯ä»¶ç±»å‹
+g.C_ID_CARD as Acc_id_no,-- å®é™…é¢†æ¬¾äººèº«ä»½è¯ä»¶å·ç 
+'' as Receipt_no-- ä½œä¸šæµæ°´å·,å”¯ä¸€æ ‡è¯†å·
 from ods_cthx_web_ply_base a
 left join ods_cthx_web_ply_applicant b on a.c_ply_no=b.c_ply_no
-left join nvhlpcis.web_app_insured c on a.c_ply_no=c.c_ply_no
-left join WEB_PLY_BNFC d on  a.c_ply_no=d.c_ply_no
+left join ods_cthx_web_app_insured c on a.c_ply_no=c.c_ply_no
+left join ods_cthx_web_ply_bnfc d on  a.c_ply_no=d.c_ply_no
 left join ods_cthx_web_clm_rpt e
 left join ods_cthx_web_clmnv_endcase f
 left join ods_cthx_web_clm_bank g

@@ -1,31 +1,49 @@
 /*
-tb_ins_persÎÊÌâ
-open_time²»ÊÇYYYYMMDD
-id_typeĞèÒªÓ³Éä,ÔİÊ±ÓÒÈ¡¶ş
+tb_ins_persé—®é¢˜
+open_timeä¸æ˜¯YYYYMMDD
+id_typeéœ€è¦æ˜ å°„,æš‚æ—¶å³å–äºŒ
+ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼ï¼
+æ€§åˆ«	11:ç”·;12:å¥³
+å›½ç±åœ°åŒº	æŒ‰ç…§GB/T 2659-2000ä¸–ç•Œå„å›½å’Œåœ°åŒºåç§°ä»£ç æ ‡å‡†å¡«å†™ã€‚ä¸‰å­—ç¬¦æ‹‰ä¸å­—æ¯ç¼©å†™ï¼Œå¦‚CHNã€HKG
+èº«ä»½è¯ä»¶ç§ç±»	11:å±…æ°‘èº«ä»½è¯æˆ–ä¸´æ—¶èº«ä»½è¯;12:å†›äººæˆ–æ­¦è­¦èº«ä»½è¯ä»¶;13:æ¸¯æ¾³å±…æ°‘æ¥å¾€å†…åœ°é€šè¡Œè¯,å°æ¹¾å±…æ°‘æ¥å¾€å¤§é™†é€šè¡Œè¯æˆ–å…¶ä»–æœ‰æ•ˆæ—…æ¸¸è¯ä»¶;14:æ¸¯æ¾³å°å±…æ°‘å±…ä½è¯;16:æˆ·å£ç°¿;17:å‡ºç”Ÿè¯;18:å…¶ä»–ç±»ä¸ªäººèº«ä»½è¯ä»¶,
+a.C_OCCUP_CDE as Occupation_code, -- èŒä¸šä»£ç 
+REF
+select C_CDE,CONCAT(C_CDE,' ',C_CNM),'codeKind' from web_bas_codelist where c_par_cde='NVnewzhiyedaima' order by c_cde
 
+cst_no	å®¢æˆ·å·	@N
+open_time	å®¢æˆ·å·åˆ›å»ºæ—¥æœŸ	YYYYMMDD
+cst_sex 	æ€§åˆ«	mapping
+nation	å›½ç±åœ°åŒº	mapping
+id_type 	èº«ä»½è¯ä»¶ç§ç±»	mapping
+id_deadline 	èº«ä»½è¯ä»¶æœ‰æ•ˆæœŸé™åˆ°æœŸæ—¥	YYYYMMDD
+income	å¹´æ”¶å…¥	ä¸‡å…ƒä¿ç•™ä¸¤ä½å°æ•°
+contact2 	è”ç³»æ–¹å¼2	@N
+contact3 	è”ç³»æ–¹å¼3	@N
+address2	ä½æ‰€åœ°æˆ–å·¥ä½œå•ä½åœ°å€2	@N
+address3	ä½æ‰€åœ°æˆ–å·¥ä½œå•ä½åœ°å€3	@N
 */
-select b.C_DPT_CDE as Company_code1, -- »ú¹¹Íøµã´úÂë£¬ÄÚ²¿µÄ»ú¹¹±àÂë
-       '@N' as Company_code2, -- ½ğÈÚ»ú¹¹±àÂë£¬ÈËĞĞ¿Æ¼¼Ë¾ÖÆ¶¨µÄ14Î»½ğÈÚ±ê×¼»¯±àÂë  ÔİÊ±È¡¡°¼à¹Ü»ú¹¹Âë£¬»ú¹¹Íâ²¿Âë£¬ÁĞÎª¿Õ¡±
-       a.C_APP_CDE as Cst_no, -- ¿Í»§ºÅ
-       a.T_CRT_TM as Open_time,-- ¿Í»§ºÅ´´½¨ÈÕÆÚ
-       '' as Close_time, -- ½áÊøÒµÎñÈÕÆÚ£¬Èç¹ûÉĞÓĞÓĞĞ§±£µ¥¾ÍÌî @N
-       a.C_APP_NME as Acc_name, -- ¿Í»§Ãû³Æ
-       a.C_SEX as Cst_sex,-- ĞÔ±ğ
-       a.C_COUNTRY as Nation, -- ¹ú¼®
-       a.C_CERTF_CLS as Id_type, -- Éí·İÖ¤¼şÀàĞÍ
-			 a.C_CERTF_CDE as Id_no , -- Éí·İÖ¤¼şºÅÂë
-			 a.T_CERTF_END_DATE as Id_deadline,-- Éí·İÓĞĞ§ÆÚÏŞ£¬µ½ÆÚÈÕ
-       a.C_OCCUP_CDE as Occupation_code, -- Ö°Òµ´úÂë
-       '@N' as Occupation, -- Ö°Òµ
-       '-9999' as Income, -- ÄêÊÕÈë
-       a.C_MOBILE as Contact1,-- ÁªÏµ·½Ê½
-       a.C_TEL as Contact2,-- ÆäËûÁªÏµ·½Ê½1
-       a.C_FAX as Contact3,-- ÆäËûÁªÏµ·½Ê½2
-       a.C_CLNT_ADDR as Address1,-- µØÖ·1
-			 '@N' as Address2,-- µØÖ·2
-			 '@N' as Address3,-- µØÖ·3
-       a.C_WORK_DPT as Company,-- ¹¤×÷µ¥Î»Ãû³Æ
-       '' as Sys_name -- ÏµÍ³Ãû³Æ
-  from ods_cthx_web_ply_applicant PARTITION(pt20190609000000) a
-  left join ods_cthx_web_ply_base PARTITION(pt20190609000000) b on a.C_PLY_NO=b.C_PLY_NO
+select b.C_DPT_CDE as Company_code1, -- æœºæ„ç½‘ç‚¹ä»£ç ï¼Œå†…éƒ¨çš„æœºæ„ç¼–ç 
+       '@N' as Company_code2, -- é‡‘èæœºæ„ç¼–ç ï¼Œäººè¡Œç§‘æŠ€å¸åˆ¶å®šçš„14ä½é‡‘èæ ‡å‡†åŒ–ç¼–ç   æš‚æ—¶å–â€œç›‘ç®¡æœºæ„ç ï¼Œæœºæ„å¤–éƒ¨ç ï¼Œåˆ—ä¸ºç©ºâ€
+       a.C_APP_CDE as Cst_no, -- å®¢æˆ·å·
+       date_format(a.T_CRT_TM,'%Y%m%d') as Open_time,-- å®¢æˆ·å·åˆ›å»ºæ—¥æœŸ
+       '' as Close_time, -- ç»“æŸä¸šåŠ¡æ—¥æœŸï¼Œå¦‚æœå°šæœ‰æœ‰æ•ˆä¿å•å°±å¡« @N
+       a.C_APP_NME as Acc_name, -- å®¢æˆ·åç§°
+       a.C_SEX as Cst_sex,-- æ€§åˆ«
+       a.C_COUNTRY as Nation, -- å›½ç±
+       RIGHT(a.C_CERTF_CLS, 2) as Id_type, -- èº«ä»½è¯ä»¶ç±»å‹
+			 a.C_CERTF_CDE as Id_no , -- èº«ä»½è¯ä»¶å·ç 
+	date_format(a.T_CERTF_END_DATE,'%Y%m%d') as Id_deadline,-- èº«ä»½æœ‰æ•ˆæœŸé™ï¼Œåˆ°æœŸæ—¥
+       a.C_OCCUP_CDE as Occupation_code, -- èŒä¸šä»£ç 
+       '@N' as Occupation, -- èŒä¸š
+       '-9999' as Income, -- å¹´æ”¶å…¥
+       a.C_MOBILE as Contact1,-- è”ç³»æ–¹å¼
+       a.C_TEL as Contact2,-- å…¶ä»–è”ç³»æ–¹å¼1
+       a.C_FAX as Contact3,-- å…¶ä»–è”ç³»æ–¹å¼2
+       a.C_CLNT_ADDR as Address1,-- åœ°å€1
+			 '@N' as Address2,-- åœ°å€2
+			 '@N' as Address3,-- åœ°å€3
+       a.C_WORK_DPT as Company,-- å·¥ä½œå•ä½åç§°
+       '' as Sys_name -- ç³»ç»Ÿåç§°
+  from ods_cthx_web_ply_applicant PARTITION(pt20190625000000) a
+  left join ods_cthx_web_ply_base PARTITION(pt20190625000000) b on a.C_PLY_NO=b.C_PLY_NO
 where a.C_CLNT_MRK='1'

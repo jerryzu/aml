@@ -1,5 +1,7 @@
 package lab.crazyspark.bean;
 
+import java.sql.Date;
+
 import lab.crazyspark.annotation.Entity;
 import lab.crazyspark.annotation.Key;
 import lab.crazyspark.validator.constraint.AtLeastOneNotEmpty;
@@ -16,6 +18,8 @@ public class Company {
     private String company_code2;
 
     private String company_name;
+
+    private Date etl_date;
 
     @BordFlagCheck(message = "境内外标识输入错误", target = BordFlag.class)
     private String bord_flag;
@@ -64,5 +68,13 @@ public class Company {
 
     public void setBord_flag(String bord_flag) {
         this.bord_flag = bord_flag;
+    }
+
+    public Date getEtl_date() {
+        return etl_date;
+    }
+
+    public void setEtl_date(Date etl_date) {
+        this.etl_date = etl_date;
     }
 }

@@ -23,4 +23,3 @@ git push -u origin +master
 [jerry@j auditing]$ git add .
 [jerry@j auditing]$ git commit -m "打包依赖及"
 [jerry@j auditing]$ git push origin
-

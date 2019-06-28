@@ -1,0 +1,9 @@
+/*
+rlfc	金融机构与客户关系	mapping
+oitp	其他身份证件/证明文件类型	@N
+cbct	客户银行卡类型	mapping
+ocbt	客户银行卡其他类型	@N
+tsdr	资金收付标志	mapping
+cfct	对方金融机构网点类型	mapping
+octt	非柜台交易方式	mapping
+*/

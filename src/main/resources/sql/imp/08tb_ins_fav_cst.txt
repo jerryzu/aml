@@ -1,22 +1,30 @@
 /*
-nvhlpcis.web_app_insured --³ö´í
+Relation
+REF
+SELECT C_CDE, C_CNM, 'codeKind' FROM WEB_BAS_COMM_CODE WHERE C_PAR_CDE = '601' ORDER BY C_CDE 
+
+ins_date	æŠ•ä¿æ—¥æœŸ	YYYYMMDD
+insfav_type	è¢«ä¿äººæˆ–å—ç›Šäººæ ‡è¯†	mapping
+insbene_cus_pro	è¢«ä¿äººæˆ–å—ç›Šäººç±»å‹	mapping
+relation	æŠ•ä¿äººã€è¢«ä¿äººä¹‹é—´çš„å…³ç³»	mapping
+fav_type	å—ç›Šäººæ ‡è¯†	mapping
 */
 select
-'' as Company_codel,-- »ú¹¹Íøµã´úÂë
-'' as Company_code2,-- ½ğÈÚ»ú¹¹±àÂë
-'' as Company_code3,-- ±£µ¥¹éÊô»ú¹¹Íøµã´úÂë
-a.C_PLY_NO as Pol_no,-- ±£µ¥ºÅ
-a.T_APP_TM as Ins_date,-- Í¶±£ÈÕÆÚ
-b.C_INSURED_NME as App_name,-- Í¶±£ÈËÃû³Æ
-b.C_INSURED_CDE as App_cst_no,-- Í¶±£ÈË¿Í»§ºÅ
-b.C_CERTF_CDE as App_id_no,-- Í¶±£ÈËÖ¤¼şºÅÂë
-'11' as Insfav_type,-- ±»±£ÈË»òÊÜÒæÈË±êÊ¶
-c.C_CLNT_MRK as Insbene_cus_pro,-- ±»±£ÈË»òÊÜÒæÈËÀàĞÍ
-c.C_APP_RELATION as Relation,-- Í¶±£ÈË¡¢±»±£ÈËÖ®¼äµÄ¹ØÏµ
-'' as Fav_type,-- ÊÜÒæÈË±êÊ¶
-c.C_INSURED_NME as Name,-- ±»±£ÈË»òÊÜÒæÈËÃû³Æ
-c.C_INSURED_CDE as InsBene_cst_no,-- ±»±£ÏÕÈË»òÊÜÒæÈË¿Í»§ºÅ
-c.C_CERTF_CDE as Insbene_id_no-- ±»±£ÏÕÈË»òÊÜÒæÈËÉí·İÖ¤¼şºÅÂë
-from ods_cthx_web_ply_base PARTITION(pt20190609000000) a
-left join ods_cthx_web_ply_applicant PARTITION(pt20190609000000) b on a.c_ply_no=b.c_ply_no
-left join nvhlpcis.web_app_insured PARTITION(pt20190609000000) c on a.c_ply_no=c.c_ply_no
+'' as company_codel,-- æœºæ„ç½‘ç‚¹ä»£ç 
+'' as company_code2,-- é‡‘èæœºæ„ç¼–ç 
+'' as company_code3,-- ä¿å•å½’å±æœºæ„ç½‘ç‚¹ä»£ç 
+a.c_ply_no as pol_no,-- ä¿å•å·
+date_format(a.t_app_tm,'%y%m%d') as ins_date,-- æŠ•ä¿æ—¥æœŸ
+b.c_app_nme as app_name,-- æŠ•ä¿äººåç§°
+b.c_app_cde as app_cst_no,-- æŠ•ä¿äººå®¢æˆ·å·
+b.c_certf_cde as app_id_no,-- æŠ•ä¿äººè¯ä»¶å·ç 
+'11' as insfav_type,-- è¢«ä¿äººæˆ–å—ç›Šäººæ ‡è¯†
+c.c_clnt_mrk as insbene_cus_pro,-- è¢«ä¿äººæˆ–å—ç›Šäººç±»å‹
+right(c.c_app_relation, 2) as relation,-- æŠ•ä¿äººã€è¢«ä¿äººä¹‹é—´çš„å…³ç³»
+'' as fav_type,-- å—ç›Šäººæ ‡è¯†
+c.c_insured_nme as name,-- è¢«ä¿äººæˆ–å—ç›Šäººåç§°
+c.c_insured_cde as insbene_cst_no,-- è¢«ä¿é™©äººæˆ–å—ç›Šäººå®¢æˆ·å·
+c.c_certf_cde as insbene_id_no-- è¢«ä¿é™©äººæˆ–å—ç›Šäººèº«ä»½è¯ä»¶å·ç 
+from ods_cthx_web_ply_base partition(pt20190625000000) a
+left join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+left join ods_cthx_web_app_insured partition(pt20190625000000) c on a.c_app_no=c.c_app_no
