@@ -4,6 +4,7 @@ import sys, getopt
 import xlwt
 import pymysql
 import pandas as pd
+import configparser
 
 class MYSQL:
     def __init__(self):
@@ -11,20 +12,19 @@ class MYSQL:
 
     def connectDB(self):
         try:
+            config=configparser.ConfigParser()  
+            config.read('db.ini')
             self._connect = pymysql.Connect(
-                host='localhost',
-                port=3306,
-                user='root',
-                passwd='gemini',
-                db='antimoneylaundering',
-                charset='utf8'
+                host=config.get('mysql','host'),
+                port=config.getint('mysql','port'),
+                user=config.get('mysql','user'),
+                passwd=config.get('mysql','passwd'),
+                db=config.get('mysql','db'),
+                charset=config.get('mysql','charset')
             )
             return 0
         except:
             return -1
-
-    def __del__(self):
-        self._connect.close()
 
     def exportsheet(self, workbook, table_name):
         self._cursor = self._connect.cursor()
@@ -62,13 +62,13 @@ class MYSQL:
         self.exportsheet(workbook, 'tb_sus_report')
         workbook.save(output_path)
 
-    def exportcsv(self, output_path, table_name):
-        sql = 'select * from  ' + table_name
-        print(sql)
+    def exportcsv(self, output_path, sql):
         df = pd.read_sql(sql, con=self._connect)
         print(df.head())
         csvfile = output_path + '/' + table_name + '.csv'
-        df.to_csv(csvfile)
+        df.to_csv(csvfile,quotechar='"',sep='|' 
+        # ,line_terminator =''
+        )
 
     def exportcsvs(self, output_path):
         self.exportcsv(output_path, 'tb_company')
@@ -88,7 +88,6 @@ class MYSQL:
         self.exportcsv(output_path,  'tb_ins_risk')
         self.exportcsv(output_path,  'tb_lar_report')
         self.exportcsv(output_path,  'tb_sus_report')
-
 
 if __name__ == '__main__':
     argv = sys.argv[1:]

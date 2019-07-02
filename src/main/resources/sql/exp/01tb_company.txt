@@ -1,0 +1,8 @@
+SELECT    
+    concat('''', trim(head_no), '''') head_no,    
+    concat('''', company_code1, '''') company_code1,    
+    concat('''', company_code2, '''') company_code2,    
+    concat('''', company_name, '''') company_name,
+    concat('''', bord_flag, '''') bord_flag
+FROM
+    tb_company

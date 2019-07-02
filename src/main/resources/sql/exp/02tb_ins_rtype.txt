@@ -1,0 +1,7 @@
+select concat('''', head_no, '''') head_no,
+  concat('''', company_code1, '''') company_code1,
+  concat('''', ins_type, '''') ins_type,
+  concat('''', ins_no, '''') ins_no,
+  concat('''', ins_name, '''') ins_name
+from 
+  tb_ins_rtype

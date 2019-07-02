@@ -1,0 +1,16 @@
+select 
+    concat('''', company_code1, '''') company_code1,
+    concat('''', company_code2, '''') company_code2,
+    concat('''', company_code3, '''') company_code3,
+    concat('''', company_code4, '''') company_code4,
+    concat('''', pol_no, '''') pol_no,
+    concat('''', app_no, '''') app_no,
+    concat('''', app_name, '''') app_name,
+    concat('''', app_cst_no, '''') app_cst_no,
+    concat('''', app_date, '''') app_date,
+    concat('''', chg_date, '''') chg_date,
+    concat('''', chg_no, '''') chg_no,
+    concat('''', item, '''') item,
+    concat('''', con_bef, '''') con_bef
+from
+    tb_ins_rchg

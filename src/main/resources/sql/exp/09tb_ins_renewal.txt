@@ -1,0 +1,26 @@
+select 
+    concat('''', company_code1, '''') company_code1,
+    concat('''', company_code2, '''') company_code2,
+    concat('''', company_code3, '''') company_code3,
+    concat('''', company_code4, '''') company_code4,
+    concat('''', pol_no, '''') pol_no,
+    concat('''', app_no, '''') app_no,
+    concat('''', ins_date, '''') ins_date,
+    concat('''', app_name, '''') app_name,
+    concat('''', app_cst_no, '''') app_cst_no,
+    concat('''', app_id_type, '''') app_id_type,
+    concat('''', app_id_no, '''') app_id_no,
+    concat('''', ins_no, '''') ins_no,
+    concat('''', renew_date, '''') renew_date,
+    concat('''', pay_date, '''') pay_date,
+    concat('''', cur_code, '''') cur_code,
+    concat('''', pre_amt, '''') pre_amt,
+    concat('''', usd_amt, '''') usd_amt,
+    concat('''', tsf_flag, '''') tsf_flag,
+    concat('''', acc_name, '''') acc_name,
+    concat('''', acc_no, '''') acc_no,
+    concat('''', acc_bank, '''') acc_bank,
+    concat('''', receipt_no, '''') receipt_no,
+    concat('''', endorse_no, '''') endorse_no
+from
+    tb_ins_renewal    

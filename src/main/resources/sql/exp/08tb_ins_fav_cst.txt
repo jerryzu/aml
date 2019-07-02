@@ -1,0 +1,18 @@
+select 
+    concat('''', company_code1, '''') company_code1,
+    concat('''', company_code2, '''') company_code2,
+    concat('''', company_code3, '''') company_code3,
+    concat('''', pol_no, '''') pol_no,
+    concat('''', ins_date, '''') ins_date,
+    concat('''', app_name, '''') app_name,
+    concat('''', app_cst_no, '''') app_cst_no,
+    concat('''', app_id_no, '''') app_id_no,
+    concat('''', insfav_type, '''') insfav_type,
+    concat('''', insbene_cus_pro, '''') insbene_cus_pro,
+    concat('''', relation, '''') relation,
+    concat('''', fav_type, '''') fav_type,
+    concat('''', name, '''') name,
+    concat('''', insbene_cst_no, '''') insbene_cst_no,
+    concat('''', insbene_id_no, '''') insbene_id_no
+from 
+    tb_ins_fav_cst

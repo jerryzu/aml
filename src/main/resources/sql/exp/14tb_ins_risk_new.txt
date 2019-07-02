@@ -1,0 +1,13 @@
+select 
+    concat('''', company_code1, '''') company_code1,
+    concat('''', company_code2, '''') company_code2,
+    concat('''', company_code3, '''') company_code3,
+    concat('''', app_name, '''') app_name,
+    concat('''', app_cst_no, '''') app_cst_no,
+    concat('''', app_id_no, '''') app_id_no,
+    concat('''', risk_code, '''') risk_code,
+    concat('''', div_date, '''') div_date,
+    concat('''', score, '''') score,
+    concat('''', norm, '''') norm
+from
+    tb_ins_risk_new

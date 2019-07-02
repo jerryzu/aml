@@ -1,0 +1,16 @@
+select 
+    concat('''', company_code1, '''') company_code1,
+    concat('''', company_code2, '''') company_code2,
+    concat('''', acc_name, '''') acc_name,
+    concat('''', ifnull(cst_no, '@N'), '''') cst_no,
+    concat('''', license, '''') license,
+    concat('''', bnf_name, '''') bnf_name,
+    concat('''', bnf_type, '''') bnf_type,
+    concat('''', ifnull(shareholding_ratio, '@N'), '''') shareholding_ratio,
+    concat('''', bnf_address, '''') bnf_address,
+    concat('''', id_type5, '''') id_type5,
+    concat('''', id_no5, '''') id_no5,
+    concat('''', ifnull(id_deadline5, '@N'), '''') id_deadline5,
+    concat('''', sys_name, '''') sys_name
+from
+    tb_ins_bo

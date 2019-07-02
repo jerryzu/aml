@@ -1,0 +1,32 @@
+select *
+from (select 
+if (trim(@y)=trim(m.objectname), @x:= @x + 1, @x:= 1) x
+    ,m.objectid, m.objectname, m.propertyid
+    ,case when POSITION('@N' in m.reftype) > 0 then
+    concat('concat('''''''', ifnull(',m.propertyname, ', ''@N''), '''''''')', ' ' ,m.propertyname)
+    else
+        concat('concat('''''''', ',m.propertyname,', '''''''')', ' ' ,m.propertyname)
+    end sql_
+    , m.reftype 
+from sys_properties m, (select @x:=0, @y:=null) b
+order by m.objectname, m.propertyname
+) a
+order by objectid, propertyid
+
+tb_company
+tb_ins_rtype
+tb_ins_pers
+tb_ins_unit
+tb_ins_bo
+tb_ins_rpol
+tb_ins_gpol
+tb_ins_fav_cst
+tb_ins_renewal
+tb_ins_rsur
+tb_ins_rpay
+tb_ins_rcla
+tb_ins_rchg
+tb_ins_risk_new
+tb_ins_risk
+tb_lar_report
+tb_sus_report

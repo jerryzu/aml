@@ -1,0 +1,25 @@
+select 
+    concat('''', company_code1, '''') company_code1,
+    concat('''', company_code2 , '''') company_code2, 
+    concat('''', ifnull(cst_no, '@N'), '''') cst_no,
+    concat('''', open_time, '''') open_time,
+    concat('''', close_time, '''') close_time,
+    concat('''', acc_name , '''') acc_name,
+    concat('''', cst_sex , '''') cst_sex, 
+    concat('''', nation, '''') nation,
+    concat('''', id_type , '''') id_type, 
+    concat('''', id_no , '''') id_no, 
+    concat('''', id_deadline , '''') id_deadline, 
+    concat('''', occupation_code, '''') occupation_code,
+    concat('''', occupation, '''') occupation,
+    concat('''', income, '''') income,
+    concat('''', contact1 , '''') contact1, 
+    concat('''', ifnull(contact2 , '@N'), '''') contact2, 
+    concat('''', ifnull(contact3 , '@N'), '''') contact3, 
+    concat('''', address1, '''') address1,
+    concat('''', ifnull(address2, '@N'), '''') address2,
+    concat('''', ifnull(address3, '@N'), '''') address3,
+    concat('''', company, '''') company,
+    concat('''', sys_name, '''') sys_name
+from
+    tb_ins_pers
