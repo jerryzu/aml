@@ -1,6 +1,8 @@
 /*
 RIGHT(a.C_CUST_RISK_RANK, 2) as Risk_code,-- 风险等级
 risk_code	风险等级	mapping
+
+不明白t_score的来源
 */
 select 
 '' as Company_codel,-- 机构网点代码

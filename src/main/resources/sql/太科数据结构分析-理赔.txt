@@ -1,0 +1,3976 @@
+------------------------------4.01 	理赔	出险信息	web_clm_accdnt
+select
+  ,c_ins_acc_pk_id -- 出险信息表ID
+  ,c_clm_no -- 赔案号
+  ,c_insured_cde -- 被保人编码
+  ,c_insured_nme -- 被保人名称
+  ,c_sex -- 性别
+  ,n_age -- 年龄
+  ,c_cert_typ -- 证件类型
+  ,c_cert_no -- 证件号码
+  ,c_occup_cde -- 职业
+  ,t_accdnt_tm -- 出险时间
+  ,c_accdnt_typ -- 险因类型
+  ,c_accdnt_rsn -- 出险原因
+  ,c_accdnt_rsnname -- 查勘出险原因名称
+  ,c_accdnt_place -- 出险地点
+  ,c_accdnt_proc -- 出险经过
+  ,n_rpt_amt -- 报损金额
+  ,c_rpt_cur -- 报损金额币种
+  ,c_remark -- 备注
+  ,t_rpt_accdnt_tm -- 报案出险时间
+  ,c_rpt_accdnt_typ -- 报案时录入的险因类型
+  ,c_rpt_accdnt_rsnname -- 报案出险原因名称
+  ,c_rpt_accdnt_rsn -- 报案出险原因
+  ,c_rpt_accdnt_place -- 报案出险地点
+  ,c_rpt_accdnt_proc -- 报案时录入的出险经过
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_disaster_rpt_amt -- 成灾估损金额
+  ,n_nogain_rpt_amt -- 绝产估损金额
+  ,c_rpt_accdnt_with_rsn -- 报案伴随原因
+  ,n_yl1 -- 承保农户数
+  ,n_yl2 -- 受益农户数
+  ,n_yl3 -- 死亡赔偿金额
+  ,n_yl4 -- 预计赔付金额
+  ,n_yl5 -- 承保数量
+  ,n_yl6 -- 赔付死亡数量
+  ,n_yl7 -- 赔付扑杀数量
+  ,n_yl8 -- 总扑杀数量
+  ,t_dead -- 死亡时间
+  ,n_dead_num -- 总死亡数
+  ,n_calam_area1 -- 受灾面积
+  ,n_calam_area2 -- 成灾面积
+  ,n_nogain_area3 -- 其中绝产面积
+  ,c_is_injury -- 是否人伤
+  ,n_psn_num -- 人数
+  ,c_hospital -- 医院
+  ,c_cost_proc -- 施救过程
+  ,c_instant_delay -- 即时、延时报案标识
+  ,c_huge_cde -- 巨灾编码
+  ,c_huge_mrk -- 0否、1是
+  ,c_yl1 -- 保单身份
+  ,t_date_birth -- 出生日期
+  ,c_province -- 省份
+  ,c_city -- 城市
+  ,c_county -- 县
+  ,c_injury_reason_code -- 损伤外部原因代码
+  ,c_grow_typ -- 生长阶段
+  ,c_scale -- 赔偿比例
+  ,c_is_pay -- 是否立即赔付；‘1’是、‘0’否
+  ,c_huge_one_cde -- 巨灾一级编码
+  ,c_huge_two_cde -- 巨灾二级编码
+  ,c_rpt_accdnt_place_detail -- 
+  ,t_modify_tm -- 修改时间戳
+from web_clm_accdnt
+
+------------------------------4.02 	理赔	理算信息表	web_clm_adjust
+select
+  ,c_adjust_pk_id -- 理算ID
+  ,c_clm_no -- 赔案号
+  ,n_clm_tms -- 赔付次数
+  ,c_adjust_dpt -- 理算机构
+  ,c_adjust_cde -- 理算人
+  ,t_adjust_tm -- 理算时间
+  ,c_pay_typ -- 赔付类型
+  ,c_losspay_cur -- 损失赔款币种
+  ,n_losspay_rmb_exch -- 损失赔款折RMB汇率
+  ,n_losspay -- 标的赔款合计
+  ,n_losspay_rmb -- 标的赔款折RMB金额
+  ,n_help -- 施救费合计
+  ,n_help_rmb -- 施救费折RMB金额
+  ,c_clmfee_cur -- 理赔费用币种
+  ,n_clmfee_rmb_exch -- 费用折RMB汇率
+  ,n_clmfee -- 理赔费用
+  ,n_clmfee_rmb -- 费用折RMB金额
+  ,c_pay_cur -- 赔款金额币种
+  ,n_losspay_pay_exch -- 损失转总赔款汇率
+  ,n_clmfee_pay_exch -- 费用转总赔款汇率
+  ,n_amt_pay_exch -- 保额转总赔款汇率
+  ,n_pay_rmb_exch -- 总赔款折RMB汇率
+  ,n_realpay -- 实付损失赔款
+  ,n_realpay_rmb -- 实付损失折RMB金额
+  ,n_pay -- 总赔款
+  ,n_pay_rmb -- 总赔款折RMB金额
+  ,c_remark -- 赔款计算说明
+  ,c_refuse -- 拒赔说明
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_tgt_fee -- 标的损失金额(农业险使用)
+  ,c_tgt_fee_cur -- 标的损失金额币种(农业险使用)
+  ,n_thd_duty_fee -- 第三者责任费
+  ,c_thd_duty_fee_cur -- 第三者责任费币种
+  ,n_les_rem -- 残值
+  ,c_les_cur -- 残值币种
+  ,n_nopay_amt -- 免赔额
+  ,c_nopay_cur -- 免赔币种
+  ,n_tal_insman_amt -- 合计赔付被保险人金额
+  ,c_tal_insman_cur -- 合计赔付被保险人金额币种
+  ,n_real_pay_sum -- 合计赔付被保险人金额(rmb)
+  ,n_no_prepay_amt -- 合计赔付被保险人金额(rmb)
+  ,n_pay_sum -- 赔款金额
+  ,n_clm_preamt_rmb -- 预付金额折RMB金额
+  ,n_clm_pre_amt -- 预付金额合计
+  ,n_clm_preamt_rmb_exch -- 预付金额折RMB汇率
+  ,c_clm_pre_cur -- 币种
+  ,n_remain -- 残值
+  ,n_remain_rmb -- 残值折RMB金额
+  ,n_law -- 法律费
+  ,n_law_rmb -- 法律费折RMB金额
+  ,c_remain_cur -- 残值币种
+  ,c_law_cur -- 法律费币种
+  ,n_remain_rmb_exch -- 残值汇率
+  ,n_law_rmb_exch -- 法律费汇率
+  ,c_agree_pay_propor -- 协议赔付比例
+  ,c_reject_reason -- 拒赔原因
+  ,n_loss_inju -- 人伤损失合计
+  ,n_loss_inju_rmb -- 人伤损失合计折RMB费用
+  ,c_loss_inju_cur -- 人伤损失合计币种
+  ,n_loss_inju_rmb_exch -- 人伤损失合计转RMB汇率
+  ,c_pay_conc -- 理算结论
+  ,c_calc_desc_a -- 理算公式备用A
+  ,c_calc_desc_b -- 理算公式备用B
+  ,c_calc_desc_c -- 理算公式备用C
+  ,c_latest_mrk -- 最新标志：0否、1是
+  ,c_calc_desc -- 赔款计算说明
+  ,pkid -- FC表主键
+  ,t_modify_tm -- 修改时间戳
+  ,c_sus_case -- 是否可疑案件
+  ,c_sps_type -- 可疑类型
+  ,c_claim_reason -- 赔付原因
+  ,c_casuamrk -- 是否人伤
+  ,c_if_appeal -- 是否涉诉
+from web_clm_adjust
+
+------------------------------4.03 	理赔	险别理算明细表	web_clm_adjustlist
+select
+  ,c_adjustlist_pk_id -- 理算清单信息ID
+  ,c_inspay_pk_id -- 被保人赔款信息ID
+  ,c_adjust_pk_id -- 理算表主键
+  ,c_clm_no -- 赔案号
+  ,n_clm_tms -- 赔付次数
+  ,n_seq -- 序号
+  ,c_cvrg_no -- 险别
+  ,c_pay_item -- 赔偿项目
+  ,n_estmt -- 定损金额
+  ,n_remain -- 残值
+  ,n_deductible_rate -- 免赔率
+  ,n_deductible -- 免赔
+  ,n_cvrg_pay -- 赔款金额
+  ,n_cvrg_paid -- 本案已赔款金额
+  ,n_cvrg_amt -- 险别保额
+  ,c_crt_cde -- 创建人员CreatorNo
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_farmer_cde -- 农户编码
+  ,c_plot_cde -- 地块编码
+  ,c_app_plot_cde -- 投保地号
+  ,c_loss_type -- 赔偿类型
+  ,n_app_output -- 承包产量
+  ,n_ply_output -- 投保产量
+  ,n_amt_every -- 每亩保额
+  ,n_app_area -- 承保面积
+  ,n_clm_most -- 日最高赔偿限额
+  ,c_clm_most_remark -- 日最高赔偿限额说明
+  ,n_lost_area -- 损失面积1
+  ,n_lost_rate -- 损失率1
+  ,n_lost_area2 -- 损失面积2
+  ,n_lost_rate2 -- 损失率2
+  ,n_lost_area3 -- 损失面积3
+  ,n_lost_rate3 -- 损失率3
+  ,n_lost_area4 -- 损失面积4
+  ,n_lost_rate4 -- 损失率4
+  ,n_lost_area5 -- 损失面积5
+  ,n_lost_rate5 -- 损失率5
+  ,n_lost_area6 -- 损失面积6
+  ,n_lost_rate6 -- 损失率6
+  ,n_got_gain -- 实收产量
+  ,n_app_scale -- 投保比例%
+  ,c_nogain -- 是否绝产0否，1是
+  ,c_prov_cde -- 省
+  ,c_city_cde -- 市（或师）
+  ,c_coun_cde -- 县(或团)
+  ,c_vill_cde -- 乡镇/分场
+  ,c_haml_cde -- 村组(或连队)
+  ,n_clm_amt_every -- 每头赔偿金额
+  ,n_clm_every_faith -- 每头约定金额
+  ,c_raise_num -- 畜别
+  ,c_teeth_num -- 齿龄
+  ,c_auris_num -- 耳号
+  ,n_app_num -- 承保数量
+  ,n_dead_num -- 死亡头数
+  ,n_remain_chk -- 核损残值
+  ,n_rescue_amt_chk -- 核损施救费
+  ,n_insured_value -- 保险价值
+  ,n_insured_pre -- 投保比例
+  ,n_accid_pro -- 事故责任比例
+  ,n_consult_pay_pro -- 协商赔付比例
+  ,n_double_ins_rate -- 重复保险分摊率
+  ,n_rescue_rate -- 施救费用分摊比例
+  ,c_cvrg_no_name -- 险别名称
+  ,n_casu_amt_chk -- 人身伤亡赔偿核赔金额
+  ,n_prop_amt_chk -- 财产损失赔偿核赔金额
+  ,n_once_indem_lmt -- 每次事故赔偿限额
+  ,n_once_casu_lmt -- 每人每次人身伤亡赔偿限额
+  ,n_once_prop_lmt -- 每次事故财产损失赔偿限额
+  ,n_cvrg_pay_amt -- 标的赔款合计
+  ,c_losstgt_pk_id -- 标的损失信息表主键
+  ,n_cvrg_edr_pay -- 批改核损金额
+  ,n_remain_edr_chk -- 批改核损残值
+  ,n_rescue_amt_edr_chk -- 批改核损施救费
+  ,n_amt_farmer -- 农户保额
+  ,n_cvrg_actual_num -- 实际出险因子
+  ,n_avail_amt -- 险别可用金额
+  ,n_condeduction_amt -- 协商扣除金额
+  ,n_tgt_seq -- 标的序号
+  ,c_tgt_typ -- 标的类型
+  ,c_resv_txt_16 -- 标的类别
+  ,t_modify_tm -- 修改时间戳
+  ,c_resv_txt_2 -- 保险项目(对应承保险别表字段)
+  ,c_tgt_nme -- 标的名称
+  ,n_seq_no -- 险别序号
+from web_clm_adjustlist
+
+------------------------------4.04 	理赔	复勘报告	web_clm_again_srvy
+select
+  ,c_again_srvy_id -- 复勘信息ID
+  ,c_clm_no -- 赔案号
+  ,c_again_srvy_tm -- 复勘开始时间
+  ,c_again_srvy_end_tm -- 复勘结束时间
+  ,c_is_mrk -- 是否保险责任
+  ,c_occup_cde -- 职业
+  ,c_tel -- 电话
+  ,c_again_srvy_adr -- 复勘地点
+  ,c_item -- 复勘项目
+  ,c_reason -- 复勘原因
+  ,c_circs_explain -- 复勘情况说明
+  ,c_find_prob -- 复勘中发现的问题
+  ,c_verdict -- 复勘结论
+  ,c_main_id -- 复勘项目信息主键
+  ,c_crt_cde -- 创建人员 Creator No
+  ,t_crt_tm -- 创建时间 Create Time
+  ,c_upd_cde -- 修改人员 Updater No
+  ,t_upd_tm -- 修改时间 Update Time
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_again_srvy
+
+------------------------------4.05 	理赔	复勘项目	web_clm_again_srvy_item
+select
+  ,c_item_id -- 复勘信息ID
+  ,c_clm_no -- 赔案号
+  ,c_item -- 复勘项目
+  ,n_num -- 复勘次数
+  ,c_reason -- 复勘原因
+  ,c_crt_cde -- 创建人员 Creator No
+  ,t_crt_tm -- 创建时间 Create Time
+  ,c_upd_cde -- 修改人员 Updater No
+  ,t_upd_tm -- 修改时间 Update Time
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_again_srvy_item
+
+------------------------------4.06 	理赔	附件信息表	web_clm_annex
+select
+*
+from web_clm_annex
+
+------------------------------4.07 	理赔	附件明细	web_clm_annex_info
+select
+*
+from web_clm_annex_info
+
+------------------------------4.08 	理赔	外部委托机构信息	web_clm_assist
+select
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_data_type -- 机构类型
+  ,c_country_code -- 国家
+  ,c_province_code -- 省
+  ,c_city_code -- 市
+  ,c_company_code -- 公司代码
+  ,c_company_name -- 公司名称
+  ,c_address -- 公司地址
+  ,c_telephone -- 联系电话
+  ,t_adb_tm -- 失效时间
+  ,c_contact -- 联系人
+  ,c_remark -- 备注
+  ,c_insrnc_speciality -- 保险性质
+  ,c_mobile -- 移动电话
+  ,c_fax -- 传真
+  ,c_email -- 电子邮件
+  ,c_zipcde -- 邮编
+  ,c_score -- 评级
+  ,c_recommcde -- 推荐信息
+  ,c_abr_nme -- 简称
+  ,c_srvy_enm -- 英文名称
+  ,c_cntct_prsn_nme -- 联系人
+  ,c_whl_ara_mrk -- 全境代理标志（0、否：1、是）
+  ,c_dpt_cde -- 机构代码
+  ,c_assist_pk_id -- 外部委托机构信息表ID
+  ,c_ass_type -- 委托类型
+  ,t_modify_tm -- 修改时间戳
+from web_clm_assist
+
+------------------------------4.09 	理赔	产品对应的单证类型	web_clm_attch_lst
+select
+  ,c_cde -- 单证ID
+  ,c_cla_cde -- 单证类型代码
+  ,c_nme -- 单证名称
+  ,c_rmk -- 备注
+  ,c_crt_cde -- 创建人
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_up_flg -- 是否必须
+  ,t_modify_tm -- 修改时间戳
+from web_clm_attch_lst
+
+------------------------------4.10 	理赔	权限级别表	web_clm_auth
+select
+  ,c_auth_id -- 自动生成主键
+  ,c_dpt_cde -- 机构代码
+  ,c_kind_no -- 产品大类
+  ,c_prod_no -- 产品代码
+  ,c_lev_typ -- 级别类型：6查勘、7估损、10人伤调查、11人伤核损、8核损、9核价、13理算、14核赔
+  ,c_lev_cde -- 级别代码
+  ,c_lev_nme -- 级别名称
+  ,c_flg -- 是否有效标志：  0否、1是
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_auth
+
+------------------------------4.11 	理赔	级别权限设置	web_clm_auth_factor
+select
+  ,c_auth_factor_id -- 自动生成主键
+  ,c_auth_id -- 权限级别表主键
+  ,c_lev_typ -- 级别类型：6查勘、7估损、10人伤调查、11人伤核损、8核损、9核价、13理算、14核赔
+  ,n_low_amt -- 金额下限
+  ,n_hig_amt -- 金额上限
+  ,n_sig_low_amt -- 单件下限
+  ,n_sig_hig_amt -- 单件上限
+  ,c_case_typ -- 案件类型
+  ,c_los_typ -- 损失类型
+  ,c_oth_typ -- 其它因子
+  ,c_flg -- 是否有效标志：  0否、1是
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_auth_factor
+
+------------------------------4.12 	理赔	结论意见信息	web_clm_back_conclu
+select
+  ,c_back_conclu_pk_id -- 结论信息ID
+  ,c_clm_no -- 赔案号
+  ,c_cur_id -- 当前环节ID
+  ,c_clm_cur_sts -- 赔案状态当前环节(立案受理)
+  ,c_clm_next_sts -- 赔案状态下一环节（理算）
+  ,c_app_dpt -- 申请机构
+  ,c_app_cde -- 申请人
+  ,c_crt_cde -- 创建人
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人
+  ,t_upd_tm -- 修改时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_back_conclu
+
+------------------------------4.13 	理赔	理算意见信息	web_clm_back_conclu_opin
+select
+  ,c_back_conclu_opin_pk_id -- 退回信息意见ID
+  ,c_back_conclu_pk_id -- 结论信息ID
+  ,c_clm_no -- 赔案号
+  ,c_reply_dpt -- 理算机构
+  ,c_reply_cde -- 理算人
+  ,t_reply_tm -- 理算时间
+  ,c_reply_conc -- 理算结论
+  ,c_reply_opin -- 理算意见
+  ,c_up_dpt -- 理算机构
+  ,c_urgent_degree -- 紧急程度
+  ,c_crt_cde -- 创建人
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人
+  ,t_upd_tm -- 修改时间
+  ,c_cur_id -- 当前环节ID
+  ,n_reply_no -- 批复次数
+  ,t_modify_tm -- 修改时间戳
+from web_clm_back_conclu_opin
+
+------------------------------4.14 	理赔	收款人信息	web_clm_bank
+select
+  ,c_bank_id -- 自动生成主键
+  ,c_fk_id -- 理算表、预付表、垫付表主键
+  ,c_rpt_no -- 报案号
+  ,c_payee_type -- 与被保险人关系
+  ,c_payee_nme -- 收款人名称
+  ,c_id_card -- 收款人身份证号
+  ,c_payee_no -- 收款人编号
+  ,c_bank_pro -- 银行省
+  ,c_bank_city -- 银行市
+  ,c_bank_cde -- 银行名称
+  ,c_bank_prt_cde -- 支行信息
+  ,c_amt_cur -- 支付币种
+  ,c_payee_bank_nme -- 开户名
+  ,c_bank_nme -- 开户行
+  ,c_bank_num -- 账号
+  ,c_pay_typ -- 支付类型
+  ,c_amt_typ -- 赔款金额类型
+  ,c_ply_typ -- 保单类型
+  ,n_amt -- 赔款金额
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_case_no -- 案件号
+  ,c_bs_typ -- 业务类型
+  ,t_pay_tm -- 支付时间
+  ,c_card_type -- 证件类型
+  ,c_tel_no -- 收款人手机号码
+  ,c_payment_type -- 支付方式
+  ,c_updt_pay_info_flag -- 支付信息修正标识
+  ,c_pay_status -- 支付状态
+  ,c_exc -- 例外事件
+  ,c_clm_no -- 赔案号
+  ,c_card_cde -- 证件号码
+  ,n_benf_prop -- 受益份额
+  ,n_clm_tms -- 赔付次数
+  ,c_prepay_rsn -- 预付原因
+  ,recovery_code -- 是否共保拆分
+  ,c_pub_piv -- 对公对私
+  ,c_bank_coun -- 开户行县
+  ,c_custseq -- 
+  ,cnaps -- CNAPS开户行编码
+  ,c_is_valid -- 是否有效
+  ,c_wetchat_type -- 微信支付方式
+  ,c_clm_mark -- 备注
+  ,c_pay_type -- 赔付类型
+  ,c_orig_insurer -- 共保公司
+  ,t_modify_tm -- 修改时间戳
+  ,c_sms_tel -- 
+  ,c_confirm_bank_num -- 确认账号
+from web_clm_bank
+
+------------------------------4.15 	理赔	销案信息表	web_clm_cancel
+select
+  ,c_cancel_pk_id -- 销案信息ID
+  ,c_clm_no -- 赔案号
+  ,n_cnl_tms -- 销案次数
+  ,c_cnl_typ -- 销案类型
+  ,c_cancel_typ -- 销案类别（0报案注销，1立案注销）
+  ,c_cnl_dpt -- 销案机构代码
+  ,c_cnl_cde -- 销案人代码
+  ,t_cnl_tm -- 销案时间
+  ,c_cnl_rsn -- 销案原因
+  ,c_cnl_sts -- 销案状态
+  ,c_chk_dpt -- 
+  ,c_chk_cde -- 审核人代码
+  ,t_chk_tm -- 审核时间
+  ,c_chk_conc -- 审核结论（0：同意；1：退回）
+  ,c_chk_opin -- 审核意见
+  ,c_renew_dpt -- 恢复机构
+  ,c_renew_cde -- 恢复人
+  ,t_renew_tm -- 恢复时间
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_remark -- 备注说明
+  ,c_back_opin -- 回复意见
+  ,t_modify_tm -- 修改时间戳
+from web_clm_cancel
+
+------------------------------4.16 	理赔	人伤信息	web_clm_casu
+select
+  ,c_inju_pk_id -- 人伤信息ID
+  ,c_srvy_pk_id -- 查勘信息ID
+  ,c_clm_no -- 赔案号
+  ,n_srvy_tms -- 查勘次数
+  ,c_insured_cde -- 被保人编码
+  ,c_insured_nme -- 被保人名字
+  ,c_sex -- 性别
+  ,c_cert_no -- 身份证号
+  ,n_age -- 年龄
+  ,c_occup_cde -- 职业
+  ,c_cntr_nme -- 联系人
+  ,c_tel -- 固定电话,电话
+  ,c_inju_degree -- 伤势程度
+  ,c_inju_lvl -- 伤残等级
+  ,c_inju_desc -- 伤情描述
+  ,c_hosp_cde -- 治疗医院编码
+  ,c_hosp_nme -- 治疗医院名称
+  ,n_cure_days -- 治疗天数
+  ,t_hosp_bgn_tm -- 住院开始时间
+  ,t_hosp_end_tm -- 住院结束时间
+  ,n_hosp_days -- 住院天数
+  ,n_nurse_num -- 护理人数
+  ,n_nurse_days -- 护理天数
+  ,n_loss_estmt -- 保险人核定额
+  ,n_loss_chk -- 核损金额
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间 
+  ,c_acc_bank -- 开户行
+  ,c_acc_name -- 账户名称
+  ,c_acc_num -- 账号
+  ,n_live_depmt -- 所住科室
+  ,n_bed -- 床号
+  ,n_cp_phy -- 主管医师
+  ,n_check_pro -- 检查项目
+  ,t_accdnt_tm_change -- 出险时间修正
+  ,c_remark -- 备注
+  ,n_inju_amt -- 伤亡赔偿金额
+  ,n_prop_amt -- 财产损失赔偿金额
+  ,n_cure_amt -- 意外医疗赔偿金额
+  ,n_loss_work_amt -- 误工费赔偿金额
+  ,n_help_amt -- 紧急救援赔偿金额
+  ,n_law_amt -- 法律费用赔偿金额
+  ,c_certf_type -- 证件类型
+  ,c_temp_id -- 临时ID，关联人伤标的信息中标的时使用
+  ,n_yl_1 -- 
+  ,n_yl_2 -- 
+  ,n_yl_3 -- 
+  ,t_modify_tm -- 修改时间戳
+  ,n_lossmedical_amt -- 预估医疗费
+  ,n_lossdie_amt -- 预估死亡伤残赔款
+  ,n_lossother_amt -- 其它费用
+  ,c_accdnt_typ -- 出险类型
+  ,c_rpt_accdnt_rsnname -- 伤情描述
+  ,c_accdnt_place -- 出险地点
+  ,c_accdnt_proc -- 事故情况
+  ,t_accdnt_tm -- 出险时间
+from web_clm_casu
+
+------------------------------4.17 	理赔	人伤定损清单	web_clm_casu_estmtlist
+select
+  ,c_casu_estmt_pk_id -- 人伤定损信息ID
+  ,c_inju_pk_id -- 人伤信息ID
+  ,c_clm_no -- 赔案号
+  ,n_srvy_tms -- 查勘次数
+  ,c_insured_cde -- 被保人编码
+  ,c_insured_nme -- 被保人姓名
+  ,c_pay_item -- 赔偿项目
+  ,c_fee_item -- 费用项目
+  ,n_claim_amt -- 被保人索赔额
+  ,n_elim_amt -- 剔减额（自负额）
+  ,n_elim_share -- 剔减比例
+  ,n_loss_estmt -- 定损金额(预估损失金额)
+  ,n_loss_chk -- 核损金额
+  ,c_avai_mrk -- 是否有效标志
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_casu_amt -- 人身伤亡赔偿金额
+  ,n_prop_amt -- 财产损失赔偿金额
+  ,n_once_one_casu_lmt -- 每次事故每人人身伤亡赔偿限额
+  ,n_once_one_prop_lmt -- 每次事故每人财产损失赔偿限额
+  ,n_casu_amt_chk -- 人身伤亡赔偿金额
+  ,n_prop_amt_chk -- 财产损失赔偿金额
+  ,t_modify_tm -- 修改时间戳
+from web_clm_casu_estmtlist
+
+------------------------------4.18 	理赔	巨灾信息维护	web_clm_catastrophe
+select
+*
+from web_clm_catastrophe
+
+------------------------------4.19 	理赔	核赔信息	web_clm_checkclm
+select
+  ,c_chkclm_pk_id -- 核赔pkid
+  ,c_clm_no -- 赔案号
+  ,c_app_typ -- 核赔类型
+  ,c_task_id -- 任务号
+  ,n_app_amt -- 预付金额
+  ,c_app_cur -- 预付币种
+  ,c_app_dpt -- 申请机构
+  ,c_app_cde -- 申请人代码
+  ,c_crt_cde -- 创建人代码
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人代码
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_checkclm
+
+------------------------------4.20 	理赔	核赔意见表	web_clm_checkclm_opin
+select
+  ,c_chkclmopin_pk_id -- 核赔意见ID
+  ,c_chkclm_pk_id -- 核赔信息ID
+  ,c_clm_no -- 赔案号
+  ,c_chkclm_dpt -- 核赔机构
+  ,c_chkclm_cde -- 核赔人
+  ,t_chkclm_tm -- 核赔时间
+  ,c_chkclm_conc -- 核赔结论
+  ,c_chkclm_opin -- 核赔意见
+  ,c_up_dpt -- 上报机构
+  ,c_urgent_degree -- 紧急程度
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_is_auto_endorse -- 是否自动冲减保额标志_非车险使用
+  ,c_is_reover_mrk -- 是否是否追偿标志_非车险使用
+  ,c_chkclm_basis -- 保额冲减依据
+  ,t_modify_tm -- 修改时间戳
+from web_clm_checkclm_opin
+
+------------------------------4.21 	理赔	财产险核损信息表	web_clm_checkloss
+select
+  ,c_chkloss_pk_id -- 核损信息ID
+  ,c_estmt_pk_id -- 定损信息ID
+  ,c_clm_no -- 赔案号
+  ,c_app_dpt -- 申请机构
+  ,c_app_cde -- 申请人
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_checkloss
+
+------------------------------4.22 	理赔	核损意见信息	web_clm_checkloss_opin
+select
+  ,c_chklossopin_pk_id -- 核损意见ID
+  ,c_chkloss_pk_id -- 核损信息ID
+  ,c_clm_no -- 赔案号
+  ,c_chkloss_dpt -- 核损机构
+  ,c_chkloss_cde -- 核损人
+  ,t_chkloss_tm -- 核损时间
+  ,c_chkloss_conc -- 核损结论（T、同意；F、退回）
+  ,c_chkloss_opin -- 核损意见
+  ,c_up_dpt -- 上报机构
+  ,c_urgent_degree -- 紧急程度
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_state -- 查勘标识
+  ,t_modify_tm -- 修改时间戳
+from web_clm_checkloss_opin
+
+------------------------------4.23 	理赔	共保分摊赔款	web_clm_coinappo
+select
+  ,c_coinappo_pk_id -- 主键ID
+  ,c_adjust_pk_id -- 理算表主键
+  ,c_clm_no -- 赔案号
+  ,n_clm_tms -- 理赔次数
+  ,c_coinsurer_cde -- 被保险人
+  ,c_chief_mrk -- 主共标志
+  ,n_ci_share -- 共保比例
+  ,n_appo_pay -- 分摊赔款
+  ,n_appo_paid -- 本案已分摊赔款
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_ply_no -- 保单号
+  ,c_ci_com_cde -- 共保公司CDE
+  ,c_ci_com_nme -- 共保公司名称
+  ,n_fee_pay -- 分摊费用
+  ,n_total_pay -- 总赔款
+  ,n_total_fee -- 总费用
+  ,t_modify_tm -- 修改时间戳
+from web_clm_coinappo
+
+------------------------------4.24 	理赔	共保重开案	web_clm_coinsure_reopen
+select
+  ,c_coinsurere_pk_id -- 共保重开案编号
+  ,c_clm_no -- 赔案号
+  ,c_ply_no -- 保单号
+  ,n_edr_prj_no -- 批改序号
+  ,n_reopen_tms -- 重开案次数
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_reopen_dpt -- 重开案机构
+  ,c_reopen_cde -- 重开案人
+  ,n_appo_paid_rmb -- 赔款金额
+  ,t_modify_tm -- 修改时间戳
+from web_clm_coinsure_reopen
+
+------------------------------4.25 	理赔	共保摊回赔款信息	web_clm_coinsure_reopen_dtl
+select
+  ,c_coinsurere_dtl_pk_id -- 共保摊回主键明细主键
+  ,c_coinsurere_pk_id -- 共保重开案主键
+  ,c_clm_no -- 赔案号
+  ,c_ply_no -- 保单号
+  ,n_edr_prj_no -- 批改序号
+  ,n_reopen_tms -- 重开案次数
+  ,c_sub_co_cde -- 保险公司
+  ,c_main_co_cde -- 
+  ,n_ci_share -- 共保比例
+  ,c_appo_pay_cur -- 赔款币种
+  ,n_appo_pay -- 分摊赔款
+  ,n_appo_pay_rmb -- 赔款金额
+  ,n_appo_paid_rmb -- 已付赔款金额
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_coinsure_reopen_dtl
+
+------------------------------4.26 	理赔	施救/法律费用清单	web_clm_cost_item
+select
+*
+from web_clm_cost_item
+
+------------------------------4.27 	理赔	理算法律费用清单	web_clm_cost_items_adjust
+select
+  ,c_cost_items_adjust_id -- 施救/法律费用清单ID
+  ,c_clm_no -- 赔案号
+  ,n_srvy_tms -- 查勘次数
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_if_eff -- 是否有效
+  ,c_feenme -- 费用名
+  ,c_feetargt -- 目的（1，防止保险标的的损失；2，减少保险标的的损失；3，仲裁费用；4，诉讼费用）
+  ,c_feetime -- 发生时间（1，事故发生后；2，事故发生时）
+  ,n_amt -- 身故保险金额
+  ,c_type -- 类型（1，施救；2，律师）
+  ,c_receipt -- 提供单据
+  ,c_remark -- 备注
+  ,n_amt_chk -- 定损金额
+  ,n_amt_adj -- 理算金额
+  ,c_adjust_pk_id -- 理算信息ID
+  ,n_clm_tms -- 赔付次数
+  ,t_modify_tm -- 修改时间戳
+from web_clm_cost_items_adjust
+
+------------------------------4.28 	理赔	出险原因	web_clm_cx_reason
+select
+  ,c_rptaccd -- 出险原因代码
+  ,c_rptaccd_name -- 出险原因中文名
+  ,c_pretcde -- 险因类型
+  ,t_modify_tm -- 修改时间戳
+from web_clm_cx_reason
+
+------------------------------4.29 	理赔	影像信息记录	web_clm_doc
+select
+*
+from web_clm_doc
+
+------------------------------4.30 	理赔	历史接款人信息	web_clm_doc_bank
+select
+*
+from web_clm_doc_bank
+
+------------------------------4.31 	理赔	单证信息	web_clm_docinfo
+select
+  ,c_docinfo_pk_id -- 
+  ,c_clm_no -- 
+  ,c_voucher_typ -- 
+  ,c_voucher_cde -- 
+  ,c_deliver_mrk -- 
+  ,c_image_mrk -- 
+  ,c_crt_cde -- 
+  ,t_crt_tm -- 
+  ,c_upd_cde -- 
+  ,t_upd_tm -- 
+  ,c_trans_mrk -- 
+  ,t_trans_tm -- 
+  ,t_modify_tm -- 淇?敼鏃堕棿鎴
+from web_clm_docinfo
+
+------------------------------4.32 	理赔	调度信息主表	web_clm_dspt
+select
+  ,c_dspt_pk_id -- 调度信息ID
+  ,c_clm_no -- 赔案号
+  ,n_dspt_tms -- 调度次数
+  ,c_dspt_dpt -- 调度机构
+  ,c_dspt_cde -- 调度人
+  ,t_dspt_tm -- 调度时间
+  ,c_dspt_typ -- 调度类型（0、本地查勘；1、委托外地查勘）
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_dspt
+
+------------------------------4.33 	理赔	调度明细	web_clm_dspt_dtl
+select
+  ,c_dsptdtl_pk_id -- 调度明细信息ID
+  ,c_dspt_pk_id -- 调度信息ID
+  ,c_clm_no -- 赔案号
+  ,n_dspt_tms -- 调度次数
+  ,c_task_typ -- 任务类型
+  ,c_srvy_cde -- 查勘人员
+  ,c_dspt_place -- 查勘地点
+  ,c_dspt_content -- 查勘内容
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_server_typ -- 查勘方 00：核心查勘  01：公估查勘  09：自主查勘
+  ,c_srvy_nme -- 服务商名称
+  ,t_modify_tm -- 修改时间戳
+from web_clm_dspt_dtl
+
+------------------------------4.34 	理赔	结案信息	web_clm_endcase
+select
+*
+from web_clm_endcase
+
+------------------------------4.35 	理赔	委托信息	web_clm_entrust
+select
+  ,c_entrust_pk_id -- 委托信息ID
+  ,c_clm_no -- 赔案号
+  ,c_task_no -- 任务号
+  ,c_entrust_dpt -- 委托机构
+  ,c_entrust_cde -- 委托人
+  ,c_entrust_cme -- 委托人名称
+  ,t_entrust_tm -- 委托时间
+  ,c_entrust_typ -- 委托类型
+  ,c_srvy_cde -- 查勘人代码
+  ,c_accept_id -- 受托机构ID
+  ,c_accept_dpt -- 机构部门
+  ,c_accept_cde -- 受托接受人
+  ,c_accept_tel -- 联系电话
+  ,c_accept_fax -- 传真
+  ,c_entrust_explain -- 委托说明
+  ,t_accept_tm -- 受托接受时间
+  ,c_accept_conc -- 接受结论
+  ,c_accept_opin -- 接受意见
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+  ,entrust_no -- 
+from web_clm_entrust
+
+------------------------------4.36 	理赔	定损基本信息表	web_clm_estmt
+select
+  ,c_estmt_pk_id -- 定损基本信息表ID
+  ,c_clm_no -- 赔案号
+  ,n_srvy_tms -- 查勘次数
+  ,c_dsptdtl_pk_id -- 调度明细信息ID
+  ,c_srvy_pk_id -- 查勘信息ID
+  ,c_estmt_dpt -- 定损机构
+  ,c_estmt_cde -- 定损人
+  ,t_estmt_tm -- 定损时间
+  ,c_loss_cur -- 损失金额币种
+  ,n_loss_rmb_exch -- 损失折RMB汇率
+  ,n_loss_tgt -- 标的损失合计
+  ,n_loss_inju -- 人伤损失合计
+  ,n_loss -- 损失合计
+  ,n_loss_rmb -- 损失折RMB金额
+  ,n_chkloss -- 核损损失合计
+  ,n_chkloss_rmb -- 核损损失折RMB金额
+  ,c_help_cur -- 施救费币种
+  ,n_help_rmb_exch -- 施救费折RMB汇率
+  ,n_help -- 施救费合计
+  ,n_help_rmb -- 施救费折RMB金额
+  ,n_chkhelp -- 核损施救费合计
+  ,n_chkhelp_rmb -- 核损施救费折RMB金额
+  ,c_clmfee_cur -- 理赔费用币种
+  ,n_clmfee_rmb_exch -- 理赔费用折RMB汇率
+  ,n_clmfee -- 理算费用金额
+  ,n_clmfee_rmb -- 理赔费用折RMB金额
+  ,n_chkclmfee -- 核损费用合计
+  ,n_chkclmfee_rmb -- 核损费用折RMB金额
+  ,c_estmt_cur -- 定损总金额币种
+  ,n_loss_estmt_exch -- 核损施救费合计
+  ,n_help_estmt_exch -- 施救费转定损汇率
+  ,n_clmfee_estmt_exch -- 费用转定损汇率
+  ,n_estmt_rmb_exch -- 估损总金额折RMB汇率
+  ,n_estmt -- 定损金额
+  ,n_estmt_rmb -- 定损总金额折RMB金额
+  ,n_chkestmt -- 核损总金额
+  ,n_chkestmt_rmb -- 核损折RMB金额
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 更新人员
+  ,t_upd_tm -- 更新时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,n_remain -- 残值
+  ,n_remain_rmb -- 残值折RMB金额
+  ,n_law -- 法律费
+  ,n_law_rmb -- 法律费折RMB金额
+  ,c_remain_cur -- 残值金额币种
+  ,c_law_cur -- 法律费币种
+  ,n_remain_rmb_exch -- 残值转RMB汇率
+  ,n_law_rmb_exch -- 法律费转RMB汇率
+  ,n_loss_inju_rmb -- 人伤损失合计折RMB费用
+  ,c_loss_inju_cur -- 人伤损失合计币种
+  ,n_loss_inju_rmb_exch -- 人伤损失合计转RMB汇率
+  ,n_chk_loss_inju -- 核损人伤损失合计
+  ,n_chk_loss_inju_rmb -- 核损人伤损失合计折RMB费用
+  ,c_chk_loss_inju_cur -- 核损人伤损失合计币种
+  ,n_chk_loss_inju_rmb_exch -- 核损人伤损失合计转RMB汇率
+  ,c_chklawcur -- 法律费金额币种
+  ,n_chkremainrmb -- 残值折RMB金额
+  ,n_chklawrmb -- 法律费折RMB金额
+  ,c_chkremaincur -- 残值金额币种
+  ,n_chkremain -- 核损残值
+  ,n_chklaw -- 法律费
+  ,t_modify_tm -- 修改时间戳
+from web_clm_estmt
+
+------------------------------4.37 	理赔	定损险别信息	web_clm_estmt_cvrg
+select
+  ,c_estmtcvrg_pk_id -- 定损险别ID
+  ,c_estmt_pk_id -- 定损信息ID
+  ,c_clm_no -- 赔案号
+  ,n_srvy_tms -- 查勘次数
+  ,c_insured_cde -- 被保人编码
+  ,c_cvrg_no -- 险别编号
+  ,c_cvrg_nme -- 险别名称
+  ,n_estmt -- 定损金额
+  ,n_rdr_amt -- 
+  ,c_task_no -- 任务号
+  ,n_excess -- 
+  ,n_franchise -- 
+  ,n_coverage -- 
+  ,n_limit_liab -- 
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_estmt_cvrg
+
+------------------------------4.38 	理赔	理算费用信息	web_clm_fee_main
+select
+*
+from web_clm_fee_main
+
+------------------------------4.39 	理赔	查勘定损费用信息	web_clm_feelist_adjust
+select
+  ,c_adjustfee_pk_id -- 费用理算清单ID
+  ,c_adjust_pk_id -- 理算信息ID
+  ,c_clm_no -- 赔案号
+  ,n_clm_tms -- 赔付次数
+  ,c_clmfee_typ -- 费用类型
+  ,n_clmfee_estmt -- 费用定损金额
+  ,n_clmfee -- 费用理算金额
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_clmfee_lst -- 费用明细
+  ,t_modify_tm -- 修改时间戳
+from web_clm_feelist_adjust
+
+------------------------------4.40 	理赔	费用信息表	web_clm_feelist_estmt
+select
+  ,c_feeestmt_pk_id -- 费用定损清单ID
+  ,c_estmt_pk_id -- 定损信息ID
+  ,c_clm_no -- 赔案号
+  ,n_srvy_tms -- 查勘次数
+  ,c_charges3 -- 残值归属3
+  ,c_clmfee_typ -- 费用类型
+  ,n_clmfee_estmt -- 费用定损金额
+  ,n_clmfee_chk -- 费用核损金额
+  ,c_avai_mrk -- 是否有效标志
+  ,c_clmfee_lst -- 费用明细
+  ,c_currency_code -- 
+  ,c_charges -- 残值归属(0为保险人，1为归被保险人)
+  ,c_accident_mrk -- 
+  ,c_cost_objecttvie -- 
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_dec_name -- 合作方名称
+  ,c_pro_type -- 项目
+  ,c_dec_fee -- 
+  ,c_receipts -- 提供单据
+  ,c_remark -- 备注
+  ,t_modify_tm -- 修改时间戳
+from web_clm_feelist_estmt
+
+------------------------------4.41 	理赔	赔案指导信息	web_clm_guide_view
+select
+  ,c_guide_id -- 
+  ,c_view_content -- 
+  ,c_flow_node -- 
+  ,c_clm_no -- 
+  ,c_crt_cde -- 
+  ,t_crt_tm -- 
+  ,c_upd_cde -- 
+  ,t_upd_tm -- 
+  ,c_trans_mrk -- 
+  ,t_trans_tm -- 
+  ,c_rgst_op -- 
+  ,c_org_id -- 创建人所属机构ID
+  ,c_org_cnm -- 创建人所属机构名称
+  ,t_modify_tm -- 修改时间戳
+from web_clm_guide_view
+
+------------------------------4.42 	理赔	赔案指导收单建议	web_clm_guide_view_attch
+select
+  ,c_guide_attch_id -- 收单信息主键
+  ,c_guide_id -- 指导意见表主键ID
+  ,c_cde -- 单证ID
+  ,c_cla_cde -- 单证类型代码
+  ,c_nme -- 单证名称
+  ,c_up_flg -- 是否必须
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_clm_no -- 赔案号
+  ,c_prod_no -- 产品号
+  ,t_modify_tm -- 修改时间戳
+from web_clm_guide_view_attch
+
+------------------------------4.43 	理赔	被保人赔款金额信息	web_clm_inspay
+select
+  ,c_inspay_pk_id -- 被保人赔款信息ID
+  ,c_adjust_pk_id -- 理算表主键
+  ,c_clm_no -- 赔案号
+  ,n_clm_tms -- 赔付次数
+  ,c_insured_cde -- 被保人编码
+  ,c_insured_nme -- 被保人名字
+  ,n_pay -- 本次理算赔款
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_inspay
+
+------------------------------4.44 	理赔	案件诉讼表	web_clm_litigation_main
+select
+*
+from web_clm_litigation_main
+
+------------------------------4.45 	理赔	财产险标的定损信息表	web_clm_losstgt
+select
+  ,c_losstgt_pk_id -- 标的损失信息表主键
+  ,c_srvy_pk_id -- 查勘信息ID
+  ,c_clm_no -- 赔案号
+  ,n_srvy_tms -- 查勘次数
+  ,c_loss_tgtnme -- 损失标的名称
+  ,c_loss_circs -- （人伤）损失情况
+  ,n_loss_estmt -- 估损金额
+  ,n_loss_chk -- 核损金额
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_loss_tgt_code -- 投保险别
+  ,c_cover_target -- 投保标的
+  ,n_insured_amt -- 保险金额
+  ,n_limit_amt -- 限额
+  ,n_insured_value -- 保险价值
+  ,n_accid_value -- 出险时价值
+  ,n_insured_pre -- 投保比例
+  ,n_accid_pro -- 事故责任比例
+  ,n_deductible -- 免赔额
+  ,n_consult_pay_pro -- 协商赔付比例
+  ,n_remain -- 残值
+  ,n_rescue_amt -- 施救费
+  ,n_remain_chk -- 核损残值
+  ,n_rescue_amt_chk -- 核损施救费
+  ,n_deductible_rate -- 免赔率
+  ,n_rescue_rate -- 施救费用分摊比例
+  ,n_double_ins_rate -- 重复保险分摊率
+  ,n_casu_amt -- 人身伤亡赔偿金额
+  ,n_prop_amt -- 财产损失赔偿金额
+  ,n_once_indem_lmt -- 单次赔偿限额
+  ,n_once_casu_lmt -- 每次事故人身伤亡赔偿限额
+  ,n_once_prop_lmt -- 每次事故财产损失赔偿限额
+  ,n_casu_amt_chk -- 人身伤亡赔偿核赔金额
+  ,n_prop_amt_chk -- 财产损失赔偿核赔金额
+  ,cover_target -- 投保标的
+  ,n_amt -- 预估赔款金额
+  ,n_amt_chk -- 预估赔款核损金额
+  ,c_loss_estmt_pk_id -- 物损查勘信息ID
+  ,n_amt_farmer -- 
+  ,t_modify_tm -- 修改时间戳
+  ,n_condeduction_amt -- 
+  ,n_loss_amt -- 
+  ,n_tgt_seq -- 标的序号
+  ,c_tgt_typ -- 标的类型
+  ,c_resv_txt_16 -- 标的类别
+  ,c_resv_txt_2 -- 保险项目(对应承保险别表字段)
+  ,c_tgt_nme -- 标的名称
+  ,n_seq_no -- 险别序号
+from web_clm_losstgt
+
+------------------------------4.46 	理赔	财产险标的定损明细信息表	web_clm_losstgt_estmtlist
+select
+  ,c_loss_estmt_pk_id -- 物损查勘信息ID
+  ,c_srvy_pk_id -- 查勘信息ID
+  ,c_losstgt_pk_id -- 损失标的信息ID
+  ,c_loss_tgtnme -- 损失标的名称
+  ,c_pay_item -- 赔偿项目
+  ,c_pay_item_tpe -- 损失类型
+  ,n_loss_estmt -- 预计估损金额/定损金额
+  ,n_loss_chk -- 核损金额
+  ,c_avai_mrk -- 是否有效标志
+  ,c_pay_item_name -- 赔偿项目名称
+  ,c_clm_no -- 赔案号
+  ,n_srvy_tms -- 查勘次数
+  ,c_crt_cde -- 创建人工号
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 更新人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_task_no -- 任务号
+  ,n_rescue_amt -- 施救费
+  ,n_seq -- 序号
+  ,c_rmk -- 备注
+  ,n_remain -- 残值
+  ,n_remain_chk -- 核损残值
+  ,n_rescue_amt_chk -- 核损施救费
+  ,c_unit -- 单位
+  ,c_pur_fixed_year -- 购置年限
+  ,c_rpt_amt -- 报损价
+  ,c_losst_type -- 损失类型
+  ,c_losst_name -- 标的名称
+  ,n_once_casu_lmt -- 每人每次人身伤亡赔偿限额
+  ,n_once_prop_lmt -- 每人每次财产损失赔偿限额
+  ,n_once_hosp_lmt -- 每人每次医疗费用赔偿限额
+  ,n_casu_amt -- 人身伤亡赔偿金额
+  ,n_prop_amt -- 财产损失赔偿金额
+  ,n_hosp_amt -- 医疗费用赔偿金额
+  ,c_casu_temp_id -- 临时ID，用于和人员基本信息关联
+  ,n_casu_amt_chk -- 人身伤亡核损金额
+  ,n_prop_amt_chk -- 财产损失核损金额
+  ,n_hosp_amt_chk -- 医疗费用核损金额
+  ,c_pay_item_a -- 赔偿项目 - 现金保险
+  ,c_pay_item_b -- 赔偿项目 - 特种设备综合保险
+  ,c_pay_item_c -- 赔偿项目 - 机器损坏险
+  ,c_pay_item_d -- 赔偿项目 - 货运险
+  ,c_pay_item_e -- 赔偿项目 - 城市家庭财产保险
+  ,c_pay_item_f -- 赔偿项目 - 家庭财产综合保险
+  ,c_pay_item_g -- 赔偿项目 - 个人贷款抵押房屋保险/贷款房屋综合保险
+  ,c_pay_item_h -- 赔偿项目 - 建筑工程一切险
+  ,c_pay_item_i -- 赔偿项目 - 安装工程一切险
+  ,c_pay_item_j -- 赔偿项目 - 船舶建造保险/沿海、内河船舶保险
+  ,c_pay_item_k -- 赔偿项目 - 暂留
+  ,n_insured_hou_amount -- 投保户数(农业险标的信息)
+  ,n_insured_amount -- 投保数量
+  ,c_bus_type -- 业务种类
+  ,n_cen_fin_prop -- 中央财政补贴比例 (The Central Finance Allowance Proportion)
+  ,n_prov_sub_prop -- 省财政补贴比例(The Provincial government subsidies Proportion)
+  ,n_local_sub_prop -- 地市财政补贴比例 (Local Financial subsidies Proportion)(农业险标的信息)
+  ,n_far_pay_expend -- 农户缴费比例 (Farmer pay expends scale to)
+  ,n_insured_amt -- 保险金额
+  ,n_accid_value -- 出险时价值
+  ,n_insured_pre -- 投保比例
+  ,t_modify_tm -- 修改时间戳
+  ,n_loss_amt -- 
+  ,n_deductible_rate -- 免赔率
+  ,n_deductible -- 免赔额
+from web_clm_losstgt_estmtlist
+
+------------------------------4.47 	理赔	医疗津贴	web_clm_ls_medical_allowance
+select
+  ,c_id -- 查勘ID
+  ,c_main_id -- 控制显示表id
+  ,c_hospital_name -- 医院名称
+  ,c_admission_date -- 入院时间
+  ,c_discharge_date -- 出院时间
+  ,c_hospital_days -- 住院天数
+  ,c_his_type -- 给付类型
+  ,c_his_stand -- 给付标准
+  ,c_his_amount -- 给付金额
+  ,c_adjust_amount_reason -- 调整原因
+  ,c_adjust_amount -- 调整金额
+  ,c_claim_people_cde -- 理算人代码
+  ,c_claim_people -- 理算人
+  ,c_claim_tm -- 理算日期
+  ,t_crt_tm -- 创建时间
+  ,t_crt_cde -- 创建人员
+  ,n_deductible_days -- 免赔天数
+  ,t_up_cde -- 修改人员
+  ,t_up_tm -- 修改时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ls_medical_allowance
+
+------------------------------4.48 	理赔	医疗费用项目剔除信息	web_clm_ls_medical_deduc_list
+select
+  ,c_id -- 主键
+  ,c_main_id -- 费用项目主表id
+  ,c_drug_nme -- 药品名称
+  ,c_expenses_amount -- 费用金额
+  ,c_deduc_amount -- 剔除金额
+  ,c_deduc_propor -- 剔除比例
+  ,c_deduc_amount_sum -- 小计
+  ,c_drug_sor -- 
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ls_medical_deduc_list
+
+------------------------------4.49 	理赔	残疾信息	web_clm_ls_medical_diseaseinfo
+select
+  ,c_id -- 查勘ID
+  ,c_main_id -- 显示表id
+  ,c_asse_stand -- 评定标准
+  ,c_asse_inscde -- 评定机构
+  ,c_asse_tm -- 评定日期
+  ,c_disease_projectname -- 残疾项目名称
+  ,c_disease_project -- 残疾项目
+  ,c_disease_level -- 残疾级别
+  ,c_his_propor -- 给付比例
+  ,c_his_amount -- 给付金额
+  ,c_adjust -- 调整金额
+  ,c_adjust_amount_reason -- 调整理由
+  ,c_claim_people_cde -- 理算人代码
+  ,c_claim_people -- 理算人
+  ,c_claim_tm -- 理算日期
+  ,t_crt_tm -- 创建时间
+  ,t_crt_cde -- 创建人员
+  ,t_up_cde -- 修改人员
+  ,t_up_tm -- 修改时间
+  ,n_remove_labor_age -- 瑙ｉ櫎銆佺粓姝㈠姵鍔ㄥ叧绯诲勾榫
+  ,n_avg_life -- 骞冲潎棰勬湡瀵垮懡
+  ,n_month_wage -- 
+  ,n_month_count -- 宸ヤ激绾у埆瀵瑰簲鏈堟瘮渚
+  ,c_disease_partname -- 残疾部位名称
+  ,c_disease_part -- 残疾部位
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ls_medical_diseaseinfo
+
+------------------------------4.50 	理赔	医疗费用	web_clm_ls_medical_expenses
+select
+  ,c_id -- 查勘ID
+  ,c_main_id -- 费用项目主表id
+  ,c_hospital_name -- 医院名称
+  ,c_admission_date -- 入院时间
+  ,c_discharge_date -- 出院时间
+  ,c_bill_type -- 账单类型
+  ,c_bill_species -- 账单种类
+  ,c_hospital_days -- 住院天数
+  ,c_sun_amount -- 合计
+  ,c_claim_amount -- 理算金额
+  ,c_social_amount -- 社保已付金额
+  ,c_third_amount -- 第三者已付金额
+  ,c_adjust_amount -- 调整金额
+  ,c_adjust_amount_reason -- 调整原因
+  ,c_claim_people_cde -- 理算人代码
+  ,c_claim_people -- 理算人名称
+  ,c_claim_tm -- 理算日期
+  ,t_crt_tm -- 创建时间
+  ,t_crt_cde -- 创建人员
+  ,t_up_tm -- 修改人
+  ,t_up_cde -- 修改时间
+  ,c_expenses_amount_sum -- 费用金额合计
+  ,c_his_amount_sum -- 自费金额合计
+  ,c_orher_deduc_amount_sum -- 其他扣除金额合计
+  ,c_reason_amount_sum -- 合理费用合计
+  ,c_dental_amount_sum -- 给付金额合计
+  ,c_opt_service_days -- 门诊治疗天数
+  ,n_deductible_rate -- 免赔率
+  ,n_pay_pro -- 赔付比例
+  ,n_deductible_value -- 免陪额
+  ,n_count -- 
+  ,c_hospital_code -- 
+  ,t_modify_tm -- 修改时间戳
+  ,c_invoiceamount_sum -- 
+  ,c_disease_cde -- 
+from web_clm_ls_medical_expenses
+
+------------------------------4.51 	理赔	重疾信息	web_clm_ls_medical_heavydis
+select
+  ,c_id -- 查勘ID
+  ,c_main_id -- 控制显示表id
+  ,c_place_reason -- 重疾原因
+  ,c_place_name -- 重疾名称
+  ,c_report_instcde -- 确诊机构
+  ,c_report_tm -- 确诊日期
+  ,c_his_propor -- 给付比例
+  ,c_his_amount -- 给付金额
+  ,c_adjust -- 调整金额
+  ,c_adjust_amount_reason -- 调整原因
+  ,c_claim_people_cde -- 理算人代码
+  ,c_claim_people -- 理算人
+  ,c_claim_tm -- 理算日期
+  ,t_crt_tm -- 创建时间
+  ,c_crt_cde -- 创建人员
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ls_medical_heavydis
+
+------------------------------4.52 	理赔	控制显示项	web_clm_ls_medical_main
+select
+  ,c_id -- 查勘ID
+  ,c_cvrg_amt -- 险别金额
+  ,c_cvrg_no -- 险别号码
+  ,c_cvrg_nme -- 险别名称
+  ,c_clm_no -- 赔案号
+  ,n_clm_tms -- 赔付次数
+  ,c_crt_cde -- 创建人员
+  ,c_crt_tm -- 创建时间
+  ,c_inju_pk_id -- 人伤信息ID
+  ,c_paly_amt -- 本次赔款金额
+  ,c_adjust_pk_id -- 理算信息ID
+  ,c_insured_cde -- 被保人编码
+  ,c_ply_no -- 保单号
+  ,c_laimed_amt -- 可用险别金额
+  ,c_paly_amt_rmb -- 本次赔款金额折合人民币
+  ,c_amt_cur -- 保额币种
+  ,c_formula -- 计算公式
+  ,n_exem_period -- 免责期（天）
+  ,c_resev_fld1 -- 保险责任
+  ,n_dduct_amt -- 免赔额
+  ,n_dduct_rate -- 免赔率(永安新增)
+  ,n_day_allowance -- 意外伤害津贴保险(补贴日金额)
+  ,n_per_indem_lmt -- 工程险：每人人身伤亡责任限额
+  ,n_per_medical_lmt -- 工程险：每人医疗费用赔偿限额
+  ,c_meber_id -- 承保团单成员
+  ,t_up_cde -- 修改人员
+  ,t_up_tm -- 修改时间
+  ,c_resev_fld2 -- 
+  ,t_modify_tm -- 修改时间戳
+  ,c_srvy_pk_id -- 查勘ID主键
+from web_clm_ls_medical_main
+
+------------------------------4.53 	理赔	医疗费用子表	web_clm_ls_medical_pen_slist
+select
+  ,c_id -- 主键
+  ,c_main_id -- 费用项目主表id
+  ,c_expense -- 费用项目
+  ,c_expenses_amount -- 费用金额
+  ,c_his_amount -- 自费金额
+  ,c_orher_deduc_amount -- 其他扣除金额
+  ,c_reason_amount -- 合理费用
+  ,c_dental_amount -- 给付金额
+  ,c_his_propor -- 给付比例
+  ,t_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,t_up_cde -- 修改人员
+  ,t_up_tm -- 修改时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ls_medical_pen_slist
+
+------------------------------4.54 	理赔	身故信息	web_clm_ls_medical_placeinfo
+select
+  ,c_id -- 查勘ID
+  ,c_main_id -- 控制显示表id
+  ,c_place_reason -- 重疾原因
+  ,c_place_tm -- 身故日期
+  ,c_report_instcde -- 报告机构
+  ,c_his_amount -- 给付金额
+  ,c_adjust -- 调整金额
+  ,c_adjust_amount_reason -- 调整理由
+  ,c_claim_people_cde -- 理算人代码
+  ,c_claim_people -- 理算人
+  ,c_claim_tm -- 理算日期
+  ,t_crt_tm -- 创建时间
+  ,t_crt_cde -- 创建人员
+  ,t_up_cde -- 修改人员
+  ,t_up_tm -- 修改时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ls_medical_placeinfo
+
+------------------------------4.55 	理赔	主表信息	web_clm_main
+select
+  ,c_case_no -- 案件号
+  ,c_rpt_no -- 报案号
+  ,c_rgst_no -- 立案号
+  ,c_end_no -- 结案号
+  ,c_arh_no -- 归档编号
+  ,c_ply_no -- 保单号
+  ,c_app_no -- 申请单号
+  ,c_edr_no -- 批单号
+  ,c_kind_no -- 产品大类
+  ,c_prod_no -- 产品代码
+  ,c_ply_typ_cde -- 保单类型代码
+  ,c_dpt_cde -- 机构代码
+  ,c_bah_dpt_cde -- 承保机构所属分公司代码
+  ,c_clm_dpt_cde -- 理赔机构代码
+  ,c_bsns_typ -- 业务来源
+  ,c_bsns_sub_typ -- 业务子类型
+  ,c_sls_cde -- 业务员
+  ,c_sls_nme -- 业务员名字
+  ,c_sls_id -- 业务员ID
+  ,c_sls_tel -- 业务员电话
+  ,c_vhl_typ -- 车辆类型
+  ,c_vhl_cde -- 车辆代码
+  ,c_use_cde -- 使用性质
+  ,c_lcn_no -- 车牌号
+  ,c_vhl_frm -- 车架号
+  ,c_eng_no -- 发动机号
+  ,n_ton_num -- 吨位数
+  ,n_set_num -- 座位数
+  ,t_ins_bgn_tm -- 保险起期
+  ,t_ins_end_tm -- 保险止期
+  ,c_app_cde -- 申请代码
+  ,c_app_nme -- 申请人
+  ,c_inwd_mrk -- 分入标志：0否、1是
+  ,c_ri_fac_mrk -- 临分标志：0否、1是
+  ,c_ci_mrk -- 共保标志：0否、1是
+  ,c_ci_typ -- 共保方式：0共出、1共入、2共入转共出
+  ,c_agri_mrk -- 涉农标志：1涉农、2非涉农、3农险
+  ,c_entrust_mrk -- 委托/受托：0正常、1委托、2受托
+  ,c_rgst_mrk -- 立案标志：0否、1自动立案、2人工立案
+  ,c_endcase_mrk -- 结案标志：0否、1是
+  ,c_arh_mrk -- 归档标志：0否、1是
+  ,c_reopen_mrk -- 重开案标志：0否、1是
+  ,c_recover_mrk -- 追偿标志：0否、1是
+  ,c_pay_mrk -- 支付标志：0否、1部分支付、2全部支付
+  ,n_prepay_mrk -- 预付标志：0否、1是
+  ,c_advpay_mrk -- 垫付标志：0否、1是
+  ,c_huge_mrk -- 巨灾标志：0否、1是
+  ,c_gup_mrk -- 注销标志：0否、1是
+  ,c_rfu_mrk -- 拒赔标志：0否、1部分拒赔、2全部拒赔
+  ,c_cnl_mrk -- 销案标志：0否、1是
+  ,c_pxy_mrk -- 无责代赔标志：0否、1是
+  ,c_self_mrk -- 互碰自赔标志：0否、1是
+  ,c_is_big -- 大案标志：0否、1是
+  ,c_is_otm -- 超时报案标志：0否、1是
+  ,c_doc_mrk -- 案件单证齐备标志：0否、1是、2人工志齐全
+  ,c_is_duty -- 是否保险责任标志：0否、1是
+  ,c_clm_degree -- 案件程度
+  ,c_clm_pri -- 案件优先级
+  ,c_clm_sts -- 赔案状态：0报案暂存、1已报案、2、已注销、3已调度、5、已定损、7已核损、9已立案、11已理算、13已核赔、10己销案、15已结案、16退回查勘 17不予立案
+  ,n_amt -- 保险金额
+  ,c_amt_cur -- 保额币种
+  ,c_clm_cur -- 理赔币种
+  ,n_pend_tms -- 未决调整次数
+  ,n_clm_tms -- 赔付次数
+  ,n_advpay_tms -- 垫付次数
+  ,n_prepay_tms -- 预付次数
+  ,n_recover_tms -- 追偿次数
+  ,n_reopen_tms -- 重开案次数
+  ,n_his_tms -- 保单历史出险次数
+  ,n_his_eff_tms -- 保单有效年度出险次数
+  ,n_his_lst_tms -- 保单上年度出险次数
+  ,n_prepay -- 预付总额
+  ,n_pp_amt -- 垫付总额
+  ,n_chase_amt -- 追偿总额
+  ,n_self_amt -- 互碰自赔总额
+  ,n_pxy_amt -- 无责代赔总额
+  ,n_exg_amt -- 通融总额
+  ,n_pay_amt -- 赔款总额
+  ,n_coin_appo -- 共保分摊总金额
+  ,n_clm_fee -- 理赔费用总额
+  ,n_guess_amt -- 报损金额
+  ,n_hlp_fee -- 施救费总额
+  ,c_rpt_tel -- 报案人电话
+  ,c_rpt_dpt_cde -- 接报案机构代码
+  ,t_prt_in_tm -- 报案录入时间
+  ,t_rpt_tm -- 报案时间
+  ,t_rgst_tm -- 立案时间
+  ,t_end_clm_tm -- 结案时间
+  ,t_srvy_tm -- 最近查勘时间
+  ,t_prelos_tm -- 最近估损时间
+  ,t_chklos_tm -- 最近核损时间
+  ,t_chkpri_tm -- 最近核价时间
+  ,t_chkclm_tm -- 最近核赔时间
+  ,t_ijr_chklos_tm -- 最近人伤核损时间
+  ,t_pre_tm -- 最近预付时间
+  ,t_adv_tm -- 最近垫付时间
+  ,t_pas_tm -- 最近追偿时间
+  ,t_acdnt_tm -- 出险时间
+  ,c_acdnt_rsn_cde -- 
+  ,c_acdnt_rsn_nme -- 出险原因名称
+from web_clm_main
+
+------------------------------4.56 	理赔	轨迹记录表	web_clm_oper_record
+select
+*
+from web_clm_oper_record
+
+------------------------------4.57 	理赔	赔款支付信息	web_clm_payinfo
+select
+  ,c_payinfo_pk_id -- 赔款支付信息ID
+  ,c_inspay_pk_id -- 被保人赔款信息ID
+  ,c_adjust_pk_id -- 理算表主键
+  ,c_clm_no -- 赔案号
+  ,n_clm_tms -- 赔付次数
+  ,n_seq -- 序号
+  ,c_pay_typ -- 赔付类型
+  ,n_pay -- 本次理算赔款
+  ,c_accept_typ -- 接收人类型
+  ,c_accept_desc -- 接收人说明
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_acc_bank -- 开户行
+  ,c_acc_name -- 账户名称
+  ,c_acc_num -- 账号
+  ,c_acc_province -- 开户省
+  ,c_acc_city -- 开户市
+  ,c_acc_bank_name -- 银行名称
+  ,c_amt_cur -- 支付币种
+  ,payinfo_desc -- 备注
+  ,c_payment_mak -- 传收付接口标志
+  ,t_modify_tm -- 修改时间戳
+from web_clm_payinfo
+
+------------------------------4.58 	理赔	未决信息	web_clm_pend
+select
+  ,c_pend_id -- 未决信息ID
+  ,c_rpt_no -- 报案号
+  ,c_case_no -- 赔案号
+  ,n_pend_tms -- 未决调整次数
+  ,t_pend_tm -- 未决调整时间
+  ,c_year -- 未决调整年
+  ,c_month -- 未决调整月
+  ,c_latest_mrk -- 最新标志
+  ,c_pend_source -- 来源
+  ,c_amt_cur -- 币种
+  ,n_this_pend_amt --   本次未决：本次任务涉及的所有项目（险别）产生的未决之和
+  ,n_this_dtmd_amt --   本次已决：本次任务涉及的所有项目（险别）产生的己决之和
+  ,n_pend_amt --   当前最新总未决：所有任务在各自最新状态下的未决之和
+  ,n_dtmd_amt --   当前最新总己决：所有任务在各自最新状态下的己决之和
+  ,n_this_fee_pend_amt --   本次费用未决：本次任务产生的未决费用
+  ,n_this_fee_dtmd_amt --   本次费用己决：本次任务产生的己决费用
+  ,n_fee_pend_amt --   当前最新费用总未决：所有任务在各自最新状态下的费用未决之和
+  ,n_fee_dtmd_amt --   当前最新费用总己决：所有任务在各自最新状态下的费用己决之和
+  ,c_crt_cde -- 创建人代码
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 更新人代码
+  ,t_upd_tm -- 更新时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_clmfee -- 理算费用金额
+  ,c_clm_no -- 赔案号
+  ,n_pend_a_amt -- 代位未决金额
+  ,n_dtmd_s_amt -- 代位已决金额
+  ,n_b_amt -- 回款金额
+  ,t_modify_tm -- 修改时间戳
+from web_clm_pend
+
+------------------------------4.59 	理赔	未决明细信息	web_clm_pend_dtl
+select
+  ,c_pend_dtl_id -- 自动生成主键
+  ,c_pend_id --   未决信息表主键
+  ,c_case_no -- 案件号
+  ,c_item -- 项目
+  ,t_pend_tm -- 未决调整时间
+  ,c_year -- 未决调整年
+  ,c_month -- 未决调整月
+  ,n_this_pend_amt --   本次未决：本次任务中此项目（险别）产生的未决
+  ,n_this_dtmd_amt --   本次已决：本次任务中此项目（险别）产生的己决
+  ,n_pend_amt --   当前最新总未决：所有任务中此项目（险别）的未决之和　
+  ,n_dtmd_amt --   当前最新总己决：所有任务中此项目（险别）的己决之和
+  ,c_crt_cde -- 创建人员代码
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员代码
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk --   迁移标志
+  ,t_trans_tm --   迁移时间
+  ,c_clm_no --   赔案号
+  ,n_avoid_rate -- 
+  ,n_avoid_amt -- 
+  ,t_modify_tm -- 修改时间戳
+from web_clm_pend_dtl
+
+------------------------------4.60 	理赔	人身险抄单险别表	web_clm_ply_agrotgt
+select
+  ,c_app_no -- 投保单号
+  ,c_ply_no -- 保单号 Policy No
+  ,c_edr_no -- 批单号
+  ,n_edr_prj_no -- 批改次数 Times of Endorsement
+  ,n_tgt_seq -- 标的序号
+  ,c_tgt_cme -- 标的项目(农业种植险)
+  ,c_tgt_addr -- 标的坐落地址
+  ,c_insured_cde -- 被保人编码
+  ,c_insured_cme -- 被保人姓名
+  ,c_certf_cls -- 证件类型【默认身份证】
+  ,c_certf_cde -- 证件号码
+  ,n_insured_amount -- 投保数量
+  ,n_unit_cost -- 单位生产成本
+  ,c_remark -- 备注
+  ,c_marking -- 标识(耳号段号)
+  ,c_clm_no --  赔案号
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ply_agrotgt
+
+------------------------------4.61 	理赔	农业险标的信息	web_clm_ply_base
+select
+  ,c_app_no -- 申请单号
+  ,c_ply_no -- 保单号 Policy No
+  ,c_edr_no -- 批单号
+  ,n_edr_prj_no -- 批改次数 Times of Endorsement
+  ,c_dpt_cde -- 机构代码 Department No
+  ,c_ply_sts -- 保单状态 Policy Status，I 非终止(有效或满期) T Terminated 终止(注退)
+  ,c_clm_no -- 赔案号
+  ,n_amt -- 保额合计 Amount Insured
+  ,c_bsns_typ -- 业务来源 Source Type of Business
+  ,c_agri_mrk -- 涉农标志  Agriculture Related Flag
+  ,c_amt_cur -- 保额币种 Currency of Amount {Code}
+  ,n_dduct_amt -- 绝对免赔额(new)
+  ,n_dduct_rate -- 免赔率(new)
+  ,c_prm_sts -- 保费实收状态，0 未实收 1 部分实收 2 保费收齐
+  ,c_prod_no -- 产品代码 Product Code
+  ,c_prod_no_old -- 老系统产品代码
+  ,c_renew_mrk -- 续保标志'0'新保;'1'续保 Renewal Flag
+  ,c_repstopext_rle_app_no -- 报停展期的总天数
+  ,c_repstopext_status -- 停展状态 T停  Z展  N 非停展状态
+  ,n_ci_jnt_amt -- 共保总保额 Joint Amount of Coinsurance
+  ,n_ci_jnt_prm -- 共保总保费 Joint Premium of Coinsurance
+  ,n_ci_own_amt -- 共保我司净保额
+  ,n_ci_own_prm -- 共保我司净保费
+  ,c_ci_inp_typ -- [共保]录单方式
+  ,c_ci_mrk -- 共保标志('0'非共保'1'共保) Coinsurance Flag
+  ,c_dduct_desc -- 免赔说明(new)
+  ,c_dispt_sttl_cde -- 诉讼方式 Dispute settle method {Code}
+  ,c_dispt_sttl_org -- 仲裁机构  Dispute settle Organ
+  ,c_foreign_mrk -- 境内外标志(0境内;1境外) DomesticForeign Flag
+  ,c_grp_mrk -- 团单标志('0'个单;'1'团单) Group Insurance Flag
+  ,c_inst_mrk -- 分期付款标志 Installment Flag
+  ,c_inwd_mrk -- 分入业务标志('0'非分入;'1'分入) Reinsurance Inward Flag
+  ,c_prm_cur -- 保费币种 Currency of Premium
+  ,c_quota_mrk -- 是否定额单 1 定额单 0 非定额单
+  ,c_reg_mrk -- 记名标志'0'不记名;'1'记名 Registered Flag
+  ,c_rel_ply_no -- 依赖关联保单号 ，如财产险与利损险，车险商业与交强险
+  ,c_repstopext_src_app_no -- 做报停展期批改前的最新投保单，如果是做第二此报停展期批改则还是原来的最新投保单号
+  ,n_prm -- 保费合计 Premium
+  ,n_prm_rmb_exch -- 保费人民币汇率
+  ,t_app_tm -- 投保日期 Applying Time
+  ,t_insrnc_bgn_tm -- 保险起期 Policy Effective Date
+  ,t_insrnc_end_tm -- 保险止期 Policy Expire Date
+  ,c_sls_id -- 业务员身份证号
+  ,c_cha_type -- 渠道中级分类
+  ,c_cha_subtype -- 渠道子类
+  ,c_brk_sls_dpt -- 代理机构
+  ,c_brk_sls_cde -- 代理业务员
+  ,c_crt_cde -- 创建人员 Creator No
+  ,t_crt_tm -- 创建时间 Create Time
+  ,c_upd_cde -- 修改人员 Updater No
+  ,t_upd_tm -- 修改时间 Update Time
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_data_src -- 
+  ,c_long_short_flag -- é•¿æœŸé™©å’ŒçŸ­æœŸé™©æ ‡è¯†	0ä¸€å¹´æœŸä»¥å†…ï¼ˆçŸ­æœŸï¼‰ 1ä¸€å¹´æœŸ     2é•¿æœŸ
+  ,c_resv_txt_9 -- 预留字符串字段9
+  ,c_resv_txt_10 -- 预留字符串字段10
+  ,c_resv_txt_11 -- 预留字符串字段11
+  ,c_resv_txt_12 -- 预留字符串字段12
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ply_base
+
+------------------------------4.62 	理赔	保批单基本信息	web_clm_ply_coinsurance
+select
+  ,c_clm_no -- 赔案号
+  ,c_ply_no -- 保单号
+  ,c_app_no -- 申请单号
+  ,c_edr_no -- 批单号
+  ,n_edr_prj_no -- 批改次数
+  ,c_ci_com_cde -- 共保公司CDE
+  ,c_ci_com_nme -- 共保公司名称
+  ,n_ci_pre -- 共保比例
+  ,n_ci_amt -- 共保保额
+  ,n_ci_fee -- 相关费用
+  ,n_ci_comm_fee -- 共保代理经济费用
+  ,n_ci_ply_fee -- 共保出单费用
+  ,n_ci_jni_amt -- 总保额
+  ,c_ci_self -- 是否本公司
+  ,c_crt_cde -- 创建人代码
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人代码
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_chief_mrk -- 主共标志
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ply_coinsurance
+
+------------------------------4.63 	理赔	从承保抄过来的保单共保信息	web_clm_ply_cvrg
+select
+  ,c_pk_no -- 主键
+  ,c_clm_no -- 赔案号
+  ,c_ply_no -- 保单号,保单号 Policy No
+  ,c_app_no -- 申请单号
+  ,c_edr_no -- 批单号
+  ,n_edr_prj_no -- 批改序号,批改次数 Times of Endorsement
+  ,n_seq_no -- 序号
+  ,c_cvrg_no -- 险别
+  ,c_cust_cvrg_nme -- 自定义险别名称,自定义险别名称 Customized Coverage Name
+  ,n_amt -- 保额,保额 Amount Insured
+  ,n_tgt_seq -- 标的序号
+  ,n_indem_lmt -- 赔偿限额,赔偿限额 Indemnity Limit
+  ,c_dduct_mrk -- 不计免赔标志, 0  否, 1  是
+  ,n_dduct_rate -- 免赔率,免赔率 Deductable Rate
+  ,n_dduct_amt -- 绝对免赔额,绝对免赔额 Straight Deductible Amount
+  ,n_dduct_prm -- 不计免赔保费
+  ,c_dduct_desc -- 免赔说明,免赔说明 Deductable Description
+  ,n_once_indem_lmt -- 单次赔偿限额,单次赔偿限额 Indemnity Limit for Any One Claim
+  ,n_exem_period -- 免责期（天）
+  ,c_cust_cl_ctnt -- 自定义条款内容,自定义条款内容 Customized Clause Content
+  ,c_under_insurance_flag -- 不足额投保标志:0:足额投保,1:不足额投保
+  ,c_cancel_mrk -- 退保标志,退保标志 Cancel Flag，缺省为 1 ，当批改退保时为‘0’
+  ,c_plan_no -- 方案号
+  ,n_dut_prm -- 变化前已了责任保费,已了责任保费，缺省为0
+  ,t_bgn_tm -- 有效起期,险别的有效起期，保单为保单的保险起期，批单为批单的生效起期
+  ,t_end_tm -- 有效止期,险别的有效起期，保单为保单的保险止期，批单为批单的生效止期
+  ,n_per_amt -- 每标的保额,每标的保额  Amount for Each Subject-matter 车上人员责任险作为司机保额
+  ,n_per_indem_lmt -- 每标的赔偿限额,每标的赔偿限额 Indemnity Limit for Each Subject-matter 车上人员责任险作为乘客保额
+  ,c_sec_cvrg_no -- 险别标的(二级子险)-家财险
+  ,c_main_cvrg_mark -- 是否主、附加险标志
+  ,n_ct_limit -- 除污费用每次事故赔偿限额 【道路危险货物承运（含三者）险】使用
+  ,n_low_limit -- 法律费用赔偿金额 【产品责任险/机动车停车场责任险/医疗责任险/雇主责任险】使用
+  ,n_fete -- 雇员人数 【雇主责任险】使用
+  ,n_accu_liab_limit -- 累计责任限额 【责任险通用】使用
+  ,n_each_sub_mat_limit -- 每标的赔偿限额 EACH SUBJECT MATTER LIMIT【机动车停车场责任险/医疗责任险】使用
+  ,n_parking_limit -- 每车位赔偿限额 【机动车停车场责任险】使用
+  ,n_bed_limit -- 每床位保险费 【机动车停车场责任险/医疗责任险】使用
+  ,n_prop_limit -- 每次事故财产损失赔偿限额 【产品责任险/火灾公众】使用
+  ,n_acci_dduct_amt -- 每次事故免赔额 【责任险通用】 使用
+  ,n_acci_dduct_rate -- 每次事故免赔率 【责任险通用】 使用
+  ,n_acci_dis_limit -- 每次事故伤残赔偿限额 【产品责任险/道路客运承运人责任/雇主责任险】 使用
+  ,n_acci_liab_limit -- 每次事故责任限额 【产品责任险/道路客运承运人责任/道路危险货物承运（含三者）/电梯责任/公众责任险/火灾公众/机动车停车场责任险/旅行社责任险/校方责任险/医疗责任险】使用
+  ,n_each_prop_limit -- 每人财产损失赔偿限额 【电梯责任/公众责任险/旅行社责任险/校方责任险】使用
+  ,n_each_limit -- 每人赔偿限额 【产品责任险】使用
+  ,n_each_die_limit -- 每人人身伤亡责任限额 【道路危险货物承运（含三者）/电梯责任/公众责任险/火灾公众/旅行社责任险/校方责任险/雇主责任险】使用
+  ,n_each_casu_liab_limit -- 每人医疗费用赔偿限额 【旅行社责任险/校方责任险/校方责任险/雇主责任险】使用
+  ,n_each_seat_limit -- 每座赔偿限额 【道路客运承运人责任】使用
+  ,n_each_seat_medi_limit -- 每座医疗费用赔偿限额 【道路客运承运人责任】使用
+  ,n_num_of_insured -- 投保人数 【机动车停车场责任险/医疗责任险】使用
+  ,n_num_of_seat -- 总承保座位数 【道路客运承运人责任】使用
+  ,n_each_liti_limit -- 每人诉讼赔偿限额 【雇主责任险】使用
+  ,c_resv_txt_1 -- 预留字符串字段1,预留
+  ,n_resv_num_1 -- 每吨获取赔偿限额【043008：水路货物承运人责任险】使用
+  ,n_resv_num_2 -- 特别费用赔偿限额【042003 教职工校方责任保险】使用
+  ,n_resv_num_3 -- 每车船架次赔偿限额【043012 】使用
+  ,n_resv_num_4 -- 物流营业总额【043012 】使用
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 更新人员
+  ,t_upd_tm -- 更新时间
+  ,c_trans_mrk --   迁移标志
+  ,t_trans_tm --   迁移时间
+  ,t_modify_tm -- 修改时间戳
+  ,c_tgt_typ -- 标的类型
+  ,c_resv_txt_16 -- 标的类别
+  ,n_resv_num_20 -- 保额，限额(对应08004酒店取消险保额字段)
+  ,c_tgt_nme -- 标的名称
+  ,n_resv_num_11 -- 保额,限额(对应08007产品的附加险)
+from web_clm_ply_cvrg
+
+------------------------------4.64 	理赔	财产险抄单险别表	web_clm_ply_insured
+select
+  ,c_pk_id -- 自定义主键
+  ,c_app_no -- 投保单号
+  ,c_ply_no -- 保单号
+  ,c_edr_no -- 批单号
+  ,n_edr_prj_no -- 批改次数
+  ,c_clm_no -- 赔案号
+  ,c_clnt_mrk -- 客户分类,客户分类,0 法人，1 个人
+  ,c_insured_cde -- 被保人编码
+  ,c_insured_nme -- 被保人名称
+  ,c_legal_nme -- 法定代表人姓名
+  ,c_legal_certf_cls -- 法定代表人证件类型
+  ,c_legal_certf_cde -- 法定代表人证件号码
+  ,t_legal_certf_end_tm -- 法定代表人证件有效期限
+  ,c_rel_insured_cde -- 副被保人对应主被保人码,副被保人对应主被保人代码
+  ,c_insured_cls -- 被保人类别,包括： 0 主被保人, 1 副被保人, 2 连带被保人
+  ,t_birthday -- 出生日期,出生年月
+  ,c_clnt_addr -- 地址
+  ,c_resid_addr -- 居住地址
+  ,c_resid_zip -- 居住地址邮编
+  ,c_mobile -- 移动电话
+  ,c_work_dpt -- 工作单位
+  ,c_work_dpt_addr -- 工作单位地址
+  ,c_work_dpt_zip -- 工作单位邮编
+  ,c_tel -- 固定电话,电话
+  ,n_drv_age -- 驾龄
+  ,c_health_cde -- 健康状况代码
+  ,c_health_desc -- 健康状况说明
+  ,c_cntr_nme -- 联系人,投保人联系人
+  ,n_age -- 年龄
+  ,c_sub_trd_cde -- 行业细分代码
+  ,c_sex -- 性别
+  ,c_zip_cde -- 邮编
+  ,c_certf_cls -- 证件类型
+  ,c_certf_cde -- 证件号码
+  ,t_certf_end_date -- 证件有效期止
+  ,c_position -- 职位
+  ,c_duty -- 职务,职务内容
+  ,c_occup_cde -- 职业代码
+  ,t_upd_tm -- 修改时间
+  ,c_upd_cde -- 修改人代码
+  ,t_crt_tm -- 创建时间
+  ,c_crt_cde -- 创建人代码
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ply_insured
+
+------------------------------4.65 	理赔	被保人信息	web_clm_ply_tgt
+select
+  ,c_pk_id -- 主键
+  ,c_ply_no -- 保单号,保单号 Policy No
+  ,c_app_no -- 申请单号,批改申请单号
+  ,c_edr_no -- 批单号
+  ,n_edr_prj_no -- 批改序号,批改次数 Times of Endorsement
+  ,c_clm_no -- 赔案号
+  ,n_tgt_seq -- 标的序号【企财险/家财险】使用
+  ,c_tgt_cme -- 标的名称/船坞[船台]编号 【企财险/家财险/建工险/机损险/船舶建造/雇主责任险/公众责任险/停车场责任险/火灾责任险/电梯责任险/农业种植险/】使用
+  ,c_tgt_addr -- 标的地址/船舶建造地址  【企财险/家财险/建工险/机损险/船舶建造/雇主责任险/公众责任险/停车场责任险/火灾责任险/电梯责任险/农业种植险/】使用
+  ,c_tgt_type -- 标的类型 【通用】
+  ,c_tgt_unit -- 标的计量单位
+  ,n_tgt_count -- 标的数量
+  ,c_tgt_survey_agent -- 标的查勘代理人
+  ,c_transportation -- 运输工具
+  ,c_port_of_shipment -- 起运港
+  ,c_transshipment -- 中转港
+  ,c_pod -- 目的港 PORT OF DESTINATION 
+  ,c_tran_typ -- 运输方式
+  ,c_claim_place -- 赔偿赔付地点
+  ,c_claim_cur -- 赔偿赔付币种
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间 
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_tgt_txt_fld_1 -- 标的字段-文本1,标的字段
+  ,n_tgt_num_fld_1 -- 标的字段-数值1,标的字段
+  ,t_tgt_tm_fld_1 -- 标的字段-日期1,标的字段
+  ,c_tgt_category -- 标的类别
+  ,c_tgt_amt -- 赔偿限额/保额
+  ,n_insured_hou_amount -- 投保户数
+  ,n_insured_amount -- 投保数量
+  ,c_bus_type -- 业务种类
+  ,n_cen_fin_prop -- 中央财政补贴比例 (The Central Finance Allowance Proportion)
+  ,n_prov_sub_prop -- 省财政补贴比例(The Provincial government subsidies Proportion)
+  ,n_local_sub_prop -- 地市财政补贴比例 (Local Financial subsidies Proportion)
+  ,n_far_pay_expend -- 农户缴费比例 (Farmer pay expends scale to)
+  ,c_tgt_txt_fld_17 -- 标的字段-文本17,标的字段
+  ,t_modify_tm -- 修改时间戳
+from web_clm_ply_tgt
+
+------------------------------4.66 	理赔	农险险的承保标的险别信息	web_clm_plycvrg
+select
+  ,c_plycvrg_pk_id -- 人身险抄单险别表ID
+  ,c_ins_acc_pk_id -- 出险信息表ID
+  ,c_clm_no -- 赔案号
+  ,c_insured_cde -- 被保人编码
+  ,c_insured_nme -- 被保人名称
+  ,c_cvrg_no -- 险别编码
+  ,c_cvrg_nme -- 险别名称
+  ,n_cvrg_amt -- 保险金额/限额
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,n_exem_period -- 免责期（天）
+  ,c_resev_fld1 -- 保险责任
+  ,n_dduct_amt -- 免赔额
+  ,n_dduct_rate -- 免赔率(永安新增)
+  ,n_day_allowance -- 意外伤害津贴保险(补贴日金额)
+  ,n_per_indem_lmt -- 063013：限额
+  ,n_per_medical_lmt -- 060025：月工资
+  ,c_meber_id -- 承保团单成员
+  ,t_modify_tm -- 修改时间戳
+from web_clm_plycvrg
+
+------------------------------4.67 	理赔	立案信息	web_clm_prepay
+select
+  ,c_prepay_id -- 主键
+  ,c_app_id -- 
+  ,c_rpt_no -- 报案号
+  ,c_case_no -- 案件号
+  ,n_num -- 复勘次数
+  ,c_prn_cde --   预付人代码
+  ,c_dpt_cde --   预付机构代码
+  ,c_rsn_cde --   预付原因代码
+  ,t_advancepay_tm --   预付时间
+  ,n_amt --   预付金额
+  ,c_rmk --   备注
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk --   迁移标志
+  ,t_trans_tm --   迁移时间
+  ,c_cause_no -- 交强险列明原因  0.醉酒  1.饮酒  2.酒驾  3.醉驾
+  ,t_modify_tm -- 修改时间戳
+from web_clm_prepay
+
+------------------------------4.68 	理赔	预付明细信息	web_clm_prepaydtl
+select
+  ,c_prepaydtl_pk_id -- 预付明细信息ID
+  ,c_prepay_pk_id -- 预付明细信息ID
+  ,c_clm_no -- 赔案号
+  ,n_prepay_tms -- 预付次数
+  ,c_insured_cde -- 被保险人代码
+  ,c_insured_nme -- 被保险人姓名
+  ,c_prepay_amt_typ -- 金额类型
+  ,n_prepaid -- 已预付金额
+  ,n_prepay -- 申请金额
+  ,c_prepay_rsn -- 预付原因
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 更新人员
+  ,t_upd_tm -- 更新时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_farmer_cde -- 农户编码
+  ,c_farmer_nme -- 农户
+  ,c_plot_cde -- 地块编码
+  ,c_app_plot_cde -- 投保地号
+  ,c_prov_cde -- 省
+  ,c_city_cde -- 市(或师)
+  ,c_coun_cde -- 县(或团)
+  ,c_vill_cde -- 乡镇(或分场)
+  ,c_haml_cde -- 村组(或连队)
+  ,c_acc_bank -- 开户行
+  ,c_acc_name -- 账户名称
+  ,c_acc_num -- 账号
+  ,c_acc_province -- 开户省
+  ,c_acc_city -- 开户市
+  ,c_acc_bank_name -- 银行名称
+  ,c_payment_mak -- 传收付接口标志
+  ,c_bank_id -- 自动生成主键
+  ,c_rdr_type -- 
+  ,c_cvrg_no -- 险别编码
+  ,c_cvrg_nme -- 险别名称
+  ,n_cvrg_amt -- 保险金额/限额
+  ,c_resev_fld1 -- 保险责任
+  ,t_modify_tm -- 修改时间戳
+from web_clm_prepaydtl
+
+------------------------------4.69 	理赔	估损、核损、核价财产明细表	web_clm_prop_assess
+select
+  ,c_prop_assess_id -- 自动生成主键
+  ,c_assess_id -- 估损核损表主键
+  ,c_rpt_no -- 报案号
+  ,c_task_no -- 任务号
+  ,c_nme --   品名 
+  ,c_typ --   型号 
+  ,c_standard --   规格 
+  ,n_preassess_amt --   估损价 
+  ,n_amount -- 数量
+  ,n_repair_amt --   维修费
+  ,c_remain_typ --   损余类型
+  ,n_remain_rate --   扣残比例
+  ,n_remain_amt --   扣值金额
+  ,c_rmk --   备注
+  ,n_agr_amt --   核损价
+  ,n_agr_amount -- 核准数量
+  ,n_agr_repair_amt --   核准维修费
+  ,c_agr_remain_typ --   核准损余类型
+  ,n_agr_remain_rate --   核准扣残比例
+  ,n_agr_remain_amt --   核准扣值金额
+  ,c_agr_rmk --   核损备注
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk --   迁移标志
+  ,t_trans_tm --   迁移时间
+  ,n_repair_name -- 维修项
+  ,c_losstgt_pk_id -- 损失标的信息ID
+  ,c_fee_type -- 费用类型
+  ,n_reject_amt -- 剔除金额
+  ,c_count_standard -- 计算标准
+  ,c_loss_ass_id -- 标的定损清单序号
+  ,c_unit -- 财产单位
+  ,safe_type -- 险种类别（0财产险,1船舶险,2责任险,3货运险,4建工险）
+  ,n_preassess_total -- 估计合计
+  ,c_exp_compensa -- 预计赔偿方式（0,现金;2,维修;3,重置价值）
+  ,c_charges -- 残值归属(0为保险人，1为归被保险人)
+  ,n_unit_price -- 单价
+  ,c_damage_degree -- 损失程度
+  ,c_pur_fixed_year -- 购置年限
+  ,c_record_type -- 记录项目(1.损失,2.残值,3.维修,0全部)
+  ,n_takleloss_amt -- 报损金额
+  ,c_trans_bill_no -- 货运单据号
+  ,c_carqo_bill_no -- 货物发票号
+  ,c_ownership -- 财产所有权(0自有,1租赁,2代保管)
+  ,c_status -- 移动查勘估损状态
+  ,c_mob_id -- 移动查勘估损id
+  ,t_modify_tm -- 修改时间戳
+from web_clm_prop_assess
+
+------------------------------4.70 	理赔	历史追偿结案信息	web_clm_recover_endcase
+select
+  ,c_reco_endcase_pk_id -- 追偿结案ID
+  ,c_recover_no -- 追偿编号
+  ,n_reco_endcase_tms -- 追偿结案次数
+  ,t_reco_endcase_tm -- 追偿结案时间
+  ,c_recover_cur -- 追偿币种
+  ,n_recover_this -- 本次追回金额
+  ,n_recover_exch -- 追回金额折RMB汇率
+  ,n_recover_rmb -- 追偿费用折RMB金额
+  ,c_recover_fee_cur -- 本次追偿费用币种
+  ,n_recover_fee -- 本次追偿费用
+  ,n_recover_fee_rmb_exch -- 追偿费用折RMB汇率
+  ,n_recover_fee_rmb -- 追回金额折RMB金额
+  ,n_fee_recover_exch -- 追回金额折RMB汇率
+  ,n_recover -- 追回实际金额
+  ,c_remark -- 备注
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_clm_tms -- 赔付次数
+  ,t_modify_tm -- 修改时间戳
+from web_clm_recover_endcase
+
+------------------------------4.71 	理赔	追偿立案	web_clm_recover_rgst
+select
+  ,c_recover_no -- 追偿编号
+  ,c_clm_no -- 赔案号
+  ,c_recover_typ -- 追偿类型
+  ,t_recover_rgst_tm -- 追偿日期
+  ,t_deadline -- 时效（截止时间）
+  ,c_recover_cur -- 追偿币种
+  ,n_recover_rgst -- 追偿金额
+  ,n_recover_rmb -- 追偿金额
+  ,n_recover_fee_rmb -- 追偿费用
+  ,c_surety_mrk -- 已获担保标志
+  ,c_liability -- 责任方
+  ,c_recover_dpt -- 追偿机构
+  ,c_recover_cde -- 追偿经办人
+  ,c_recover_rsn -- 追偿理由
+  ,c_recpver_file -- 追偿文件
+  ,c_entrusted -- 被委托方
+  ,c_tel -- 联系电话
+  ,c_addr -- 地址
+  ,c_remark -- 备注
+  ,n_reco_endcase_tms -- 结案次数
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 更新人员
+  ,t_upd_tm -- 更新时间
+  ,c_recover_sts -- 追偿状态
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_success -- 是否追偿成功
+  ,t_continue -- 是否继续追偿
+  ,t_hkclm_tm -- 追偿审核时间
+  ,c_recover_chk_cdenme -- 审核人名字
+  ,c_recover_chk_cde -- 审核人编码
+  ,c_recover_chk_dpt -- 审核部门
+  ,c_recover_chk_tim -- 审核时间
+  ,c_recover_fee_cur -- 币种
+  ,c_recover_chk_sug -- 审核意见
+  ,c_recover_chk -- 审核结论
+  ,n_amt -- 保险金额
+  ,n_clm_tms -- 赔付次数
+  ,t_modify_tm -- 修改时间戳
+from web_clm_recover_rgst
+
+------------------------------4.72 	理赔	领款人信息	web_clm_recp
+select
+  ,c_recp_pk_id -- 领款人信息ID
+  ,c_clm_no -- 赔案号
+  ,c_insured_cde -- 被保险人代码
+  ,c_insured_nme -- 被保险人名称
+  ,c_relcde -- 与被保险人关系
+  ,c_bnfc_nme -- 领款人姓名
+  ,c_certf_cls -- 证件类型
+  ,c_certf_cde -- 证件代码
+  ,n_amt -- 身故保险金额
+  ,c_benf_ord -- 受益顺序
+  ,n_benf_prop -- 受益份额
+  ,n_benf_allprop -- 受益金额
+  ,c_acc_bank -- 开户行
+  ,c_acc_name -- 账户名称
+  ,c_acc_num -- 账号
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,n_clm_tms -- 赔付次数
+  ,c_acc_province -- 开户省
+  ,c_acc_city -- 开户市
+  ,c_acc_bank_name -- 银行总行名称
+  ,c_payment_mak -- 传收付接口标志
+  ,c_cust_seq -- 收付唯一流水号
+  ,t_modify_tm -- 修改时间戳
+from web_clm_recp
+
+------------------------------4.73 	理赔	重开案信息	web_clm_reopen
+select
+  ,c_reopen_pk_id -- 重开案ID
+  ,c_clm_no -- 赔案号
+  ,n_reopen_tms -- 重开案次数
+  ,c_dspt_dpt -- 调度机构
+  ,c_dspt_cde -- 调度人
+  ,t_dspt_tm -- 调度时间
+  ,c_reopen_rsn -- 重开案原因
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_status -- 状态
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_clm_reopen_id -- 
+  ,c_clm_main_id -- 赔案表id
+  ,t_reopen_tm -- 
+  ,c_reopen_rsn_cde -- 
+  ,t_reopen_audt_tm -- 
+  ,c_reopen_audt_prsn_cde -- 
+  ,c_remark -- 备注
+  ,n_version -- 
+  ,c_deal_org -- 
+  ,t_modify_tm -- 修改时间戳
+from web_clm_reopen
+
+------------------------------4.74 	理赔	重复保险信息	web_clm_repeat_ins
+select
+  ,c_repeat_ins_id -- 共保信息ID
+  ,c_clm_no -- 赔案号
+  ,c_against_type -- 类别
+  ,c_ins_company -- 保险公司
+  ,n_amount -- 保额
+  ,n_actual_value -- 标的实际价值
+  ,n_propotion -- 比例（%）
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员代码
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_task_no -- 任务号
+  ,c_estmt_pk_id -- 定损信息ID
+  ,n_srvy_tms -- 查勘次数
+  ,c_if_note -- 是否通知其他共保方
+  ,t_note_tms -- 通知时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_repeat_ins
+
+------------------------------4.75 	理赔	立案信息	web_clm_rgst
+select
+*
+from web_clm_rgst
+
+------------------------------4.76 	理赔	风险单位赔款分摊信息表	web_clm_riskunit_amtappo
+select
+*
+from web_clm_riskunit_amtappo
+
+------------------------------4.77 	理赔	报案信息	web_clm_rpt
+select
+  ,c_clm_no -- 赔案号
+  ,c_noinfo_rpt_mrk -- 无资料报案标志
+  ,c_noinfo_rpt_no -- 无资料报案编号
+  ,c_rpt_dpt -- 接报案机构
+  ,c_rpt_cde -- 接报案人
+  ,c_dspt_way -- 调度方式
+  ,c_srvy_typ -- 赔案查勘类别
+  ,t_rpt_tm -- 报案时间
+  ,c_rpt_way -- 报案方式
+  ,c_rptman_typ -- 报案人类别
+  ,c_rptman_nme -- 报案人姓名
+  ,c_rptman_tel -- 报案人电话
+  ,c_rptman_email -- 报案人EMAIL
+  ,c_rptman_addr -- 报案人地址
+  ,c_insured_rel -- 与被保人关系
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_calam_area1 -- 受灾面积
+  ,n_calam_area2 -- 成灾面积
+  ,n_nogain_area3 -- 其中绝产面积
+  ,n_dead_num -- 总死亡数
+  ,t_dead -- 死亡时间
+  ,n_yl1 -- 承保农户数
+  ,n_yl2 -- 受益农户数
+  ,c_yl1 -- 性别
+  ,c_yl2 -- 出生日期
+  ,t_yl1 -- 预留1
+  ,t_yl2 -- 预留2
+  ,n_yl3 -- 死亡赔偿金额
+  ,n_yl4 -- 预计赔付金额
+  ,n_yl5 -- 承保数量
+  ,n_yl6 -- 赔付死亡数量
+  ,n_yl7 -- 赔付扑杀数量
+  ,n_yl8 -- 总扑杀数量
+  ,c_yl3 -- 证件类型
+  ,c_yl4 -- 证件号码
+  ,c_province -- 省份
+  ,c_city -- 城市
+  ,c_county -- 县
+  ,c_dspt_name -- 调度员名
+  ,c_dspt_cde -- 调度员编码
+  ,c_contact_name -- 联系人姓名
+  ,c_contact_tel -- 联系人电话
+  ,c_channel -- 
+  ,c_grp_mrk -- 是否团单报案标志:1-是，0-否
+  ,call_the_police -- 是否报警,T=是:F=否
+  ,t_modify_tm -- 修改时间戳
+  ,c_rpt_source -- 数据来源
+  ,c_member_id -- 会员ID:互联网理赔列表查询接口需要
+from web_clm_rpt
+
+------------------------------4.78 	理赔	无资料报案信息表	web_clm_rpt_noinfo
+select
+  ,c_noinfo_rpt_no -- 无资料报案编号
+  ,c_rpt_way -- 报案方式
+  ,t_rpt_tm -- 报案时间
+  ,c_rpt_dpt -- 接报案机构
+  ,c_rpt_cde -- 接报案人
+  ,c_rptman_typ -- 报案人类别
+  ,c_rptman_nme -- 报案人姓名
+  ,c_rptman_tel -- 报案人电话
+  ,c_rptman_email -- 报案人EMAIL
+  ,c_rptman_addr -- 报案人地址
+  ,c_mendrpt_sts -- 补报案状态
+  ,t_mendrpt_tm -- 补报案时间
+  ,c_clm_no -- 赔案号
+  ,t_accdnt_tm -- 出险时间
+  ,c_accdnt_typ -- 出险类型
+  ,c_accdnt_rsn -- 报案出险原因
+  ,c_accdnt_place -- 出险地点
+  ,c_accdnt_proc -- 出险经过
+  ,n_rpt_amt -- 报损金额
+  ,c_rpt_cur -- 报损金额币种
+  ,c_remark -- 备注
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_record_id -- 
+  ,c_call_no -- 
+  ,c_case_type -- 
+  ,c_rpt_no -- 
+  ,c_accdnt_target -- 
+  ,catastrophe_sign -- 
+  ,insure_start_tm -- 
+  ,insure_end_tm -- 
+  ,c_prod_type -- 
+  ,c_rsua_sign_type -- 
+  ,c_drvr_name -- 
+  ,c_rpttel_tel -- 
+  ,c_no_rpt_type -- 
+  ,c_rpt_accdnt_rsn -- 
+  ,c_instant_delay -- 即时、延时报案标识
+  ,c_insured_nme -- 出险人姓名
+  ,c_occup_cde -- 职业
+  ,c_cert_no -- 身份证号
+  ,c_cert_typ -- 证件类型
+  ,c_cost_proc -- 施救过程
+  ,t_modify_tm -- 修改时间戳
+from web_clm_rpt_noinfo
+
+------------------------------4.79 	理赔	查勘基本信息	web_clm_srvy
+select
+  ,c_srvy_id -- 主键ID
+  ,c_rpt_no -- 
+  ,c_srvy_opn_cde --   查勘意见代码：0不同意，1同意
+  ,c_srvy_prn_cde -- 
+  ,c_lcn_no --   车牌号
+  ,c_vhl_frm --   车架号/ VIN
+  ,c_eng_no --   发动机号
+  ,c_brnd_nme -- 厂牌车型(车型名称)
+  ,c_bmd_cde --   车型编码
+  ,c_car_com --   生产厂家
+  ,c_body_color --   车身颜色
+  ,c_car_color --   车牌颜色
+  ,c_veh_typ --   号牌种类
+  ,c_t_ply_no --   交强保单号
+  ,c_t_com --   交强承保公司
+  ,c_ins_nme --   被保人姓名
+  ,c_ins_mob --   被保人手机
+  ,c_ins_tel --   被保人电话
+  ,c_ins_idcard --   被保人证件号
+  ,c_ins_bank_nme --   被保人开户名
+  ,c_ins_bank --   被保人开户行
+  ,c_ins_bankid --   被保人账号
+  ,c_ins_adr --   被保人住址
+  ,c_ins_zip --   被保人邮编
+  ,c_drv_nme --   驾驶员姓名
+  ,c_drv_sex --   驾驶员性别
+  ,c_drv_age --   驾驶员年龄
+  ,c_drv_local --   驾驶员属地
+  ,c_edu_cde --   驾驶员文化程度
+  ,c_job --   驾驶员职业
+  ,c_drv_mob --   驾驶员手机
+  ,c_drv_tel --   驾驶员电话
+  ,c_drv_ins_rel --   驾驶员与被保人关系
+  ,c_drvr_no --   驾驶证号
+  ,c_arm_nme --   报警人姓名
+  ,c_arm_mob --   报警人手机
+  ,c_arm_tel --   报警人电话
+  ,c_arm_typ --   报警人身份
+  ,c_candrvr_typ --   准驾车型
+  ,t_first_gettm --   初次领证时间
+  ,t_adt_tm --   出险时间
+  ,c_adt_adr --   出险地点
+  ,c_adt_rsn_cde --   出险原因
+  ,c_adt_nearrsn --   出险近因
+  ,c_adt_rmk --   出险经过
+  ,t_srvy_tm --   查勘时间
+  ,t_srvy_end_tm --   查勘结束时间
+  ,c_srvy_adr --   查勘地点
+  ,c_hnd_typ --   事故处理情况
+  ,c_is_first --   是否第一现场查勘：0否，1是
+  ,c_nofirst_rsn --   非第一现场查勘原因
+  ,c_los_rmk --   损失描述
+  ,c_adt_cde -- 事故责任代码：1全责，2主责，3同责，4次责，5无责，9无法判定责任
+  ,c_adt_rate --   事故责任比例
+  ,c_notduty_rsn --   无法判定责任原因
+  ,c_is_sign --   是否保险责任：0否，1是
+  ,c_is_giveup --   是否客户放弃索赔：0否，1是
+  ,c_pursue_tgt --   追偿对象
+  ,c_is_pursue --   是否可追偿：0否，1是
+  ,c_is_self --   是否互碰自赔：0否，1是
+  ,c_is_all_los --   是否全损：0否、1是
+  ,c_rmk --   备注
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk --   迁移标志
+  ,t_trans_tm --   迁移时间
+  ,c_accident_letter -- 有无交管事故书 0 否 1 是
+  ,c_road_accident -- 是否道路交通事故 0 否 1 是
+  ,c_adr_code -- 事故地点代码
+  ,c_section -- 事故管界
+  ,c_manage_type_jq -- 事故处理类型
+  ,subrogation_flag -- 代位求偿标志 0 否 1 是
+  ,c_loss -- 损失情况
+  ,c_simple_case -- 是否简易案件0 否 1 是
+  ,c_totally_amt -- 案件总预估损失金额
+  ,c_accident_type -- 保险事故分类代码
+  ,c_sh_adr -- 上海地址信息
+  ,c_certi_type -- 出险驾驶员证件类型
+  ,c_certi_code -- 出险驾驶员证件号码
+  ,c_license_no -- 出险驾驶员档案编号
+  ,t_license_effectural_date -- 出险驾驶员驾驶证有效日期
+  ,c_thire_isorno_car -- 第三方是否为机动车  0 否 1 是
+  ,t_modify_tm -- 修改时间戳
+from web_clm_srvy
+
+------------------------------4.80 	理赔	养殖查勘信息	web_clm_srvy_breed
+select
+  c_clm_no -- 赔案号
+  ,n_clm_tms -- 赔付次数
+  ,c_ply_no -- 保单号
+  ,n_srvy_tms -- 查勘次数
+  ,c_raise_num -- 畜别
+  ,c_teeth_num -- 齿龄
+  ,c_auris_num -- 耳号
+  ,c_feather_color -- 毛色
+  ,c_raise_ilk -- 畜种
+  ,c_sex -- 性别
+  ,c_insrnc_cde -- 
+  ,n_dead_num -- 死亡数量
+  ,c_number_begin -- 起始号码
+  ,c_number_end -- 终止编号
+  ,c_cur_cde -- 
+  ,c_remark -- 备注
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_pk_id -- 
+  ,n_sec_num1 -- 
+  ,n_sec_amt1 -- 
+  ,c_losstgt_pk_id -- 定损险别信息表主键
+  ,n_deductible -- 免赔额
+  ,n_deductible_rate -- 免赔率
+  ,n_remain -- 残值
+  ,n_remain_chk -- 核损残值
+  ,n_rescue_amt -- 施救费
+  ,n_rescue_amt_chk -- 核损施救费
+  ,n_loss_estmt -- 定损金额(预估损失金额)
+  ,n_loss_estmt_chk -- 核损金额
+  ,c_cost_proc -- 施救情况
+  ,n_loss_estmt_adjust -- 理算损失金额
+  ,n_rescue_amt_adjust -- 理算施救费
+  ,n_remain_adjust -- 理算残值
+  ,t_modify_tm -- 修改时间戳
+from web_clm_srvy_breed
+
+------------------------------4.81 	理赔	查勘明细表	web_clm_srvy_dtl
+select
+  c_srvy_id -- 查勘号ID
+  ,c_rpt_no -- 报案号
+  ,c_srvy_prn_cde -- 查勘人
+  ,t_srvy_tm --   查勘时间
+  ,t_srvy_end_tm --   查勘结束时间
+  ,c_los_rmk --   损失描述
+  ,c_rmk --   备注
+  ,c_crt_cde -- 创建人员
+  ,c_own_dpt_cde -- 查勘机构
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk --   迁移标志
+  ,t_trans_tm --   迁移时间
+  ,n_srvy_amount -- 案件调查金额
+  ,c_srvy_cause -- 查勘原因:0首位查勘、1增派查勘、2、主动增派
+  ,c_srvy_task_no -- 查勘任务号
+  ,t_modify_tm -- 修改时间戳
+from web_clm_srvy_dtl
+
+------------------------------4.82 	理赔	农业种植险损失清单	web_clm_srvy_grow
+select
+  c_clm_no -- 赔案号
+  ,n_clm_tms -- 赔付次数
+  ,c_ply_no -- 保单号
+  ,n_srvy_tms -- 查勘次数
+  ,c_srvy_prsn_cde -- 
+  ,c_farmer_cde -- 农户编码
+  ,c_plot_cde -- 地块编号
+  ,c_app_plot_cde -- 投保地号
+  ,n_app_area -- 承保面积
+  ,n_lost_area -- 损失面积1
+  ,n_lost_rate -- 损失率1
+  ,c_nogain -- 是否绝产 0 否，1是
+  ,c_prov_cde -- 省
+  ,c_city_cde -- 市(或师)
+  ,c_coun_cde -- 县(或团)
+  ,c_vill_cde -- 乡镇(或分场)
+  ,c_haml_cde -- 村组(或连队)
+  ,t_clm_srvy_tm -- 查勘时间
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,n_cont_outpt -- 投保产量
+  ,n_ply_outpt -- 承包产量
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_losstgt_pk_id -- 定损险别信息表主键
+  ,c_remark -- 备注
+  ,n_deductible -- 免赔额
+  ,n_deductible_rate -- 免赔率
+  ,n_remain -- 残值
+  ,n_remain_chk -- 核损残值
+  ,n_rescue_amt -- 施救费
+  ,n_rescue_amt_chk -- 核损施救费
+  ,n_loss_estmt -- 定损金额(预估损失金额)
+  ,n_loss_estmt_chk -- 核损金额
+  ,c_cost_proc -- 施救情况
+  ,n_loss_estmt_adjust -- 理算损失金额
+  ,n_rescue_amt_adjust -- 理算施救费
+  ,n_remain_adjust -- 理算残值
+  ,n_amt_farmer -- 农户保额
+  ,n_duplic_ation -- 
+  ,c_count_formula -- 计算公式
+  ,c_count_formula_rel -- 计算说明
+  ,t_modify_tm -- 修改时间戳
+from web_clm_srvy_grow
+
+------------------------------4.83 	理赔	调度改派申请表	web_clm_taskchg
+select
+  ,c_clm_no -- 赔案号
+  ,c_task_id -- 任务ID
+  ,c_task_typ -- 任务类型
+  ,c_app_dpt -- 申请机构
+  ,c_app_cde -- 申请人
+  ,t_app_tm -- 申请时间
+  ,c_app_rsn -- 申请原因
+  ,c_chgdspt_dpt -- 改派机构
+  ,c_chgdspt_cde -- 改派人
+  ,t_chgdspt_tm -- 改派时间
+  ,c_deal_cde -- 处理人
+  ,c_deal_dpt_cde -- 
+  ,c_chgdspt_opin -- 改派意见
+  ,c_crt_cde -- 创建人
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_taskchg
+
+------------------------------4.84 	理赔	第三者损失清单	web_clm_third_part_loss
+select
+  ,c_third_ploss_id -- 损失第三者信息ID
+  ,n_srvy_tms -- 查勘次数
+  ,c_losst_item -- 损失项目
+  ,c_losst_type -- 损失类型
+  ,n_unit_price -- 单价
+  ,c_clm_no -- 赔案号
+  ,n_amount -- 数量
+  ,n_clmfee_estmt -- 费用定损金额（预计估损金额）
+  ,n_clmfee_chk -- 费用核损金额
+  ,n_loss_price -- 报损价
+  ,c_task_id -- 任务号
+  ,c_crt_cde -- 创建人
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_seq -- 序号
+  ,c_rmk -- 备注
+  ,c_losstgt_pk_id -- 损失标的信息ID
+  ,n_preassess_amt -- 估损金额
+  ,c_unit -- 单位
+  ,n_remain -- 残值
+  ,n_rescue_amt -- 施救费
+  ,n_remain_chk -- 核损残值
+  ,n_rescue_amt_chk -- 核损施救费
+  ,n_insured_amt -- 保险金额
+  ,n_accid_value -- 出险时价值
+  ,n_insured_pre -- 投保比例
+  ,t_modify_tm -- 修改时间戳
+from web_clm_third_part_loss
+
+------------------------------4.85 	理赔	员工级别设置	web_clm_user_auth
+select
+  ,c_user_auth_id -- 自动生成主键
+  ,c_auth_id -- 权限级别表主键
+  ,c_oper_id -- 操作员代码
+  ,c_dpt_cde -- 操作机构
+  ,c_lev_typ -- 级别类型：6查勘、7估损、10人伤调查、11人伤核损、8核损、9核价、13理算、14核赔
+  ,c_lev_cde -- 级别代码
+  ,c_flg -- 是否有效标志：  0否、1是
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_clm_user_auth
+
+
+
+
+
+
+------------------------------5.01 	收付	保费客户信息	web_fin_rpprmcustomer
+select 
+  c_rcpt_no -- 收据号
+  ,c_item_no -- 序列号
+  ,c_customer_accounts -- 收款方帐号
+  ,c_accounts_name -- 收款人名称
+  ,c_bank_accounts -- 收款人开户行
+  ,c_provinces -- 收款人省份
+  ,c_city -- 收款人市
+  ,c_mail -- 邮箱
+  ,c_mobile_phone -- 电话
+  ,c_cur_cde -- 币种代码
+  ,c_open_city -- 公司开户地区
+  ,c_bal_type -- 结算方式
+  ,c_company_accounts -- 付款方帐号
+  ,t_desire_date -- 期望日
+  ,t_desire_time -- 期望时间
+  ,c_use -- 用途
+  ,n_get_prm -- 单据总金额
+  ,c_receive_no -- 收款人银行 （联行号 对应codelist  BankName_List）
+  ,c_company_openbank -- 开户银行
+  ,c_table_flag -- 表类别
+  ,c_check_flag -- 审核标识
+  ,c_check_cde -- 审核人
+  ,t_check_tm -- 审核时间
+  ,c_send_bank_flag -- 报盘标识
+  ,c_send_bank_cde -- 报盘人
+  ,t_send_bank_tm -- 报盘时间
+  ,c_recv_bank_flag -- 回盘标识
+  ,c_recv_bank_cde -- 回盘人
+  ,t_recv_bank_tm -- 回盘时间
+  ,c_recv_bank_reason -- 回盘说明
+  ,c_check_name -- 审核人
+  ,c_export_name -- 导出人
+  ,t_export_tm -- 导出时间
+  ,c_import_name -- 导入人
+  ,t_import_tm -- 导入时间
+  ,c_import_memo -- 导入说明
+  ,c_bala_mrk -- 处理标示(0待审核，11待资料补录，12待资料审核)
+  ,c_check_memo -- 退回原因
+  ,c_entry_name -- 录入人
+  ,t_entry_tm -- 录入时间
+  ,t_update_tm -- 修改时间
+  ,c_capital_flows -- 收款人类型 1 直赔客户  2 委托协议修理厂   3委托非协议修理厂   4法院    5 委托其他 6 机构转账直赔  7 机构现金直赔   8 医院
+  ,c_identity_no -- 投保人身份证号
+  ,c_reportcase_tel -- 报案人电话
+  ,c_insurant_tel -- 被保险人电话
+  ,c_validate_flag -- 确认标识(0 未经客户确认，1 相符，2 不相符，3 不确定，4 需二次回访，5 客服回访确认中，6 需稽核)
+  ,c_validate_mind -- 确认意见
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_previous_mrk -- 上一次处理标识
+  ,n_undocheck_count -- 驳回次数
+  ,c_batch_no -- 打包标识
+  ,back_flag -- 退回标识
+  ,back_times -- 退回次数
+  ,bankpaytype -- 收款人性质
+  ,c_data_src -- 数据来源
+  ,dxp_tran_flag -- 
+  ,c_memo -- 描述信息、备注
+  ,c_old_order_no -- 微信订单号（保单的交易流水号）
+  ,c_wishing_flag -- 是否红包标识 00：普通支付 01：现金红包  02：裂变红包
+  ,c_activity_nme -- 活动名称
+  ,c_wishes_msg -- 红包祝福语
+  ,n_poll_no -- ä¼ é€æ¬¡æ•°
+  ,t_modify_tm -- 修改时间戳
+  ,c_rd_seq -- 传送资金管理系统的流水号
+  ,c_abstract -- 资金系统对账码
+from web_fin_rpprmcustomer
+
+show create table web_fin_rpprmcustomer
+
+------------------------------5.02 	收付	保费进行分录的规则	web_fin_prm_subject
+select 
+  ,c_rp_typ -- 收付类型
+  ,c_pre_flag -- 预收标识(1：挂账早 0：收付早)
+  ,c_pos_flag -- 金额正负(0：负 1：正)
+  ,c_inst_mrk -- 分期标识(0：非分期 1：分期)
+  ,c_agri_mrk -- 涉农标识
+  ,c_nat_typ -- 涉农性质
+  ,c_ply_typ -- 政策类型
+  ,c_fin_typ -- 保费来源
+  ,c_tran_flag -- 自营单据标志
+  ,c_cav_flag -- 借贷方向
+  ,c_sbjt_no -- 科目代码
+  ,c_sbjt_name -- 科目名称
+  ,c_sbjt_memo -- 科目备注
+  ,c_prm_sou -- 保费来源
+  ,c_servicetype_no -- 业务类型
+  ,c_cont_mrk -- 共保标识
+  ,c_arp_flag -- 收付挂账标志
+  ,t_modify_tm -- 修改时间戳
+from web_fin_prm_subject
+
+show create table web_fin_prm_subject
+
+------------------------------5.03 	收付	共保单位	web_fin_gb
+select 
+  ,c_gb_cde -- 共保单位编码
+  ,c_fingb_cde -- 共保单位财务映射编码
+  ,c_is_vaild -- 是否有效
+  ,c_gb_cnm -- 共保单位名称
+  ,t_crt_tm -- 创建日期
+  ,t_modify_tm -- 修改时间戳
+from web_fin_gb
+
+show create table web_fin_gb
+
+------------------------------5.04 	收付	再保-财务挂账接口表	web_fin_riced_due
+select 
+  ,c_rcpt_no -- 单据号
+  ,c_dpt_cde -- 出单机构
+  ,c_dptacc_cde -- 做账机构
+  ,c_ply_no -- 保单号（跟单）
+  ,c_app_no -- 申请单号（跟单）
+  ,c_edr_no -- 批单号（跟单）
+  ,c_clm_no -- 赔案号
+  ,n_tms -- 期次
+  ,c_bsns_typ -- 渠道
+  ,c_prod_no -- 险种
+  ,c_feetyp_cde -- 费用类型
+  ,c_bala_mrk -- "0"正常（default）当保单做了注销或退保批改时，将该保单及其所有批单的未收付的记录，此字段置为“1”，致使在收付模块不能检索收付；
+  ,t_insrnc_bgn_tm -- 保单起期
+  ,t_insrnc_end_tm -- 保单止期
+  ,c_bs_cur -- 业务接口写入币种
+  ,n_bs_amt -- 业务接口写入金额
+  ,c_due_cur -- 挂账币种
+  ,n_due_amt -- 金额
+  ,t_due_tm -- 挂账日期
+  ,c_due_mrk -- 是否已挂账：0未挂账；1已挂账。
+  ,c_rp_cur -- 收付币种
+  ,n_rp_amt -- 收付总金额
+  ,t_rp_tm -- 收付日期
+  ,c_rp_flag -- 1：已收付。
+  ,t_paid_tm -- 收付复核日期
+  ,n_paid_amt -- 复核总金额
+  ,c_pay_mde_cde -- 付款方式
+  ,c_slsgrp_cde -- 销售团队
+  ,c_sls_cde -- 业务员
+  ,c_cha_mrk -- 0：法人；1：个人。
+  ,c_cha_cls -- 渠道类别
+  ,c_cha_cde -- 渠道编码
+  ,c_app_nme -- 投保人名称
+  ,n_tax_rate -- 税率
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_accnt_flag -- 00 未收付-未确认,01 未收付-已确认,10 已收付-未确认,11 已收付-已确认
+  ,n_other_amt -- 其他应收金额。如车船税
+  ,c_customer_accounts -- 客户帐号
+  ,c_batch_no -- 1．选单导入回写2．上海平台缴费确认成功回写
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_memo -- 备注
+  ,c_type -- 合约类型
+  ,c_ri_com -- 再保公司
+  ,c_bill_ym -- 账单年月
+  ,c_bill_no -- 
+  ,c_cont_cde -- 合约代码
+  ,c_cont_id -- 合约标识号
+  ,c_doc_flag -- 1 分出保费，2 分出摊回分保费用，3 分出摊回分保赔款，4 分出现金赔款，5 分出存入分保准备金，6 分出分保准备金利息，7 分保费收入，8 分保费用支出，9 分保赔款支出，10 分保现金赔款支出，11 分保准备金收入，12 分保准备金利息收入，13 分出摊回预付分保赔款  ， 14 分保预付赔款支出
+  ,c_busi_source -- 0.原保险分出；1.分入；2.分入转分出（再保险分出）
+  ,c_vou_no -- 汇总后回写 结算单号
+  ,c_province -- 省
+  ,c_city -- 市
+  ,c_bill_type -- 账单类型
+  ,c_cvrg_no -- 险别编码
+  ,c_longshort_flag -- 长期险和短期险标识
+  ,c_grp_mrk -- 团队标志 0：个单  1：团单
+  ,c_usage_cde -- 车辆使用性质
+  ,t_modify_tm -- 修改时间戳
+  ,c_ri_com2 -- 二级再保公司
+  ,c_attrib -- 境内外标识
+from web_fin_riced_due
+
+show create table web_fin_riced_due
+
+------------------------------5.05 	收付	再保-财务收付	web_fin_ribill_due
+select 
+  ,c_rcpt_no -- 单据号
+  ,c_dpt_cde -- 出单机构
+  ,c_dptacc_cde -- 做账机构
+  ,c_ply_no -- 保单号
+  ,c_app_no -- 投保单号
+  ,c_edr_no -- 批单号
+  ,c_clm_no -- 赔案号
+  ,n_tms -- 保费期次
+  ,c_bsns_typ -- 01直销业务；02代理业务；03经纪业务。
+  ,c_prod_no -- 产品编号
+  ,c_feetyp_cde -- 费用类型代码
+  ,c_bala_mrk -- 冲销标志"0"正常（default）当保单做了注销或退保批改时，将该保单及其所有批单的未收付的记录，此字段置为“1”，致使在收付模块不能检索收付；
+  ,t_insrnc_bgn_tm -- 保险起期
+  ,t_insrnc_end_tm -- 保险止期
+  ,c_bs_cur -- 业务币种：业务接口写入币种
+  ,n_bs_amt -- 业务金额：业务接口写入金额
+  ,c_due_cur -- 挂账币种
+  ,n_due_amt -- 挂账金额
+  ,t_due_tm -- 挂账日期
+  ,c_due_mrk -- 是否已挂账：0未挂账；1已挂账。
+  ,c_rp_cur -- 收付币种
+  ,n_rp_amt -- 收付总金额
+  ,t_rp_tm -- 收付日期
+  ,c_rp_flag -- 1：已收付。
+  ,t_paid_tm -- 实付日期
+  ,n_paid_amt -- 复核总金额
+  ,c_pay_mde_cde -- 付款方式
+  ,c_slsgrp_cde -- 售销团队
+  ,c_sls_cde -- 业务员
+  ,c_cha_mrk -- 渠道标识：0：法人；1：个人。
+  ,c_cha_cls -- 渠道类别
+  ,c_cha_cde -- 渠道编码
+  ,c_app_nme -- 投保人名称
+  ,n_tax_rate -- 税率
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_accnt_flag -- 00 未收付-未确认,01 未收付-已确认,10 已收付-未确认,11 已收付-已确认
+  ,n_other_amt -- 其他应收金额。如车船税
+  ,c_customer_accounts -- 客户帐号
+  ,c_batch_no -- 1．选单导入回写2．上海平台缴费确认成功回写
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_memo -- 备注
+  ,c_type -- 合约类型
+  ,c_ri_com -- 再保人
+  ,c_bill_ym -- 账单年月
+  ,c_bill_no -- 
+  ,c_cont_cde -- 合约标识
+  ,c_cont_id -- 合约标识号
+  ,c_doc_flag -- 1 分出保费，2 分出摊回分保费用，3 分出摊回分保赔款，4 分出现金赔款，5 分出存入分保准备金，6 分出分保准备金利息，7 分保费收入，8 分保费用支出，9 分保赔款支出，10 分保现金赔款支出，11 分保准备金收入，12 分保准备金利息收入，13 分出摊回预付分保赔款  ， 14 分保预付赔款支出
+  ,c_busi_source -- 分保标识0．   分出1．   分入
+  ,n_exch_rate -- 本次汇率
+  ,c_province -- 省
+  ,c_city -- 市
+  ,c_bill_type -- 账单类型
+  ,c_cvrg_no -- 险别
+  ,c_usage_cde -- è½¦è¾†ä½¿ç”¨æ€§è´¨
+  ,t_modify_tm -- 修改时间戳
+  ,c_ri_com2 -- 二级再保公司
+  ,c_attrib -- 境内外标识
+  ,c_sendats_mrk -- 资金系统处理状态
+  ,c_abstract -- 资金系统对账码
+  ,c_mergepay_flag -- 是否合并支付
+from web_fin_ribill_due
+
+show create table web_fin_ribill_due
+
+------------------------------5.06 	收付	再保公司	web_fin_ricom_detail
+select 
+  ,c_com_cde -- 再保公司代码
+  ,c_attrib -- 公司属性,A境内,B境外
+  ,c_com_detail -- 再保人明细
+  ,c_is_valid -- 是否有效
+  ,t_crt_tm -- 创建时间
+  ,c_com_name -- 再保公司名称
+  ,t_modify_tm -- 修改时间戳
+from web_fin_ricom_detail
+
+show create table web_fin_ricom_detail
+
+------------------------------5.07 	收付	承保费用分录明细表	web_fin_pay_subject***********************科目表??
+select 
+  ,c_rp_typ -- 收付类型
+  ,c_pos_flag -- 金额正负
+  ,c_fee_typ -- 费用类型
+  ,c_agri_mrk -- 涉农标识
+  ,c_nat_typ -- 涉农性质
+  ,c_ply_typ -- 政策类型
+  ,c_tran_flag -- 自营单据标识
+  ,c_cav_flag -- 借贷方向
+  ,c_sbjt_no -- 科目代码
+  ,c_sbjt_name -- 科目名称
+  ,c_sbjt_memo -- 科目备注
+  ,c_servicetype_no -- 业务类型
+  ,c_cont_mrk -- 共保标识
+  ,c_arp_flag -- 收付挂账标志
+  ,c_inst_mrk -- 分期标识
+  ,c_pre_flag -- 预付标识
+  ,t_modify_tm -- 修改时间戳
+from web_fin_pay_subject
+
+show create table web_fin_pay_subject
+
+------------------------------5.08 	收付	挂账信息表	web_fin_madcr
+select 
+  ,c_seq_no -- 凭证流水号
+  ,c_item_no -- 序号
+  ,c_rcpt_no -- 收据号
+  ,c_fee_typ -- 费用类型
+  ,c_cav_flag -- 借贷方向 1 借 2 贷
+  ,c_sbjt_no -- 科目编码
+  ,c_sbjt_memo -- 明细段
+  ,c_manage_cde -- 管理段
+  ,n_amt -- 原币金额
+  ,c_cur_no -- 币种代码
+  ,c_prod_no -- 产品
+  ,c_bsns_typ -- 渠道
+  ,c_dpt_cde -- 单据机构
+  ,c_dptacc_no -- 收付机构
+  ,c_company_cde -- 账套
+  ,c_department_cde -- 部门
+  ,c_ply_no -- 保单号
+  ,c_edr_no -- 批单号
+  ,c_clm_no -- 赔案号
+  ,n_exch_amt -- 人民币金额
+  ,n_rate -- 汇率
+  ,c_chr_cur_no -- 收付款币种
+  ,c_servicetype_no -- 业务类型
+  ,c_vou_memo -- 凭证摘要
+  ,t_due_tm -- 挂账日期
+  ,t_end_tm -- 月结日期
+  ,c_cha_cde -- 渠道编码
+  ,c_salegrp_cde -- 售销团队
+  ,c_current_dpt_cde -- 内部往来机构
+  ,c_pre_flag -- 准备金标识
+  ,t_crt_tm -- 创建日期
+  ,c_con_dpt_cde -- 共保人
+  ,c_insrnc_cde -- 
+  ,c_pay_prsn_name -- 被保险人名称
+  ,c_finbank_cde -- 总帐银行代码
+  ,c_cost_cde -- 成本中心
+  ,c_vou_no -- 凭证号
+  ,c_check_flag -- 复核标识
+  ,c_use_atr -- 
+  ,c_clnt_mrk -- 客户类型：0：法人 1：个人（指被保险人）
+  ,c_cont_code -- 合约类型
+  ,c_sbjt_mrk -- 
+  ,c_send_flag -- 传送标识 0 未导入 1 错误 2 成功
+  ,c_ri_com -- 再保公司
+  ,c_sls_cde -- 业务员
+  ,c_pay_prsn_cde -- 被保险人
+  ,c_cha_cls -- 渠道性质
+  ,c_cha_mrk -- 客户类型
+  ,c_period_name -- 会计期间
+  ,c_voucher_no -- 汇总后凭证号
+  ,n_total_amt -- 凭证总金额
+  ,c_verifyvou_memo -- 校验编码
+  ,c_kind_no -- 产品大类编码
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_prm_sou -- 保费来源段
+  ,c_vehiclestyp_no -- 
+  ,c_agr_flag -- 
+  ,c_agr_kind -- 
+  ,c_agr_typ -- 
+  ,t_sign_date -- 
+  ,t_insrnc_bgn_tm -- 开始日期
+  ,t_insrnc_end_tm -- 截止日期
+  ,c_invoice_no -- 
+  ,c_app_nme -- 投保人名称
+  ,t_accdnt_tm -- 
+  ,t_over_date -- 
+  ,c_billtype -- 
+  ,c_data_src -- 
+  ,c_area -- 
+  ,c_province -- 省
+  ,c_voucher_item -- 
+  ,t_upd_tm -- 修改日期
+  ,t_modify_tm -- 修改时间戳
+  ,c_bill_no -- 账单号
+from web_fin_madcr
+
+show create table web_fin_madcr
+
+------------------------------5.09 	收付	挂账信息财务接口表	web_fin_madcr_intf
+select 
+*
+from web_fin_madcr_intf
+
+show create table web_fin_madcr_intf
+
+------------------------------5.10 	收付	接口表-保费	web_fin_prm_due
+select 
+  ,c_rcpt_no -- 收据号
+  ,c_dpt_cde -- 出单机构
+  ,c_dptacc_cde -- 做账机构
+  ,c_ply_no -- 保单号
+  ,c_app_no -- 投保单号
+  ,c_edr_no -- 批单号
+  ,n_tms -- 保费期次
+  ,c_bsns_typ -- 业务来源
+  ,c_prod_no -- 产品代码
+  ,c_tran_flag -- 业务单据标识 (自营，共保)
+  ,c_feetyp_cde -- 费用类型代码
+  ,c_clnt_mrk -- 客户类型
+  ,c_bala_mrk -- 冲销标志
+  ,c_ma_bala_mrk -- 挂账冲销标识
+  ,t_insrnc_bgn_tm -- 保险起期
+  ,t_insrnc_end_tm -- 保险止期
+  ,c_longshort_flag -- 长期险和短期险标识
+  ,c_bs_cur -- 业务币种
+  ,n_bs_amt -- 业务金额
+  ,c_due_cur -- 挂账币种
+  ,n_due_amt -- 挂账金额
+  ,t_due_tm -- 挂账日期
+  ,c_due_mrk -- 挂账标志
+  ,c_rp_cur -- 收付币种
+  ,n_rp_amt -- 收付金额
+  ,t_rp_tm -- 收付日期
+  ,c_rp_flag -- 收付标识
+  ,t_paid_tm -- 收付复核日期
+  ,n_paid_amt -- 收付复核金额
+  ,n_pre_amt -- 预收金额
+  ,c_edr_typ -- 批改类型
+  ,c_edr_rsn -- 批改原因
+  ,c_inst_mrk -- 分期标志
+  ,c_main_con_cde -- 主共保人
+  ,c_follow_con_cde -- 共保人（仅供页面显示使用）
+  ,c_payer_cde -- 付款人代码
+  ,c_payer_nme -- 付款人名称
+  ,c_pay_mde_cde -- 付款方式
+  ,t_pay_bgn_tm -- 缴费起期
+  ,t_pay_end_tm -- 缴费止期
+  ,c_slsgrp_cde -- 销售团队
+  ,c_sls_cde -- 业务员
+  ,c_cha_mrk -- 渠道标识
+  ,c_cha_cls -- 渠道类别
+  ,c_cha_cde -- 渠道编码
+  ,c_bank_account -- 银行帐号
+  ,c_app_nme -- 投保人名称
+  ,c_circ_vhl_typ -- 保监车型号
+  ,c_lcn_no -- 车牌号
+  ,c_agt_agr_no -- 渠道协议
+  ,n_tax_rate -- 税率
+  ,c_prn_no -- 收据印刷号
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_opt_no -- 操作号
+  ,c_rollback_mark -- 冲正标识
+  ,c_to_fin_flag -- 传财务标志
+  ,c_bank_cde -- 银行代码
+  ,c_arp_flag -- 收付属性
+  ,c_compare_falg -- 配对标识
+  ,n_can_sum -- 核销金额
+  ,c_accnt_flag -- 会计状态
+  ,c_ply_mrk -- 结费计算标识
+  ,n_other_amt -- 其他金额
+  ,c_account -- 帐号编码
+  ,c_customer_accounts -- 客户帐号
+  ,c_batch_no -- 批号
+  ,c_bfn_no -- 商户号
+  ,t_agree_tm -- 票据确认时间
+  ,c_agree_cde -- 票据确认同意人
+  ,n_shares_no -- 分数
+  ,t_bln_tm -- 解付日期
+  ,c_con_dpt_cde -- 共保人
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_memo -- 备注
+  ,n_stamp_tax -- 印花税
+  ,n_edr_prj_no -- 批改序号 *
+  ,c_cav_no -- 收付单号
+  ,c_head_flag -- 总公司做账标识
+  ,c_head_cav_no -- 前置收付单号
+  ,c_pos_no -- pos终端号
+  ,c_agri_mrk -- 涉农标志
+  ,c_ply_typ -- 政策类型
+  ,c_fin_typ -- 保费来源
+  ,n_sumtax_got_amt -- 实收车船税金额
+  ,n_real_sum -- 实收金额
+  ,c_pay_name -- 被保人名称
+  ,n_ply_amt -- 保额
+  ,t_real_bal_tm -- 挂账确认时间
+  ,c_rp_times -- 收付次数
+  ,c_data_src -- 数据来源
+  ,c_agr_kind -- 涉农性质
+  ,c_agr_typ -- 农险大类
+  ,c_con_replace_flag -- 共保代收付标识
+  ,c_prm_status -- 数据状态
+  ,c_order_no -- 订单号
+  ,c_pay_status -- 付款状态 
+from web_fin_prm_due
+
+show create table web_fin_prm_due
+
+------------------------------5.11 	收付	接口表-费用	web_fin_pay_due
+select 
+  ,c_rcpt_no -- 收据号
+  ,c_dpt_cde -- 出单机构
+  ,c_dptacc_cde -- 做账机构
+  ,c_ply_no -- 保单号
+  ,c_app_no -- 投保单号
+  ,c_edr_no -- 批单号
+  ,c_clm_no -- 赔案编号
+  ,t_insrnc_bgn_tm -- 保险起期
+  ,t_insrnc_end_tm -- 保险止期
+  ,n_tms -- 期次
+  ,c_tran_flag -- 业务单据标识
+  ,c_feetyp_cde -- 费用类型代码
+  ,c_longshort_flag -- 长期险短期险标识
+  ,c_prod_no -- 产品代码
+  ,c_clnt_mrk -- 客户类型
+  ,c_bsns_typ -- 业务来源
+  ,c_bs_cur -- 业务币种
+  ,n_bs_amt -- 业务金额
+  ,c_due_cur -- 挂账币种
+  ,n_due_amt -- 挂账金额
+  ,t_due_tm -- 挂账日期
+  ,c_due_mrk -- 挂账标志
+  ,c_rp_cur -- 收付币种
+  ,n_rp_amt -- 收付金额
+  ,t_rp_tm -- 收付日期
+  ,c_rp_flag -- 收付标识
+  ,t_paid_tm -- 收付复核日期
+  ,n_paid_amt -- 收付复核金额
+  ,c_payer_cde -- 付款人编码
+  ,c_payer_nme -- 付款人名称
+  ,t_pay_bgn_tm -- 付费起期
+  ,t_pay_end_tm -- 付费止期
+  ,c_pay_mde_cde -- 付款方式
+  ,c_bala_mrk -- 冲消标志
+  ,c_ma_bala_mrk -- 挂账冲销标识
+  ,c_bank_account -- 银行帐号
+  ,c_bank_cde -- 银行
+  ,c_slsgrp_cde -- 售销团队
+  ,c_sls_cde -- 业务员
+  ,c_cha_mrk -- 渠道标识
+  ,c_cha_cls -- 渠道类别
+  ,c_cha_cde -- 渠道编码
+  ,n_tax_rate -- 税率
+  ,c_con_dpt_cde -- 共保人
+  ,c_main_con_cde -- 主共保人
+  ,c_follow_con_cde -- 共保人（仅供页面显示使用）
+  ,c_app_nme -- 投保人名称
+  ,c_lcn_no -- 车牌号
+  ,c_circ_vhl_typ -- 保监车型号
+  ,c_edr_typ -- 批改类型
+  ,c_edr_rsn -- 批改原因
+  ,c_old_edr -- 旧批单号
+  ,c_prn_no -- 收据印刷号
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_opt_no -- 操作号
+  ,c_rollback_mark -- 冲正标识
+  ,c_to_fin_flag -- 传财务标志
+  ,c_account -- 账号
+  ,c_arp_flag -- 收付属性
+  ,c_compare_falg -- 配对标识
+  ,n_can_sum -- 核销金额
+  ,c_accnt_flag -- 会计状态
+  ,c_batch_no -- 银行付款批号
+  ,t_yj_tm -- 佣金回写标识日期
+  ,c_yjupd_no -- 佣金批号
+  ,c_budget_cde -- 申请人
+  ,t_budget_tm -- 申请时间
+  ,c_allocated_cde -- 下拨人
+  ,t_allocated_tm -- 下拨时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_memo -- 备注
+  ,n_ply_amt -- 保额
+  ,c_fee_flag -- 费用标识
+  ,c_rp_times -- 收付次数
+  ,c_data_src -- 数据来源
+  ,c_agr_kind -- 涉农性质
+  ,c_agr_typ -- 农险大类
+  ,c_agri_mrk -- 涉农标识
+  ,c_con_replace_flag -- 共保代收付标识
+  ,c_insrnt_cde -- 被保险人编码
+  ,c_insrnt_nme -- 被保险人名称
+  ,c_ply_typ -- 政策类型
+  ,c_fin_typ -- 保费来源
+  ,t_udr_tm -- 核保日期
+  ,c_bad_debt_flag -- 坏账标识 ‘Y’为坏账
+  ,t_issue_tm -- 签单日期
+  ,c_ma_flag -- 是否挂账标识
+  ,dxp_tran_flag -- 
+  ,c_province -- 省
+  ,c_city -- 市
+  ,t_edr_bgn_tm -- 批单生效日期
+  ,t_edr_end_tm -- 批单截止日期
+  ,c_usage_cde -- 使用性质
+  ,n_vat_amt -- 
+  ,n_price_amt -- 
+  ,n_vat_rate -- 计算增值税率
+from web_fin_pay_due
+
+show create table web_fin_pay_due
+
+------------------------------5.12 	收付	接口表-赔款	web_fin_clm_due
+select 
+  ,n_con_amt -- 从共与主共总金额
+  ,c_rcpt_no -- 收据号
+  ,c_dpt_cde -- 出单机构
+  ,c_dptacc_cde -- 做账机构
+  ,c_ply_no -- 保单号
+  ,c_clm_no -- 赔案编号
+  ,n_tms -- 期次
+  ,c_bsns_typ -- 业务来源
+  ,c_prod_no -- 产品代码
+  ,c_tran_flag -- 业务单据标识
+  ,c_feetyp_cde -- 费用类型代码
+  ,c_clnt_mrk -- 客户类型
+  ,c_eac_dcm_mrk -- 结案标志
+  ,c_clm_typ -- 赔案类型
+  ,t_clm_tm -- 核赔日期
+  ,c_bala_mrk -- 冲消标识
+  ,c_longshort_flag -- 长期险和短期险标识
+  ,c_bs_cur -- 业务币种
+  ,n_bs_amt -- 业务金额
+  ,c_due_cur -- 挂账币种
+  ,n_due_amt -- 挂账金额
+  ,t_due_tm -- 挂账日期
+  ,c_due_mrk -- 挂账标志
+  ,c_rp_cur -- 收付币种
+  ,n_rp_amt -- 收付金额
+  ,t_rp_tm -- 收付日期
+  ,c_rp_flag -- 收付标识
+  ,t_paid_tm -- 复核日期
+  ,n_paid_amt -- 复核金额
+  ,c_payer_cde -- 付款人编码
+  ,c_payer_nme -- 付款人名称
+  ,t_pay_bgn_tm -- 付费起期
+  ,t_pay_end_tm -- 付费止期
+  ,c_pay_mde_cde -- 付款方式码
+  ,n_clm_sum_amt -- 赔款总金额
+  ,n_cavpre_amt -- 冲减预付金额
+  ,c_prepay_cur -- 原预付金额币种
+  ,n_prepay_pay_exch -- 预付币种转赔付币种汇率
+  ,c_con_dpt_cde -- 共保人
+  ,c_main_con_cde -- 主共保人
+  ,c_follow_con_cde -- 共保人（仅供页面显示使用）
+  ,c_slsgrp_cde -- 销售团队
+  ,c_sls_cde -- 业务员
+  ,c_cha_mrk -- 渠道标识
+  ,c_cha_cls -- 渠道类别
+  ,c_cha_cde -- 渠道编码
+  ,c_insrnt_cde -- 被保险人编码
+  ,c_insrnt_nme -- 被保险人名称
+  ,c_bnfc_cde -- 受益人编码
+  ,c_bank_account -- 银行帐号
+  ,c_app_nme -- 投保申请人名称
+  ,c_circ_vhl_typ -- 保监车型号
+  ,c_lcn_no -- 车牌号
+  ,c_prn_no -- 收据印刷号
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,n_pre_amt -- 预付金额
+  ,n_srvy_amt -- 本案总查勘金额
+  ,c_opt_no -- 操作号
+  ,c_rollback_mark -- 冲正标识
+  ,c_to_fin_flag -- 传财务标志
+  ,c_arp_flag -- 收付属性
+  ,c_bank_cde -- 银行代码
+  ,c_account -- 帐号编码
+  ,n_can_sum -- 核销金额
+  ,c_accnt_flag -- 会计状态
+  ,c_pretyp_cde -- 交强预付类型
+  ,c_batch_no -- 批号
+  ,t_tp_tm -- 通赔回写标识日期
+  ,c_tpupd_no -- 通赔批号
+  ,c_customer_accounts -- 客户帐号
+  ,t_insrnc_bgn_tm -- 保险起期
+  ,t_insrnc_end_tm -- 保险止期
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_memo -- 备注
+  ,n_cavadv_amt -- 金额
+  ,c_rp_times -- 收付次数
+  ,c_agr_kind -- 涉农性质
+  ,c_agr_typ -- 农险大类
+  ,c_agri_mrk -- 涉农标识
+  ,c_data_src -- 数据来源
+  ,c_app_no -- 投保单号
+  ,n_clm_tms -- 赔案次数
+  ,c_bad_debt_flag -- 坏账标识
+  ,n_ci_share -- 共保比例 
+  ,c_ma_flag -- 是否挂账标识
+  ,c_usage_cde -- 车辆使用性质
+  ,c_province -- 省
+  ,c_city -- 市
+  ,n_vat_amt -- 增值税
+  ,n_price_amt -- 不含税的价值金额
+  ,c_vat_auth -- 增值税认证标识
+  ,c_grp_mrk -- 团队标志 0：个单  1：团单
+  ,c_resv_txt_no -- 引流渠道代码
+  ,c_resv_txt_name -- 引流渠道名称
+  ,c_resv_prod_no -- 引流渠道产品代码
+  ,c_resv_prod_name -- 引流渠道产品名称
+from web_fin_clm_due
+
+show create table web_fin_clm_due
+
+------------------------------5.13 	收付	收付临时凭证	web_fin_tmp_dcr
+select 
+  ,c_seq_no -- 类凭证号
+  ,c_item_no -- 序号
+  ,c_cav_flag -- 借贷方向
+  ,c_sbjt_no -- 科目代码
+  ,n_amt -- 金额
+  ,n_exch_amt -- 兑换收付金额
+  ,c_cur_no -- 挂账币种
+  ,n_rate -- 汇率
+  ,c_chr_cur_no -- 收付款币种
+  ,t_crt_tm -- 创建日期
+  ,c_dptacc_no -- 做账机构
+  ,c_dpt_cde -- 出单机构
+  ,c_cav_no -- 收付单号
+  ,c_rcpt_no -- 业务单据号
+  ,c_bal_type -- 结算方式
+  ,c_pay_name -- 缴款人
+  ,c_bank_cde -- 银行代码
+  ,c_check_no -- 支票号
+  ,t_rp_tm -- 收付日期
+  ,c_sls_cde -- 业务员
+  ,c_prod_no -- 产品代码
+  ,c_cha_cls -- 渠道类别
+  ,c_cha_cde -- 渠道编码
+  ,c_salegrp_cde -- 销售团队
+  ,c_pay_prsn_cde -- 被保险人编码
+  ,c_ri_com -- 再保人
+  ,c_cont_code -- 合约代码
+  ,c_vou_no -- 凭证号
+  ,c_send_flag -- 传送标识
+  ,t_end_tm -- 月结日期
+  ,c_bsns_typ -- 业务来源
+  ,c_pay_prsn_name -- 被保险人名称
+  ,c_sbjt_memo -- 科目备注
+  ,c_difvou_no -- 异币种凭证号
+  ,c_rp_type -- 收付类型
+  ,c_flow_no -- 现金流量
+  ,c_ply_no -- 保单号
+  ,c_cha_mrk -- 渠道标识
+  ,c_finbank_cde -- 总帐银行代码
+  ,c_vou_memo -- 凭证摘要
+  ,c_company_cde -- 财务公司
+  ,c_cost_cde -- 成本中心
+  ,c_current_dpt_cde -- 内部往来机构
+  ,c_con_dpt_cde -- 共保人
+  ,c_check_flag -- 复核标识
+  ,c_period_name -- 会计期间
+  ,c_voucher_no -- 做账后凭证号
+  ,n_total_amt -- 凭证总金额
+  ,c_servicetype_no -- 业务类型
+  ,request_id -- 请求
+  ,c_department_cde -- 部门
+  ,c_kind_no -- 产品大类编码
+  ,c_prereal_flag -- 预收转实收标识
+  ,c_check_cde -- 收付人
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_prm_sou -- 保费来源明细
+  ,c_billtype -- 账单类型
+  ,c_vehiclestyp_no -- 车型
+  ,c_agr_flag -- 涉农标识
+  ,c_agr_kind -- 涉农性质
+  ,c_agr_typ -- 农险类别
+  ,c_insrnc_cde -- 险别代码
+  ,c_clm_no -- 赔案编号
+  ,c_edr_no -- 批单号
+  ,t_sign_date -- 传送时间
+  ,t_insrnc_bgn_tm -- 开始日期
+  ,t_insrnc_end_tm -- 截至日期
+  ,c_invoice_no -- 号
+  ,c_app_nme -- 投保人名称
+  ,t_accdnt_tm -- 出险时间
+  ,t_over_date -- 时间
+  ,c_order_no -- 
+  ,c_data_src -- 数据来源
+  ,c_province -- 省
+  ,t_modify_tm -- 修改时间戳
+  ,c_abstract -- 资金系统对账码
+from web_fin_tmp_dcr
+
+show create table web_fin_tmp_dcr
+
+------------------------------5.14 	收付	收付主表	web_fin_cav_bill
+select 
+  ,c_cav_pk_id -- 收付单号
+  ,c_dpt_cde -- 做账机构
+  ,c_cur_cde -- 币种
+  ,n_sum_amt -- 金额
+  ,c_oper_cde -- 出纳员
+  ,t_cav_tm -- 收付日期
+  ,t_vou_tm -- 财务记账日期
+  ,c_multicav_flag -- 收付标识
+  ,c_check_cde -- 会计员
+  ,t_check_tm -- 复核日期
+  ,c_check_flag -- 复核标识 0待复核 1待修改 2已复核 3已冲正
+  ,c_check_memo -- 复核意见
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_replace_flag -- 代收/代付
+  ,c_card_no -- 北京车险才有
+  ,c_ref_cde -- 银联返回信息
+  ,c_bfn_no -- 商户号
+  ,c_gather_flag -- 自动汇总凭证号：同凭证号
+  ,c_pos_no -- POS终端号
+  ,c_sref_no -- 检索号
+  ,c_bankret_tm -- 
+  ,c_rp_type -- 收付类型
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_data_src -- 
+  ,c_check_mrk -- 
+  ,dxp_tran_flag -- 
+  ,t_modify_tm -- 修改时间戳
+from web_fin_cav_bill
+
+show create table web_fin_cav_bill
+
+------------------------------5.15 	收付	收付信息表	web_fin_dcr
+select 
+  ,c_seq_no -- 流水号
+  ,c_item_no -- 序号
+  ,c_cav_flag -- 借贷方向
+  ,c_sbjt_no -- 科目号
+  ,n_amt -- 金额
+  ,n_exch_amt -- 兑换收付金额
+  ,c_cur_no -- 挂账币种
+  ,n_rate -- 汇率
+  ,c_chr_cur_no -- 收付款币种
+  ,t_crt_tm -- 创建日期
+  ,c_dptacc_no -- 做账机构
+  ,c_dpt_cde -- 出单机构
+  ,c_cav_no -- 收付单号
+  ,c_rcpt_no -- 业务单据号
+  ,c_bal_type -- 结算方式
+  ,c_pay_name -- 缴款人
+  ,c_bank_cde -- 银行代码
+  ,c_check_no -- 支票号
+  ,t_rp_tm -- 收付日期
+  ,c_sls_cde -- 业务员
+  ,c_prod_no -- 产品代码
+  ,c_cha_cls -- 渠道列别
+  ,c_cha_cde -- 渠道编码
+  ,c_salegrp_cde -- 销售团队
+  ,c_pay_prsn_cde -- 被保险人编码
+  ,c_ri_com -- 再保人
+  ,c_cont_code -- 合约代码
+  ,c_vou_no -- 凭证号
+  ,c_send_flag -- 传送标识
+  ,t_end_tm -- 月结日期
+  ,c_bsns_typ -- 业务来源
+  ,c_pay_prsn_name -- 被保人名称
+  ,c_sbjt_memo -- 科目备注
+  ,c_difvou_no -- 异币种凭证号
+  ,c_rp_type -- 收付类型
+  ,c_flow_no -- 现金流量
+  ,c_ply_no -- 保单号
+  ,c_cha_mrk -- 渠道标识
+  ,c_finbank_cde -- 总帐银行代码
+  ,c_vou_memo -- 凭证摘要
+  ,c_company_cde -- 财务公司
+  ,c_cost_cde -- 成本中心
+  ,c_current_dpt_cde -- 内部往来机构
+  ,c_con_dpt_cde -- 共保人
+  ,c_check_flag -- 复核标识
+  ,c_period_name -- 会计期间
+  ,c_voucher_no -- 做账后凭证号
+  ,n_total_amt -- 凭证总金额
+  ,c_servicetype_no -- 业务类型
+  ,request_id -- 请求
+  ,c_department_cde -- 部门
+  ,c_kind_no -- 产品大类编码
+  ,c_prereal_flag -- 预收转实收
+  ,c_check_cde -- 收付人
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_prm_sou -- 保费来源
+  ,c_billtype -- 账单类型
+  ,c_vehiclestyp_no -- 车型
+  ,c_agr_flag -- 涉农标识
+  ,c_agr_kind -- 涉农性质
+  ,c_agr_typ -- 农险类别
+  ,c_insrnc_cde -- 险别代码
+  ,c_clm_no -- 赔案编号
+  ,c_edr_no -- 批单号
+  ,t_sign_date -- 传送时间
+  ,t_insrnc_bgn_tm -- 开始日期
+  ,t_insrnc_end_tm -- 截至日期
+  ,c_invoice_no -- 号
+  ,c_app_nme -- 投保人名称
+  ,t_accdnt_tm -- 出险时间
+  ,t_over_date -- 时间
+  ,c_order_no -- 
+  ,c_data_src -- 数据来源
+  ,c_province -- 省
+  ,c_voucher_item -- 
+  ,c_serial_no -- 手续费流水号
+  ,c_ser_no -- 确认流水号
+  ,t_modify_tm -- 修改时间戳
+  ,c_abstract -- 资金系统对账码
+  ,c_batch_no -- 互联网批次号
+from web_fin_dcr
+
+show create table web_fin_dcr
+
+------------------------------5.16 	收付	收付信息财务接口表	web_fin_dcr_intf
+select 
+  c_seq_no -- 类凭证号
+  ,c_item_no -- 序号
+  ,c_cav_flag -- 借贷方向
+  ,c_sbjt_no -- 科目编码
+  ,c_sbjt_memo -- 科目备注
+  ,n_amt -- 原单据挂账币种的收付金额
+  ,n_exch_amt -- 收付款币种对应金额
+  ,c_cur_no -- 挂账币种
+  ,n_rate -- 汇率
+  ,c_chr_cur_no -- 收付款币种
+  ,t_crt_tm -- 创建日期
+  ,c_dptacc_no -- 做账机构
+  ,c_dpt_cde -- 出单机构
+  ,c_flow_no -- 现金流量
+  ,c_rp_type -- 收付类型
+  ,c_ri_com -- 再保人
+  ,c_bal_type -- 结算方式
+  ,c_bank_cde -- 银行代码
+  ,c_check_no -- 支票号
+  ,t_rp_tm -- 收付日期
+  ,c_prod_no -- 产品代码
+  ,ts -- 凭证回写日期
+  ,c_send_flag -- 0 未导入;1 成功;2 错误;3 重新导入
+  ,c_vou_no -- 财务系统回写
+  ,c_cont_code -- 合约代码
+  ,c_cha_mrk -- 0：法人；1：个人。
+  ,c_finbank_cde -- 财务核算险别
+  ,c_bsns_typ -- 01直销业务；02代理业务；03经纪业务。
+  ,c_salegrp_cde -- 售销团队
+  ,c_vou_memo -- 凭证摘要
+  ,c_company_cde -- 财务公司
+  ,c_cost_cde -- 成本中心
+  ,c_current_dpt_cde -- 内部往来机构
+  ,t_vou_date -- oracle记账日期
+  ,c_con_dpt_cde -- 共保人
+  ,c_check_flag -- 2正常，默认值3冲销4退保冲销
+  ,c_send_memo -- 错误描述
+  ,c_period_name -- 财务入账的会计期间 需按照财务系统的标准代码导入，如：2007-01 
+  ,c_cav_no -- 收付单号
+  ,set_of_books_id -- 帐套ID
+  ,actual_flag -- （实际、预算、保留）余额类型 从收付系统引入的凭证都为“A” 
+  ,user_je_category_name -- 凭证类型
+  ,user_je_source_name -- 从收付系统引入的凭证都为“产险收付”
+  ,chart_of_accounts_id -- 来自产险收付系统的数据全部默认为常数
+  ,n_total_amt -- 凭证总金额
+  ,c_servicetype_no -- 业务类型
+  ,request_id -- Ibm接口回写
+  ,c_department_cde -- 部门
+  ,c_verifyvou_memo -- 校验编码
+  ,c_rcpt_no -- 单据号
+  ,c_check_cde -- 复核人
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_vou_nme -- 回写财务凭证号
+  ,c_prm_sou -- 保费来源
+  ,c_trans_no -- 对账标识位
+  ,t_modify_tm -- 修改时间戳
+from web_fin_dcr_intf
+
+show create table web_fin_dcr_intf
+
+------------------------------5.17 	收付	收付再保单证从表	web_fin_cav_ridoc
+select 
+  n_item_no -- 序号
+  ,c_cav_pk_id -- 收付单号
+  ,c_bill_no -- 账单编号
+  ,n_bill_inst -- 账单期别
+  ,c_bill_ym -- 帐单年月
+  ,c_ri_com -- 再保公司
+  ,c_dpt_cde -- 出单机构
+  ,c_prod_no -- 产品代码
+  ,c_cont_cde -- 合约代码
+  ,c_cont_id -- 合约标识号
+  ,t_bal_end_tm -- 账单结算止期
+  ,c_fee_typ -- 费用类型
+  ,c_fee_cur -- 费用币种
+  ,n_fee_amt -- 费用金额
+  ,c_rp_cur -- 收付币种
+  ,n_rp_amt -- 收付金额
+  ,n_exch_rate -- 本次汇率
+  ,n_orig_cur_amt -- 原币收付金额
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_memo -- 备注
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_doc_flag -- 1 分出保费 2 分出摊回分保费用 3 分出摊回分保赔款 4 分出现金赔款 5 分出存入分保准备金 6 分出分保准备金利息
+  ,n_exchgot_prm -- 本次兑换币种收付金额
+  ,t_due_tm -- 挂账时间
+  ,c_dptacc_cde -- 做账机构
+  ,c_bill_flag -- 1 保费 2 赔款 3 手续费
+  ,c_rcpt_no -- 单据号：从业务接口表中得到
+  ,c_province -- 省
+  ,t_modify_tm -- 修改时间戳
+  ,c_bsns_typ -- 业务来源
+  ,c_ply_no -- 保单号
+  ,c_edr_no -- 批单号
+  ,c_clm_no -- 赔案号
+  ,c_ri_com2 -- 二级再保公司
+  ,n_vat_amt -- 增值税
+  ,n_sur_vat_amt -- 附加税
+  ,c_attrib -- 境内外标志
+from web_fin_cav_ridoc
+
+show create table web_fin_cav_ridoc
+
+------------------------------5.18 	收付	收付单证从表	web_fin_cav_doc[与保单相关]***********************
+select 
+  c_cav_pk_id -- 收付单号
+  ,n_item_no -- 序号
+  ,c_ply_no -- 保单号
+  ,c_edr_no -- 批单号
+  ,c_clm_no -- 赔案号
+  ,c_bs_cur -- 业务币种
+  ,n_bs_amt -- 业务金额
+  ,c_rp_cur -- 收付币种
+  ,n_rp_amt -- 收付金额
+  ,n_rp_prm -- 已收付金额
+  ,n_orig_cur_amt -- 本次原币收付金额
+  ,n_exch_rate -- 本次汇率
+  ,c_payer_cde -- 付款人代码
+  ,c_payer_nme -- 缴款人
+  ,t_insrnc_bgn_tm -- 开始日期
+  ,t_insrnc_end_tm -- 截止日期
+  ,t_udr_tm -- 核保/核赔时间
+  ,c_prod_no -- 产品代码
+  ,c_feetyp_cde -- 费用类型
+  ,c_bsns_typ -- 业务来源：01直销业务；02代理业务；03经纪业务。
+  ,c_clnt_mrk -- 客户类型：0：法人 1：个人（指被保险人）
+  ,c_slsgrp_cde -- 销售团队
+  ,c_sls_cde -- 业务员
+  ,c_cha_cls -- 渠道类别
+  ,c_cha_cde -- 渠道编码
+  ,c_insrnt_cde -- 被保险人
+  ,n_sum_amt -- 本案总结案金额或保单总金额
+  ,c_real_flag -- 实收标识
+  ,c_bill_flag -- 单据标识
+  ,n_orig_prm -- 单据原金额
+  ,c_con_dpt_cde -- 从共保人
+  ,c_main_con_cde -- 主共保人
+  ,c_follow_con_cde -- 共保人（仅供页面显示使用）
+  ,c_edr_typ -- 批改类型
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_rcpt_no -- 收据号
+  ,c_dpt_cde -- 机构部门
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_memo -- 备注
+  ,c_est_company -- 
+  ,c_pay_name -- 缴款人
+  ,n_tms -- 期次
+  ,c_app_nme -- 投保人名称
+  ,c_itemflag_no -- 
+  ,c_data_src -- 
+  ,dxp_tran_flag -- 
+  ,c_province -- 省
+  ,c_order_no -- 
+  ,c_bfn_no -- 商户号
+  ,n_price_amt -- 
+  ,n_vat_amt -- 
+  ,n_con_amt -- 
+  ,c_tran_flag -- 业务单据标识 (0自营，1共保)
+  ,t_modify_tm -- 修改时间戳
+  ,c_usage_cde -- 车辆实用性质
+  ,c_bank_cde -- 银行代码
+  ,c_bank_account -- 银行帐号
+  ,c_abstract -- 资金系统对账码
+from web_fin_cav_doc
+
+show create table web_fin_cav_doc
+
+------------------------------5.19 	收付	收付差额调整从表	web_fin_cav_obj
+select 
+  n_item_no -- 序号
+  ,c_cav_pk_id -- 收付单号
+  ,c_dpt_cde -- 款项所属机构
+  ,c_sbjt_no -- 科目编码
+  ,c_cav_dir -- 收付方向标识
+  ,c_cur_cde -- 币种代码
+  ,n_amt -- 金额
+  ,c_pre_flag -- 预收标识
+  ,n_pre_amt -- 预收金额
+  ,c_bsns_typ -- 业务来源
+  ,c_prod_no -- 产品代码
+  ,c_payer_nme -- 缴款人
+  ,c_sls_cde -- 业务员
+  ,c_cha_cls -- 渠道类别
+  ,c_cha_cde -- 渠道编码
+  ,c_curt_dpt_cde -- 内部往来机构
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_bbxrxlc_lb -- 被保险人、修理厂类别
+  ,c_customer_accounts -- 客户银行账号
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_ocav_no -- 原收付单号
+  ,c_oitem_no -- 原序号
+  ,c_doc_typ -- 单据类型
+  ,c_batch_no -- 批号
+  ,c_dptacc_cde -- 做账机构
+  ,c_rcpt_no -- 收据单号
+  ,c_data_src -- 数据来源
+  ,c_ply_no -- 保单号
+  ,dxp_tran_flag -- 
+  ,c_agt_agr_no -- 渠道协议
+  ,c_province -- 省
+  ,t_modify_tm -- 修改时间戳
+  ,c_obj_vat_flag -- 0：差额调整信息，1：增值税信息
+  ,c_attrib -- 再保境内境外标识
+  ,c_ri_com -- 再保人
+  ,c_bill_no -- 账单编号
+from web_fin_cav_obj
+
+show create table web_fin_cav_obj
+
+------------------------------5.20 	收付	收付款项从表	web_fin_cav_mny
+select 
+  n_item_no -- 序号
+  ,c_cav_pk_id -- 收付单号
+  ,t_rp_tm -- 收付日期
+  ,c_sbjt_no -- 科目编码
+  ,c_cur_cde -- 币种代码
+  ,n_amt -- 金额
+  ,n_use_amt -- 已用金额
+  ,c_flow_cde -- 流量指标编码
+  ,c_feetyp_cde -- 费用类型代码
+  ,c_payer_nme -- 缴款人
+  ,c_bal_typ -- 结算方式
+  ,c_check_no -- 支票号
+  ,c_bank_cde -- 银行代码
+  ,c_bank_nme -- 客户银行名称
+  ,c_bank_accnt -- 客户银行帐户
+  ,c_rp_nme -- 收付人名称
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建日期
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改日期
+  ,c_rp_name -- 投保人(（被保险人、修理厂)
+  ,c_savecash_bank -- 存现银行
+  ,t_savecash_tm -- 存现日期
+  ,c_savecash_no -- 存现流水号
+  ,c_savecash_opt -- 存现人
+  ,c_check_flag -- 复核标识
+  ,c_formafee_no -- 转存流水号
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_pay_name -- 被保人名称
+  ,c_data_src -- 数据来源
+  ,dxp_tran_flag -- 
+  ,c_province -- 省
+  ,t_modify_tm -- 修改时间戳
+  ,c_abstract -- 资金系统对账码
+  ,c_urid -- 资金收款明细信息urid
+  ,c_doc_flag -- 账单标识
+from web_fin_cav_mny
+
+show create table web_fin_cav_mny
+
+------------------------------5.21 	收付	理赔传收付明细表	web_fin_clm_details_due
+select 
+*
+from web_fin_clm_details_due
+
+show create table web_fin_clm_details_due
+
+------------------------------5.22 	收付	科目表	web_fin_inner_subject
+select 
+  c_rp_typ -- 收付类型
+  ,c_doc_flag -- 金额正负(0正1负)
+  ,c_cav_flag -- 借贷方向
+  ,c_sbjt_no -- 科目编码（输出）
+  ,c_sbjt_name -- 科目名称（输出）
+  ,c_servicetype_no -- 业务类型（输出）
+from web_fin_inner_subject
+
+show create table web_fin_inner_subject
+
+------------------------------5.23 	收付	自动校验科目	web_fin_vali_subject
+select 
+*
+from web_fin_vali_subject
+
+show create table web_fin_vali_subject
+
+------------------------------5.24 	收付	自动校验表	web_fin_autovalimomey
+select 
+*
+from web_fin_autovalimomey
+
+show create table web_fin_autovalimomey
+
+------------------------------5.25 	收付	费用客户信息	web_fin_rppaycustomer
+select 
+  ,c_rcpt_no -- 收据号
+  ,c_item_no -- 序列号
+  ,c_customer_accounts -- 收款方帐号
+  ,c_accounts_name -- 收款人名称
+  ,c_bank_accounts -- 收款人开户行
+  ,c_provinces -- 收款人省份
+  ,c_city -- 收款人市
+  ,c_mail -- 邮箱
+  ,c_mobile_phone -- 电话
+  ,c_cur_cde -- 币种代码
+  ,c_open_city -- 公司开户地区
+  ,c_bal_type -- 结算方式
+  ,c_company_accounts -- 付款方帐号
+  ,t_desire_date -- 期望日
+  ,t_desire_time -- 期望时间
+  ,c_use -- 用途
+  ,n_get_prm -- 单据总金额
+  ,c_receive_no -- 收款人银行 （联行号 对应codelist  BankName_List）
+  ,c_company_openbank -- 开户银行
+  ,c_table_flag -- 表类别
+  ,c_check_flag -- 审核标识
+  ,c_check_cde -- 审核人
+  ,t_check_tm -- 审核时间
+  ,c_send_bank_flag -- 报盘标识
+  ,c_send_bank_cde -- 报盘人
+  ,t_send_bank_tm -- 报盘时间
+  ,c_recv_bank_flag -- 回盘标识
+  ,c_recv_bank_cde -- 回盘人
+  ,t_recv_bank_tm -- 回盘时间
+  ,c_recv_bank_reason -- 回盘说明
+  ,c_check_name -- 审核人
+  ,c_export_name -- 导出人
+  ,t_export_tm -- 导出时间
+  ,c_import_name -- 导入人
+  ,t_import_tm -- 导入时间
+  ,c_import_memo -- 导入说明
+  ,c_bala_mrk -- 处理标示(0待审核，11待资料补录，12待资料审核)
+  ,c_check_memo -- 退回原因
+  ,c_entry_name -- 录入人
+  ,t_entry_tm -- 录入时间
+  ,t_update_tm -- 修改时间
+  ,c_capital_flows -- 收款人类型 1 直赔客户  2 委托协议修理厂   3委托非协议修理厂   4法院    5 委托其他 6 机构转账直赔  7 机构现金直赔   8 医院
+  ,c_identity_no -- 投保人身份证号
+  ,c_reportcase_tel -- 报案人电话
+  ,c_insurant_tel -- 被保险人电话
+  ,c_validate_flag -- 确认标识(0 未经客户确认，1 相符，2 不相符，3 不确定，4 需二次回访，5 客服回访确认中，6 需稽核)
+  ,c_validate_mind -- 确认意见
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_previous_mrk -- 上一次处理标识
+  ,n_undocheck_count -- 驳回次数
+  ,back_flag -- 退回标识
+  ,back_times -- 退回次数
+  ,bankpaytype -- 收款人性质
+  ,c_data_src -- 数据来源
+  ,dxp_tran_flag -- 
+  ,c_memo -- (描述信息、备注)
+  ,t_modify_tm -- 修改时间戳
+  ,c_rd_seq -- 传送资金管理系统的流水号
+  ,c_abstract -- 资金系统对账码
+from web_fin_rppaycustomer
+
+show create table web_fin_rppaycustomer
+
+------------------------------5.26 	收付	赔款分录明细表	web_fin_clm_subject
+select 
+  ,c_rp_typ -- 收付类型
+  ,c_pos_flag -- 金额正负
+  ,c_tran_flag -- 自营单据标志
+  ,c_pre_flag -- 预收标识
+  ,c_clm_typ -- 赔案类型
+  ,c_agri_mrk -- 涉农标识
+  ,c_nat_typ -- 涉农性质
+  ,c_ply_typ -- 政策类型
+  ,c_cav_flag -- 借贷方向
+  ,c_sbjt_no -- 科目编码
+  ,c_sbjt_name -- 科目名称
+  ,c_sbjt_memo -- 科目备注
+  ,c_servicetype_no -- 业务类型
+  ,c_cont_mrk -- 共保标识
+  ,c_arp_flag -- 收付挂账标志
+  ,t_modify_tm -- 修改时间戳
+from web_fin_clm_subject
+
+show create table web_fin_clm_subject
+
+------------------------------5.27 	收付	赔款客户信息	web_fin_rpclmcustomer
+select 
+  c_rcpt_no -- 收据号
+  ,c_item_no -- 编号
+  ,c_customer_accounts -- 收款方帐号
+  ,c_accounts_name -- 收款人名称
+  ,c_bank_accounts -- 收款人开户行
+  ,c_provinces -- 收款人省份
+  ,c_city -- 收款人市
+  ,c_mail -- 邮箱
+  ,c_mobile_phone -- 电话
+  ,c_cur_cde -- 币种代码
+  ,c_open_city -- 公司开户地区
+  ,c_bal_type -- 结算方式
+  ,c_company_accounts -- 付款方帐号
+  ,t_desire_date -- 期望日
+  ,t_desire_time -- 期望时间
+  ,c_use -- 用途
+  ,n_get_prm -- 单据业务金额
+  ,c_receive_no -- 收款人银行（联行号对应codelistBankName_List）
+  ,c_company_openbank -- 开户银行？
+  ,c_table_flag -- 表类别？
+  ,c_check_flag -- 审核标识
+  ,c_check_cde -- 审核人
+  ,t_check_tm -- 审核时间
+  ,c_send_bank_flag -- 报盘标识
+  ,c_send_bank_cde -- 报盘人
+  ,t_send_bank_tm -- 报盘时间
+  ,c_recv_bank_flag -- 回盘标识
+  ,c_recv_bank_cde -- 回盘人
+  ,t_recv_bank_tm -- 回盘时间
+  ,c_recv_bank_reason -- 回盘说明
+  ,c_check_name -- 审核人
+  ,c_export_name -- 导出人
+  ,t_export_tm -- 导出时间
+  ,c_import_name -- 导入人
+  ,t_import_tm -- 导入时间
+  ,c_import_memo -- 导入说明
+  ,c_bala_mrk -- 处理标示(0待审核，11待资料补录，12待资料审核)
+  ,c_bank_cde -- 银行代码
+  ,c_capital_flows -- 收款人类型1直赔客户2委托协议修理厂3委托非协议修理厂4法院5委托其他6机构转账直赔7机构现金直赔8医院
+  ,c_repairplant_no -- 修理网点
+  ,c_pay_type -- 结算期(C季付，D日结，M月结，W周结，Y年结)
+  ,c_check_memo -- 退回原因
+  ,c_entry_name -- 录入人
+  ,t_entry_tm -- 录入时间
+  ,t_update_tm -- 修改时间
+  ,c_previous_mrk -- 上一次处理标识
+  ,c_identity_no -- 投保人身份证号
+  ,c_reportcase_tel -- 报案人电话
+  ,c_insurant_tel -- 被保险人电话
+  ,c_validate_flag -- 确认标识(0未经客户确认，1相符，2不相符，3不确定，4需二次回访，5客服回访确认中，6需稽核)
+  ,c_validate_mind -- 确认意见
+  ,n_undocheck_count -- 驳回次数
+  ,t_call_tm -- 回访确认时间
+  ,c_trans_mrk -- 迁移标识
+  ,t_trans_tm -- 迁移时间
+  ,c_lawyer -- 律师
+  ,c_legal_affairs -- 法务
+  ,c_clm_charger -- 理赔负责人
+  ,c_dpt_charger -- 部门负责人
+  ,c_memo -- 备注
+  ,c_icbc_cityno -- 工商银行城市代码
+  ,back_flag -- 退回标识
+  ,back_times -- 退回次数
+  ,c_est_company -- 公估公司
+  ,bankpaytype -- 收款人性质
+  ,n_use_amt -- 单据收付金额
+  ,c_activity_nme -- 活动名称
+  ,c_wishes_msg -- 红包祝福语
+  ,c_wishing_flag -- 是否红包（00 普通支付 01 现金红包 02 裂变红包）
+  ,n_poll_no -- 传送次数
+  ,t_modify_tm -- 修改时间戳
+  ,c_rd_seq -- 传送资金管理系统的流水号
+  ,c_abstract -- 资金系统对账码
+from web_fin_rpclmcustomer
+
+show create table web_fin_rpclmcustomer
+
+

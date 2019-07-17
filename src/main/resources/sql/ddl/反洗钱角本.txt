@@ -1,0 +1,88 @@
+DROP TABLE `rpt_fxq_tb_ident_pers`;
+
+CREATE TABLE `rpt_fxq_tb_ident_pers` (
+  `c_certf_cls` varchar(30) DEFAULT NULL COMMENT '证件类型',
+  `c_certf_cde` varchar(20) DEFAULT NULL COMMENT '证件号码',
+  `c_person_nme` varchar(100) DEFAULT NULL COMMENT '姓名',
+  `pt` varchar(15) DEFAULT NULL COMMENT '分区字段'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='三要素表-自然人'
+/*!50500 PARTITION BY RANGE  COLUMNS(pt)
+(PARTITION pt20190712000000 VALUES LESS THAN ('20190712999999') ENGINE = InnoDB) */;
+
+truncate table rpt_fxq_tb_ident_pers;
+insert into rpt_fxq_tb_ident_pers
+select distinct
+	v.c_certf_cls, -- 身份证件类型
+	v.c_certf_cde, -- 身份证件号码
+	v.c_person_name,-- 工作单位名称
+	'20190712000000' as pt-- 分区字段
+from (
+    select distinct  
+        a.c_certf_cls, -- 身份证件类型
+        a.c_certf_cde, -- 身份证件号码
+        a.c_app_nme c_person_name-- 工作单位名称
+    from ods_cthx_web_ply_applicant partition(pt20190625000000) a
+        left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+    where a.c_clnt_mrk='1' and b.t_next_edr_udr_tm > now()
+    union all
+    select distinct
+        a.c_certf_cls, -- 身份证件类型
+        a.c_certf_cde, -- 身份证件号码
+        a.c_bnfc_nme-- 工作单位名称
+    from ods_cthx_web_ply_bnfc partition(pt20190625000000) a
+        left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+    where a.c_clnt_mrk='1' and b.t_next_edr_udr_tm > now()
+    union all
+    select distinct
+        a.c_certf_cls, -- 身份证件类型
+        a.c_certf_cde, -- 身份证件号码
+        a.c_insured_nme-- 工作单位名称
+    from ods_cthx_web_ply_insured partition(pt20190625000000) a
+        left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+    where a.c_clnt_mrk='1' and b.t_next_edr_udr_tm > now()
+) v    
+
+-----------------------------------------------------------------------------------------------------------------------------
+drop table `rpt_fxq_tb_ident_units`;
+
+create table `rpt_fxq_tb_ident_units` (
+  `c_certf_cls` varchar(30) default null comment '证件类型',
+  `c_certf_cde` varchar(20) default null comment '证件号码',
+  `c_legal_name` varchar(100) default null comment '姓名',
+  `pt` varchar(15) default null comment '分区字段'
+) engine=innodb default charset=utf8 comment='三要素表-自然人'
+/*!50500 partition by range  columns(pt)
+(partition pt20190712000000 values less than ('20190712999999') engine = innodb) */;
+
+truncate table rpt_fxq_tb_ident_units;
+insert into rpt_fxq_tb_ident_units
+select distinct
+    v.c_certf_cls, -- 身份证件类型
+    v.c_certf_cde, -- 身份证件号码
+    v.c_legal_name,-- 工作单位名称
+     '20190712000000' as pt-- 分区字段
+from (
+    select distinct  
+        a.c_certf_cls, -- 身份证件类型
+        a.c_certf_cde, -- 身份证件号码
+        a.c_app_nme c_legal_name-- 工作单位名称
+    from ods_cthx_web_ply_applicant partition(pt20190625000000) a
+        left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+    where a.c_clnt_mrk='0' and b.t_next_edr_udr_tm > now()
+    union all
+    select distinct
+        a.c_certf_cls, -- 身份证件类型
+        a.c_certf_cde, -- 身份证件号码
+        a.c_bnfc_nme-- 工作单位名称
+    from ods_cthx_web_ply_bnfc partition(pt20190625000000) a
+        left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+    where a.c_clnt_mrk='0' and b.t_next_edr_udr_tm > now()
+    union all
+    select distinct
+        a.c_certf_cls, -- 身份证件类型
+        a.c_certf_cde, -- 身份证件号码
+        a.c_insured_nme-- 工作单位名称
+    from ods_cthx_web_ply_insured partition(pt20190625000000) a
+        left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+    where a.c_clnt_mrk='0' and b.t_next_edr_udr_tm > now()
+) v

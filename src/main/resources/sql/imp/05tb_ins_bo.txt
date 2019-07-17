@@ -1,28 +1,36 @@
 /*
 无数据
-		   a.C_CERTF_CLS as Id_type5,-- 受益所有人证件类型
-
+a.c_certf_cls as id_type5,-- 受益所有人证件类型
 cst_no	客户号	@N
 bnf_type	判定受益所有人方式	mapping
 shareholding_ratio	持股数量或表决所占比重	@N
 id_type5	受益所有人身份证件类型	mapping
 id_deadline5	受益所有人身份证件有效期限到期日	YYYYMMDD@N
-             
 */
-select b.C_DPT_CDE as Company_code1, -- 机构网点代码，内部的机构编码
-       '@N' as Company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
-       c.C_APP_CDE as Cst_no, -- 客户号
-       c.C_APP_NME as Acc_name, -- 客户名称
-       c.C_BUSLICENCE_NO as License,-- 营业执照号码
-       a.C_BNFC_NME as Bnf_name,-- 收益所有人姓名
-			 '14' as Bnf_type,-- 判定受益所有人方式,14其他
-       '@N' as Shareholding_ratio,-- 持股数量或表决权比例
-       a.c_addr as Bnf_address,-- 受益所有人住址
-		   a.C_CERTF_CLS as Id_type5,-- 受益所有人证件类型
-			 a.C_CERTF_CDE as Id_no5,-- 受益所有人证件号码
-       '@N'as Id_deadline5,-- 受益所有人证件有效期
-       '@N'as Sys_name-- 系统名称
-  from ods_cthx_web_ply_bnfc PARTITION(pt20190625000000) a
-  left join ods_cthx_web_ply_base PARTITION(pt20190625000000) b on a.C_PLY_NO=b.C_PLY_NO 
-  left join ods_cthx_web_ply_applicant PARTITION(pt20190625000000) c on a.C_PLY_NO=c.C_PLY_NO 
- where a.C_CLNT_MRK='1'
+select b.c_dpt_cde as company_code1, -- 机构网点代码，内部的机构编码
+    '@N' as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
+    c.c_app_cde as cst_no, -- 客户号
+    c.c_app_nme as acc_name, -- 客户名称
+    c.c_buslicence_no as license,-- 营业执照号码
+    a.c_bnfc_nme as bnf_name,-- 收益所有人姓名
+    '14' as bnf_type,-- 判定受益所有人方式,14其他
+    '@N' as shareholding_ratio,-- 持股数量或表决权比例
+    a.c_addr as bnf_address,-- 受益所有人住址    
+    case 
+        when a.c_certf_cls = '120001' then 11 -- 居民身份证
+        when a.c_certf_cls = '120002' then 13 -- 护照
+        when a.c_certf_cls = '120003' then 12 -- 军人证
+        when a.c_certf_cls = '120004' then 13 -- 回乡证
+        when a.c_certf_cls = '120005' then 14 -- 港澳居民居住证
+        when a.c_certf_cls = '120006' then 14 -- 台湾居民居住证
+        when a.c_certf_cls = '120009' then 18 -- 其它
+    else 
+        18 -- 其它
+    end as id_type5,-- 受益所有人证件类型
+    a.c_certf_cde as id_no5,-- 受益所有人证件号码
+    '@N'as id_deadline5,-- 受益所有人证件有效期
+    '@N'as sys_name-- 系统名称
+from ods_cthx_web_ply_bnfc a
+    left join ods_cthx_web_ply_base b on a.c_ply_no=b.c_ply_no 
+    left join ods_cthx_web_ply_applicant c on a.c_ply_no=c.c_ply_no
+where c.c_clnt_mrk='1' -- 受益人没有客户类别区分,申请人有客户类别区分

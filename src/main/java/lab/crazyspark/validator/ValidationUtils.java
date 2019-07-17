@@ -23,7 +23,7 @@ public class ValidationUtils {
 
         List<String> messageList = new ArrayList<String>();
         for (ConstraintViolation<T> constraintViolation : constraintViolations) {
-            messageList.add(constraintViolation.getMessage());
+            messageList.add(constraintViolation.getPropertyPath().toString() + ":" + constraintViolation.getMessage());
         }
         return messageList;
     }

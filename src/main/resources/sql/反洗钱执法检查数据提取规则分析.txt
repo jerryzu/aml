@@ -1,0 +1,663 @@
+create table `ods_cthx_web_ply_base` (
+  `c_app_no` varchar(50) character set utf8 collate utf8_bin not null comment '申请单号',
+  `c_app_typ` varchar(1) character set utf8 collate utf8_bin default null comment ' a  投保单, e 批改申请单, q 报价单, o 开口保单',
+  `c_ply_no` varchar(50) character set utf8 collate utf8_bin default null comment '保单号 policy no',
+  `n_edr_prj_no` decimal(6,0) default '0' comment '批改次数 times of endorsement',
+  `c_edr_no` varchar(50) character set utf8 collate utf8_bin default null comment '批单号',
+  `c_rel_ply_no` varchar(50) character set utf8 collate utf8_bin default null comment '依赖关联保单号 ，如财产险与利损险，车险商业与交强险',
+  `c_prod_no` varchar(6) character set utf8 collate utf8_bin default null comment '产品代码 product code',
+  `c_dpt_cde` varchar(30) character set utf8 collate utf8_bin default null comment '机构代码 department no',
+  `c_sls_cde` varchar(30) character set utf8 collate utf8_bin default null comment '业务员',
+  `c_bsns_typ` varchar(30) character set utf8 collate utf8_bin default null comment '业务来源 source type of business',
+  `c_bsns_subtyp` varchar(30) character set utf8 collate utf8_bin default null comment '业务来源细分 source subtype of business',
+  `c_brkr_cde` varchar(30) character set utf8 collate utf8_bin default null comment '代理人/经纪人 agent/broker no',
+  `c_agt_agr_no` varchar(30) character set utf8 collate utf8_bin default null comment '代理协议或合作协议号 agency agreement no',
+  `n_sub_co_no` varchar(30) character set utf8 collate utf8_bin default '' comment '补充协议号 supplemental agreement no',
+  `c_oc_ply_no` varchar(50) character set utf8 collate utf8_bin default null comment '开口保单业务的预约保单号',
+  `n_disc_rate` decimal(10,6) default null comment '整张单的折扣率',
+  `n_rate` decimal(10,6) default null comment '整张保单的费率',
+  `n_comm_rate` decimal(10,6) default null comment '手续费比例 proportion of commission to premium',
+  `c_renew_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '续保标志: 0 新保; 1 续保 renewal flag ',
+  `c_orig_ply_no` varchar(50) character set utf8 collate utf8_bin default null comment '续保单上年保单号 original policy no of renewal',
+  `c_orig_insurer` varchar(30) character set utf8 collate utf8_bin default null comment '上年保险公司 former insurer',
+  `c_amt_cur` varchar(30) character set utf8 collate utf8_bin default null comment '保额币种 currency of amount {code}',
+  `n_amt` decimal(20,2) default null comment '保额合计 amount insured',
+  `n_amt_rmb_exch` decimal(10,6) default null comment '保费汇率 exchange rate of premium',
+  `c_prm_cur` varchar(30) character set utf8 collate utf8_bin default null comment '保费币种 currency of premium',
+  `n_calc_prm` decimal(20,2) default null comment '计算保费合计,系统自动计算的保费金额',
+  `n_prm` decimal(20,2) default null comment '保费合计 premium',
+  `n_prm_rmb_exch` decimal(10,6) default null comment '保费人民币汇率',
+  `n_indem_lmt` decimal(20,2) default null comment '赔偿限额合计 limits of idemnity',
+  `c_ratio_typ` varchar(6) character set utf8 collate utf8_bin default null comment '短期费率方式 part-term rate type',
+  `n_ratio_coef` decimal(10,6) default null comment '短期系数 part-term coefficient',
+  `n_saving_amt` decimal(20,2) default null comment '储金  amount of saving fund',
+  `c_prm_sts` varchar(1) character set utf8 collate utf8_bin default null comment '保费实收状态，0 未实收 1 部分实收 2 保费收齐',
+  `c_ply_sts` varchar(10) character set utf8 collate utf8_bin default null comment '保单状态 policy status，i: 非终止(有效或满期) t: terminated 终止(注退)',
+  `t_termn_tm` datetime default null comment '保单终止时间 time of policy termination，初始为保险止期，注退后填上注退时间',
+  `c_inwd_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '分入业务标志( 0 非分入; 1 分入) reinsurance inward flag',
+  `c_ci_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '共保标志( 0 非共保 1 共保) coinsurance flag',
+  `c_ci_typ` varchar(30) character set utf8 collate utf8_bin default null comment '共保方式代码 coinsurance type {code}',
+  `n_ci_jnt_amt` decimal(20,2) default null comment '共保总保额 joint amount of coinsurance',
+  `n_ci_jnt_prm` decimal(20,2) default null comment '共保总保费 joint premium of coinsurance',
+  `c_long_term_mrk` varchar(1) character set utf8 collate utf8_bin default null comment '多年期标志( 0 短期; 1 多年期) long term flag',
+  `t_app_tm` datetime default null comment '投保日期 applying time',
+  `c_opr_typ` varchar(1) character set utf8 collate utf8_bin default null comment '保单号生成方式, 0  自动, 1  手动',
+  `c_prn_no` varchar(50) character set utf8 collate utf8_bin default null comment '印刷号 print no',
+  `t_insrnc_bgn_tm` datetime default null comment '保险起期 policy effective date',
+  `t_insrnc_end_tm` datetime default null comment '保险止期 policy expire date',
+  `c_tm_sys_cde` varchar(30) character set utf8 collate utf8_bin default null comment '时制(0-24时/12-12时) time system code (0-24hr/12-12hr)',
+  `c_unfix_spc` text character set utf8 collate utf8_bin comment '非固定特别约定 unfixed special provision',
+  `c_grp_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '团单标志( 0 个单; 1 团单) group insurance flag',
+  `c_mult_insrnt_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment ' 0 否  , 1 是',
+  `c_listorcol_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '清单/汇总标志( 0 输入清单, 1 输入汇总  ; )，人身险需要',
+  `c_master_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '统括保单标志 master policy flag',
+  `c_bid_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '投标业务标志',
+  `c_pkg_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment ' 0 否, 1 是',
+  `c_pkg_no` varchar(50) character set utf8 collate utf8_bin default null comment '一揽子编号 package business flag',
+  `n_prm_disc` decimal(10,6) default null comment '套餐优折扣',
+  `c_reg_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '记名标志: 0 不记名; 1 记名 registered flag',
+  `c_dec_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '法定申报标志(0非申报;1申报) legal declaration flag',
+  `c_juri_cde` varchar(50) character set utf8 collate utf8_bin default null comment '司法管辖代码 jurisdition code',
+  `c_agri_mrk` varchar(30) character set utf8 collate utf8_bin default null comment '涉农标志  agriculture related flag',
+  `c_foreign_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '境内外标志(0:境内;1:境外) domestic/foreign flag',
+  `c_imporexp_mrk` varchar(30) character set utf8 collate utf8_bin default null comment '进出口标志',
+  `c_manual_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '手工出单标志(0非手工1手工)',
+  `c_inst_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '分期付款标志 installment flag',
+  `c_vip_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment 'vip标志 vip flag',
+  `c_open_cover_no` varchar(50) character set utf8 collate utf8_bin default null comment '预约协议 open cover no',
+  `c_dispt_sttl_cde` varchar(30) character set utf8 collate utf8_bin default null comment '诉讼方式 dispute settle method {code}',
+  `c_dispt_sttl_org` varchar(100) character set utf8 collate utf8_bin default null comment '仲裁机构  dispute settle organ',
+  `c_opr_cde` varchar(30) character set utf8 collate utf8_bin default null comment '操作员代码 operator s no',
+  `t_opr_tm` datetime default null comment '操作日期 operate time',
+  `c_chk_cde` varchar(30) character set utf8 collate utf8_bin default null comment '复核人代码 checker s no',
+  `t_issue_tm` datetime default null comment '签单日期 issue time',
+  `t_udr_tm` datetime default null comment '核保日期 underwrite time',
+  `c_udr_dpt_cde` varchar(30) character set utf8 collate utf8_bin default null comment '核保机构 underwriting department no',
+  `c_udr_cde` varchar(30) character set utf8 collate utf8_bin default null comment '核保人代码 underwriter s no',
+  `c_udr_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '核保标志',
+  `c_ri_fac_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '临分标志 facultative reinsurance flag',
+  `c_ri_chk_cde` varchar(30) character set utf8 collate utf8_bin default null comment '再保审核人代码 reinsurance approver s no',
+  `c_ri_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '再保确认标志 reinsurance approved flag',
+  `t_next_edr_bgn_tm` datetime default null comment '批改生效起期 beginning of successive edorsement  effective time ',
+  `t_next_edr_end_tm` datetime default null comment '批改生效止期 end of successive edorsement effective time ',
+  `t_next_edr_udr_tm` datetime default null comment '下次批改核保日期 underwriting time of endorsement in succession',
+  `c_revert_mrk` varchar(1) character set utf8 collate utf8_bin default null comment '批改回退标志 0 无回退/新记录 1 被回退记录 2 目的记录',
+  `c_remark` text character set utf8 collate utf8_bin comment '备注 remark',
+  `t_edr_app_tm` datetime default null comment '批改申请日期',
+  `t_edr_bgn_tm` datetime default null comment '批改生效起期',
+  `t_edr_end_tm` datetime default null comment '批改生效止期',
+  `c_edr_mrk` varchar(30) character set utf8 collate utf8_bin default null comment '申请类型,1 内部批单，2 客户申请',
+  `c_edr_type` varchar(30) character set utf8 collate utf8_bin default null comment '批改类型,1 一般批改，2 注销，3退保  4、组合批改  5 满期返还  9 批单撤销',
+  `c_edr_rsn_bundle_cde` varchar(50) character set utf8 collate utf8_bin default null comment '批改原因或组合代码',
+  `n_bef_edr_prj_no` decimal(6,0) default null comment '批改业务原保单记录序批改号 predecessor endorsement prj no',
+  `n_bef_edr_amt` decimal(20,2) default null comment '批改前保额',
+  `n_bef_edr_prm` decimal(20,2) default null comment '批改前保费',
+  `c_latest_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment ' 0 否, 1 是',
+  `n_amt_var` decimal(20,2) default null comment '保额变化，批单保额-上一批单（保单）保额',
+  `n_calc_prm_var` decimal(20,2) default null comment '计算保费变化',
+  `n_prm_var` decimal(20,2) default null comment '保费变化，批单保费上一批单（保单）保费',
+  `n_indem_lmt_var` decimal(20,2) default null comment '赔偿限额变化',
+  `c_app_prsn_cde` varchar(30) character set utf8 collate utf8_bin default null comment '申请人代码',
+  `c_app_prsn_nme` varchar(100) character set utf8 collate utf8_bin default null comment '申请人名称',
+  `c_edr_ctnt` text character set utf8 collate utf8_bin comment '批文内容',
+  `c_resv_txt_1` varchar(200) character set utf8 collate utf8_bin default null comment '预留 reserved field',
+  `c_resv_txt_2` varchar(200) character set utf8 collate utf8_bin default null comment '预留 reserved field',
+  `c_resv_txt_3` varchar(200) character set utf8 collate utf8_bin default null comment '预留 reserved field',
+  `c_resv_txt_4` varchar(200) character set utf8 collate utf8_bin default null comment '预留 reserved field',
+  `c_crt_cde` varchar(30) character set utf8 collate utf8_bin default null comment '创建人员 creator no',
+  `t_crt_tm` datetime default null comment '创建时间 create time',
+  `c_upd_cde` varchar(30) character set utf8 collate utf8_bin default null comment '修改人员 updater no',
+  `t_upd_tm` datetime default null comment '修改时间 update time',
+  `c_grant_dpt_cde` varchar(30) character set utf8 collate utf8_bin default null comment '经营单位',
+  `c_vip_cus` varchar(30) character set utf8 collate utf8_bin default null comment 'vip客户',
+  `n_max_fee_prop` decimal(10,6) default null comment '费用最高比例',
+  `c_fin_typ` varchar(30) character set utf8 collate utf8_bin default null comment '财政来源类型,英文名',
+  `n_orig_times` decimal(4,0) default null comment '续保次数',
+  `c_dpt_attr` varchar(30) character set utf8 collate utf8_bin default null comment '部门属性',
+  `c_salegrp_cde` varchar(30) character set utf8 collate utf8_bin default null comment '销售团队',
+  `c_sls_id` varchar(20) character set utf8 collate utf8_bin default null comment '业务员身份证号',
+  `c_sls_tel` varchar(20) character set utf8 collate utf8_bin default null comment '业务员联系电话',
+  `c_sls_nme` varchar(50) character set utf8 collate utf8_bin default null comment '业务员名称',
+  `c_frz_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '0 正常，1 质押/挂失',
+  `c_fee_cal_typ` varchar(30) character set utf8 collate utf8_bin default null comment '费用计算基数',
+  `c_rate_no` varchar(30) character set utf8 collate utf8_bin default null comment '费率码',
+  `c_common_flag` varchar(1) character set utf8 collate utf8_bin default '0' comment '大客户标志 默认为''0''',
+  `c_save_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '留存标志 默认为''0''',
+  `n_bef_edr_saving` decimal(20,2) default null comment '批改前储金',
+  `n_saving_var` decimal(20,2) default null comment '储金变化',
+  `c_trans_mrk` varchar(1) character set utf8 collate utf8_bin default null comment '迁移标志',
+  `t_trans_tm` datetime default null comment '迁移时间',
+  `c_immeff_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '批文内容',
+  `c_data_src` varchar(3) character set utf8 collate utf8_bin default null comment '系统来源',
+  `c_quote_no` varchar(50) character set utf8 collate utf8_bin default null comment '报价码',
+  `n_base_prm` decimal(20,2) default null comment '应交基准保费',
+  `n_all_prm` decimal(20,2) default null comment '整期保费',
+  `n_irr_ratio` decimal(20,2) default null comment '浮动率',
+  `c_prod_no_old` varchar(6) character set utf8 collate utf8_bin default null comment '老系统产品代码',
+  `c_quota_mrk` varchar(1) character set utf8 collate utf8_bin default null comment '是否定额单 1 定额单 0 非定额单',
+  `c_large_business` varchar(1) character set utf8 collate utf8_bin default '0' comment '大额交易标记 0非大额 1 是大额交易',
+  `c_sus_business` varchar(1) character set utf8 collate utf8_bin default '0' comment '可疑交易标记 0非可疑交易 1是可疑交易',
+  `c_cha_type` varchar(30) character set utf8 collate utf8_bin default null comment '渠道中级分类',
+  `c_cha_subtype` varchar(30) character set utf8 collate utf8_bin default null comment '渠道子类',
+  `c_sur_formula` text character set utf8 collate utf8_bin comment '退保公式',
+  `c_noendclm_mrk` varchar(1) character set utf8 collate utf8_bin default '0' comment '有在途赔案标记 1 有 0 没有',
+  `n_tax_amt` decimal(20,2) default '0.00' comment '车船税-冗余字段',
+  `t_repstopext_bgn_tm` datetime default null comment '停驶起期',
+  `t_repstopext_end_tm` datetime default null comment '停驶展期',
+  `c_repstopext_rle_app_no` varchar(50) character set utf8 collate utf8_bin default null comment '报停展期的总天数',
+  `t_repstopext_last_end_tm` datetime default null comment '上次展期',
+  `t_src_insrnc_bgn_tm` datetime default null comment '原始保单起期',
+  `t_src_insrnc_end_tm` datetime default null comment '原始保单止期',
+  `c_repstopext_status` varchar(10) character set utf8 collate utf8_bin default null comment '停展状态 t停  z展  n 非停展状态',
+  `c_repstopext_src_app_no` varchar(50) character set utf8 collate utf8_bin default null comment '做报停展期批改前的最新投保单，如果是做第二此报停展期批改则还是原来的最新投保单号',
+  `c_sls_cde_old` varchar(30) character set utf8 collate utf8_bin default null comment '老系统业务员代码',
+  `c_dpt_cde_old` varchar(30) character set utf8 collate utf8_bin default null comment '老系统承保机构代码',
+  `c_brk_sls_cde` varchar(200) character set utf8 collate utf8_bin default null comment '代理业务员',
+  `c_tender_no` varchar(50) character set utf8 collate utf8_bin default null comment '政府采购任务编码',
+  `c_approve_cde` varchar(30) character set utf8 collate utf8_bin default null comment '保险公司审批人员代码',
+  `c_preferential` varchar(200) character set utf8 collate utf8_bin default null comment '减免信息',
+  `n_commission_rate_upper` decimal(20,2) default null comment '手续费支付比例上限(宁波手续费上传)',
+  `c_trd_cde` varchar(30) character set utf8 collate utf8_bin default null comment '国民经济行业分类与代码',
+  `c_dduct_desc` varchar(200) character set utf8 collate utf8_bin default null comment '免赔说明(new)',
+  `n_dduct_rate` decimal(10,6) default null comment '免赔率(new)',
+  `n_dduct_amt` decimal(20,2) default null comment '绝对免赔额(new)',
+  `c_resv_txt_6` varchar(200) character set utf8 collate utf8_bin default null comment '预留 reserved field',
+  `c_resv_txt_7` varchar(200) character set utf8 collate utf8_bin default null comment '预留 reserved field',
+  `c_resv_txt_8` varchar(200) character set utf8 collate utf8_bin default null comment '预留 reserved field',
+  `c_ri_fac_opn` text character set utf8 collate utf8_bin comment '临分意见',
+  `n_ci_own_amt` decimal(20,2) default null comment '共保我司净保额',
+  `n_ci_own_prm` decimal(20,2) default null comment '共保我司净保费',
+  `c_ci_inp_typ` varchar(30) character set utf8 collate utf8_bin default null comment '[共保]录单方式',
+  `c_ci_pri_typ` varchar(30) character set utf8 collate utf8_bin default null comment '[共保]单证打印方式',
+  `c_resv_txt_5` varchar(200) character set utf8 collate utf8_bin default null comment '预留 reserved field',
+  `c_area_flag` varchar(6) character set utf8 collate utf8_bin default '' comment '地区标识',
+  `c_certf_no` varchar(50) character set utf8 collate utf8_bin default null comment '代理业务跟单销售人员职业证号',
+  `c_needfee_flag` varchar(1) character set utf8 collate utf8_bin default '0' comment '是否规定见费出单标志 0 否 1 是',
+  `c_canclfee_flg` varchar(1) character set utf8 collate utf8_bin default '' comment ' 特殊取消见费出单标志 0 否 1 是',
+  `c_canclfeersn_cde` varchar(10) character set utf8 collate utf8_bin default null comment ' 特殊取消见费出单原因',
+  `t_last_bill_date` datetime default null comment '上张保单签单日期',
+  `t_last_start_date` datetime default null comment '上张保单起保日期/浮动因素计算期间起期',
+  `t_last_end_date` datetime default null comment '上张保单终保日期/浮动因素计算区间止期',
+  `t_run_bgn_tm` datetime default null comment '追溯起期',
+  `t_run_end_tm` datetime default null comment '追溯止期',
+  `c_payment_mrk` varchar(1) character set utf8 collate utf8_bin default null comment '是否已经将团单收付变为个单进行传送  0：未传送  1：已经传送',
+  `c_unfix_spc_change` varchar(2) character set utf8 collate utf8_bin default null comment '是否修改特别约定（是否走自核）：0-否；1-是；',
+  `c_unfix_spc_hidden` text character set utf8 collate utf8_bin comment '隐藏特别约定',
+  `c_danzheng_typ` varchar(50) character set utf8 collate utf8_bin default null comment '单证类型',
+  `n_surr_rate` decimal(20,2) default null comment '注销手续费率',
+  `c_monitor_id` varchar(100) character set utf8 collate utf8_bin default null comment '时间监控id',
+  `n_resv_num_1` decimal(20,2) default null comment '预留数值字段1',
+  `n_resv_num_2` decimal(20,2) default null comment '预留数值字段2',
+  `n_resv_num_3` decimal(20,2) default null comment '预留数值字段3',
+  `n_charge_prm` decimal(20,2) default null comment '换算保额(人民币)',
+  `c_islog_back` varchar(50) character set utf8 collate utf8_bin default null comment '是否ilog返回修改，1为ilog返回修改，0为自核通过，或者自核转人工',
+  `c_quick_flag` varchar(50) character set utf8 collate utf8_bin default null comment '是否快速出单：0-否；1-是；',
+  `c_unfix_spc_ilog` varchar(50) character set utf8 collate utf8_bin default null comment '特别约定按照:特约编号---特约内容###特约编号---特约内容,传递给ilog',
+  `c_undr_opn` text character set utf8 collate utf8_bin comment 'ilog申请核保返回修改原因',
+  `c_glass_typ` varchar(50) character set utf8 collate utf8_bin default null comment '玻璃类型,玻璃类型 glass type',
+  `c_brk_sls_name` varchar(50) character set utf8 collate utf8_bin default null comment '代理业务员名称',
+  `c_edr_ratio_typ` varchar(50) character set utf8 collate utf8_bin default null comment '批改短期费率类型',
+  `n_fund_rate` decimal(20,2) default null comment '计提救助基金比例',
+  `n_fund_amount` decimal(20,2) default null comment '计提救助基金金额',
+  `c_pkg_app_no` varchar(50) character set utf8 collate utf8_bin default null,
+  `c_pkg_prod_no` varchar(6) character set utf8 collate utf8_bin default null,
+  `c_market_id` varchar(50) character set utf8 collate utf8_bin default null,
+  `t_agree_start_tm` datetime default null,
+  `t_agree_stop_tm` datetime default null,
+  `c_agreement_days` varchar(4) character set utf8 collate utf8_bin default null,
+  `c_water_mark` varchar(1) character set utf8 collate utf8_bin default null comment '是否涉海|涉水 0 否 1是',
+  `c_oc_agr_no` varchar(50) character set utf8 collate utf8_bin default null comment '开口保单协议号',
+  `c_spec_no` text character set utf8 collate utf8_bin comment '特别约定序号集',
+  `c_intro_dptcde` varchar(50) character set utf8 collate utf8_bin default null comment '服务机构',
+  `c_recei_title_cde` varchar(20) character set utf8 collate utf8_bin default null comment '发票抬头',
+  `c_recei_title_nme` varchar(200) character set utf8 collate utf8_bin default null comment '发票标题',
+  `c_country_flag` varchar(30) character set utf8 collate utf8_bin default null comment '县/区',
+  `c_app_area_code` varchar(30) character set utf8 collate utf8_bin default null comment '指定查询区域',
+  `c_pure_prm_flag` text character set utf8 collate utf8_bin comment '纯风险保费标识',
+  `c_recei_hs` varchar(30) character set utf8 collate utf8_bin default null comment 'y为回收发票，n未回收（发票丢失）',
+  `c_province` varchar(30) default null comment '省份(支票)',
+  `c_paper_mrk` varchar(1) default null comment '是否需要纸质保单及发票,0：不需要 ，1：需要',
+  `c_send_per` varchar(100) default null comment '配送人',
+  `c_send_mobile` varchar(100) default null comment '配送人电话',
+  `c_send_addr` varchar(200) default null comment '配送地址',
+  `c_pre_no` varchar(50) default null,
+  `c_order_no` varchar(50) default null comment '订单号',
+  `c_joint_no` varchar(50) default null comment '联合投保号,为null是为非联合投保',
+  `n_price` decimal(20,2) default null comment '保费收入',
+  `n_vat` decimal(20,2) default null comment '增值税',
+  `n_price_var` decimal(20,2) default null comment '保费收入变化值',
+  `n_vat_var` decimal(20,2) default null comment '增值税变化',
+  `c_cha_vat_type` varchar(1) character set utf8 collate utf8_bin default null comment '代理人缴税类型',
+  `c_resv_txt_9` varchar(200) default null comment '预留字段9',
+  `c_resv_txt_10` varchar(200) default null comment '预留字段10',
+  `c_resv_txt_11` varchar(200) default null comment '预留字段11',
+  `c_resv_txt_12` varchar(200) default null comment '预留字段12',
+  `c_resv_txt_13` varchar(200) default null comment '预留字段13',
+  `c_resv_txt_14` varchar(200) character set utf8 collate utf8_bin default null comment '产品方案号',
+  `c_resv_txt_15` varchar(200) default null comment '预留字段15',
+  `c_resv_txt_16` varchar(200) default null comment '预留字段16',
+  `c_resv_txt_17` varchar(200) default null comment '预留字段17',
+  `c_resv_txt_18` varchar(200) default null comment '预留字段18',
+  `c_resv_txt_19` varchar(200) default null comment '预留字段19',
+  `c_resv_txt_20` varchar(200) default null comment '预留字段20',
+  `t_modify_tm` timestamp not null default current_timestamp on update current_timestamp comment '修改时间戳',
+  `pt` varchar(20) not null comment '分区字段',
+  `c_sps_tas` varchar(30) default null,
+  `c_sps_typ` varchar(100) default null
+) engine=innodb default charset=utf8 comment='保批单基本信息'
+/*!50500 partition by range  columns(pt)
+
+
+
+财险无需提取受益人信息,寿险业务无需提取保险标的信息,所有字段均为必填,如果系统末采集某数据项目内容字符型数据项用"@N"替代,数值型数据项用"-9999",金额值默认单位为元
+1.tb_compnay:机构对照表
+内容:法人机构,及向客户提供金融服务的分支机构或部门条线,每个分支机构或部门生成一条完整的记录
+涉及: 法人,机构,部门
+
+2.tb_ins_rtype:保险险种代码对照表(表六至表十三涉及的保险产品)
+内容: 法人机构提从的所有金融服务(产品)
+----------------6.tb_ins_rpol检查期所有自然人承保及特定业务保单:
+----------------07.tb_ins_gpol:检查期所有单位承保及特定业务保单
+----------------08.tb_ins_fav_cst单位客户保单对应的被保险人及受益人信息
+----------------09.tb_ins_renewal检查期所有加保业务清单
+----------------10.tb_ins_rsur检查期所有退费类保单
+----------------11.tb_ins_rpay检查期所有给付业务保单
+----------------12.tb_ins_rcla检查期所有理赔业务保单
+----------------13.tb_ins_rchg检查期所有非支付类保全/批改业务清单
+涉及: 法人,机构, 险种
+
+3.tb_ins_pers:自然人客户身份信息记录清单(表六至表十三涉及的所有投保人,被保人,受益人[人身保险业务,财产保险业务无需提取]),实际领款人为自然人时的客户身份信息
+填写单个客户统一客户号,对于单客户存在多个客户号,以及受益人或实际领款人等末开立客户号的情形,填写"@N"
+
+内容: 所有投保人,被保,受益人(受益人适用人身保险,财产保险无需提取),实际领款人为自然人的客户信息
+----------------6.tb_ins_rpol检查期所有自然人承保及特定业务保单:
+----------------07.tb_ins_gpol:检查期所有单位承保及特定业务保单
+----------------08.tb_ins_fav_cst单位客户保单对应的被保险人及受益人信息
+----------------09.tb_ins_renewal检查期所有加保业务清单
+----------------10.tb_ins_rsur检查期所有退费类保单
+----------------11.tb_ins_rpay检查期所有给付业务保单
+----------------12.tb_ins_rcla检查期所有理赔业务保单
+----------------13.tb_ins_rchg检查期所有非支付类保全/批改业务清单
+涉及: 机构,客户(自然人)
+理赔领款人
+select 
+	g.n_amt as cla_amt,-- 理赔金额
+	g.c_payee_nme as acc_name,-- 实际领款人名称
+	g.c_bank_num as acc_no,-- 实际领款人账号
+	g.c_bank_cde as acc_bank,-- 实际领款人开户机构
+	g.c_pub_piv as acc_type,-- 实际领款人类型
+	g.c_card_type as acc_id_type,-- 实际领款人身份证件类型
+	g.c_id_card as acc_id_no-- 实际领款人身份证件号码
+from ods_cthx_web_clm_bank g
+
+4.tb_ins_unit:单位客户身份信息记录清单(表六至表十三涉及的所有投保人,被保人,受益人[人身保险业务,财产保险业务无需提取]),实际领款人为单位时的客户身份信息
+一个单位客户存在多个控股股东或实际控制人的,每个控股股东或实际控制人生成一条记录
+
+内容: 所有投保人,被保,受益人(受益人适用人身保险,财产保险无需提取),实际领款人为单位的客户信息
+----------------6.tb_ins_rpol检查期所有自然人承保及特定业务保单:
+----------------07.tb_ins_gpol:检查期所有单位承保及特定业务保单
+----------------08.tb_ins_fav_cst单位客户保单对应的被保险人及受益人信息
+----------------09.tb_ins_renewal检查期所有加保业务清单
+----------------10.tb_ins_rsur检查期所有退费类保单
+----------------11.tb_ins_rpay检查期所有给付业务保单
+----------------12.tb_ins_rcla检查期所有理赔业务保单
+----------------13.tb_ins_rchg检查期所有非支付类保全/批改业务清单
+
+涉及: 机构,网点,非自然人客户信息,负责人信息,业务办理授权人
+
+5.tb_ins_bo:受益所有人身份信息记录清单取出表七,八,九,十一,十二,十三涉及的投保人,被保险人或受益人为非自然人的受益所有人信息
+数据来源
+web_app_grp_member受益所有人
+
+内容: 投保人,被保险人受益人为非自然人的受益所有人信息
+----------------07.tb_ins_gpol:检查期所有单位承保及特定业务保单
+----------------08.tb_ins_fav_cst单位客户保单对应的被保险人及受益人信息
+----------------09.tb_ins_renewal检查期所有加保业务清单
+----------------11.tb_ins_rpay检查期所有给付业务保单
+----------------12.tb_ins_rcla检查期所有理赔业务保单
+----------------13.tb_ins_rchg检查期所有非支付类保全/批改业务清单
+
+涉及: 投保人, 被保人, 受益人,机构,网点,单位客户,
+
+6.tb_ins_rpol检查期所有自然人承保及特定业务保单:
+数据来源
+web_ply_base
+web_ply_applicant
+web_app_insured
+web_app_grp_member
+
+1.
+1)业务期限:投保日期,生效日期任一满足检查业务期限内,检查对象承保的投保人为自然人的所有保单信息
+2)以及表九,十一,十二业务中投保人为自然人的保单信息(多次只需要数据提取当日的保单信息即可),
+如同一份保单同时符合1)和2)的条件,则分别提取多条记录
+2.
+一份保单涉及多个被保险人时,每个被保险人按照本表结构生成一条记录
+3.
+指定受益人为法定受益人中的一人或若干人时,不填写本表受益人相关字段
+4.
+单个被保险人涉及多个指定受益人的姓名,身份证号码用半角";"隔开
+5.
+对同一份保单,多个被保险人,每个被保险人涉及多个险种情形,每个险种单独生成一条记录
+
+内容投保人为自然人的所有保单信息
+及涉及表九,十一,十二的业务的投保人为自然人的保单信息
+----------------09.tb_ins_renewal检查期所有加保业务清单
+----------------11.tb_ins_rpay检查期所有给付业务保单
+----------------12.tb_ins_rcla检查期所有理赔业务保单
+
+涉及:机构,保单,投保单,销售渠道,投保人,被保人,受益人,险种保费(本期交金额),交费信息,保险标的,交费账户
+
+7.tb_ins_gpol:检查期所有单位承保及特定业务保单
+数据来源
+web_ply_base
+web_ply_applicant
+web_ply_ent_tgt
+
+1.
+1)业务期限:投保日期,生效日期任一满足检查业务期限内,检查对象承保的投保人为非自然人的所有保单信息
+2)以及表九,十一,十二业务中投保人为非自然人的保单信息(多次只需要数据提取当日的保单信息即可),
+如同一份保单同时符合1)和2)的条件,则分别提取多条记录
+2.
+本表保单涉及的被保险人,受益人相关信息在表八中单列
+3.
+指定受益人为法定受益人中的一人或若干人时,不填写本表受益人相关字段
+4.
+单个被保险人涉及多个指定受益人的姓名,身份证号码用半角";"隔开
+5.
+对同一份保单,多个被保险人,每个被保险人涉及多个险种情形,每个险种单独生成一条记录
+
+内容: 非自然人所有保单信息
+     特定业务保单(投保人为非自然人)
+----------------09.tb_ins_renewal检查期所有加保业务清单
+----------------11.tb_ins_rpay检查期所有给付业务保单
+----------------12.tb_ins_rcla检查期所有理赔业务保单
+涉及: 机构,网点,保单,投保单,销售渠道,投保人,被保人,险种,保费金额(本期),交费信息,保险标的物(适于财险),交保方式,交费账户
+
+8.tb_ins_fav_cst单位客户保单对应的被保险人及受益人信息
+数据来源
+web_ply_base
+web_ply_applicant
+web_app_insured
+web_app_grp_member
+
+提取表七涉及的保单对应的被保险人,受益人信息,按被保险人,受益人分别增加记录
+如果一份保单存在多个被保险人或受益人的,需逐条增加记录
+内容: 所有单位承保(及特定业务保单)的被保险人及受益人信息表
+涉及: 被保人, 受益人. 机构,网点,保单,投保人
+
+9.tb_ins_renewal检查期所有加保业务清单
+数据来源
+web_ply_base
+web_ply_applicant
+
+检查业务期限内,检查对象办理的所有的增加或追加保费,保额业务保单信息,每一条业务生成一条完善的记录,本表不含首期业务
+
+内容: 保费,保额的增加或追加
+涉及: 机构,网点,保单,投保单,险种,业务发生日期,资金交易日期,交易金额,交费帐户
+
+10.tb_ins_rsur检查期所有退费类保单
+数据来源
+web_ply_base
+web_ply_applicant
+1.检查业务期限内,检查对象所有退费类信息
+2.退费类业务包括退保,减保,万能险部分领取,保单贷款等业务
+
+内容退保,减保,万能险领取,保单贷款
+涉及: 机构,网点,保单,投保单,保费(累计缴纳),汇率[仅外币交易存在,退费(累计),投保人,业务申请人,业务日期,资金交易日期,业务发生金额,收款帐户]
+
+11.tb_ins_rpay检查期所有给付业务保单
+数据来源
+web_ply_base
+web_ply_applicant
+web_app_insured
+web_ply_bnfc
+web_app_grp_member
+
+1.检查业务期限内,检查对象所有的给付信息,每一笔业务生成一条完整的记录
+2.本表适用人身保险业务,主要包括生存金给付,满期金给付等业务
+
+内容: 保险公司对于人身保险给于的生存金给付,满期金给付
+涉及: 机构,网点,保单,投保单,累计保费,投保人,被保人,受益人,给付,业务日期,资金交易,收款账户
+
+12.tb_ins_rcla检查期所有理赔业务保单
+数据来源
+web_ply_base
+web_ply_applicant
+web_app_insured
+web_app_grp_member
+web_clm_rpt  --报案信息
+web_clmnv_endcase --结案信息
+web_clm_bank --收款人信息(*)
+
+1.本表数据范围为检查业务期限内,检查对象所有理赔信息,每一笔理赔支付业务生成一条完整的记录
+一份赔案涉及多个受益人或实际收款人的,相应生成多条记录
+2.理赔日期为实际资金交易日期
+
+内容: 对受益人或实际收款人的实际赔付记录(每人每笔一条)
+涉及: 机构,网点,保单,投保单,投保人,被保人,受益人,理赔申请人,理赔日期,理赔金,领款人
+
+select c_clm_no,sum(n_due_amt) 支付金额,t_paid_tm 支付时间  
+from  ods_cthx_web_fin_clm_due  partition(pt20190714000000)
+where  c_feetyp_cde ='CPPK'
+
+13.tb_ins_rchg检查期所有非支付类保全/批改业务清单
+数据来源
+web_ply_base
+web_ply_applicant
+web_bas_edr_rsn
+
+本表提取除退保,加保,减保,理赔,给付,保单质押借款等以外的所有非支付类保全/批改业务,每一次保全业务生成一条记录.
+
+内容: 投保人,投保单,保单,申请日期,变更或批改日期,批单号,保全/批改项目-->变更投保人,团险替换被保人,变更受益人,变更客户,变更管理机构,其他类型的保全/批改业务可不提供
+涉及: 机构,网点,保单,投保单,投保人,申请日期,变更内容,批单信息,保全项目,变更内容
+
+14.tb_ins_risk_new存量客户当前风险等级表
+1.检查业务期限结束日在检查对象尚存在业务关系的所有客户(投保人)的最新一次(最新时间为提取数据当日)风险等级划分记录
+2.对于检查业务期限起始日至提取数据日期间结束业务关系的客户,其风险等级划分记录也应导入本表
+3.对于检查业务期限起始日前已结束业务关系的客户,以及检查业务期限结束日至提数日新建业务关系的客户,其风险等级划分记录可不导入本表.
+
+内容: 投保人,风险等级,划分日期,划分依据
+涉及: 投保人
+
+15.tb_ins_risk存量客户检查业务期限内风险等级划分表
+1.本表数据范围为检查业务期限内,曾经在检查对象建立过业务关系,且截至检查业务期限起始日尚存在业务关系的所有客户(投保人)的历次(指检查业务期限内历次)风险等级划分记录
+2.对于检查业务期限起始日至提取数据日期(指保险机构提取检查所需数据的实际时点,具体到提数当天)间结束业务关系的客户,其风险等级划分记录也应导入本表
+3.对于检查业务期限起始日前已结束业务关系的客户,其风险等级划分记录可不导入本表.
+存量客户每次的划分记录均应当生成一条记录
+
+内容: 投保人,风险等级,划分日期,划分依据
+涉及: 投保人
+
+
+SELECT name, group_concat(score order by course, id) 
+FROM tt2
+group by name
+
+
+
+---------------------------------------------------------------------------
+-- select * from information_schema.tables where table_name like 'web_clm_bank'
+-- select * from information_schema.columns where table_name like 'web_clm_bank' order by column_name, table_schema
+
+-- select * from information_schema.tables where table_name like 'web_clm_bank'
+-- select * from information_schema.columns where table_name like 'web_clm_bank' order by column_name, table_schema
+
+select ordinal_position, column_name, column_comment from information_schema.columns where table_schema = 'nvhlclm' and table_name like 'web_clm_bank' order by ordinal_position
+select ordinal_position, column_name, column_comment from information_schema.columns where table_schema = 'nvhlpcis' and table_name like 'web_app_grp_member' order by ordinal_position
+select ordinal_position, column_name, column_comment from information_schema.columns where table_schema = 'nvhlpcis' and table_name like 'web_ply_bnfc' order by ordinal_position
+select ordinal_position, column_name, column_comment from information_schema.columns where table_schema = 'nvhlpcis' and table_name like 'web_ply_applicant' order by ordinal_position
+select ordinal_position, column_name, column_comment from information_schema.columns where table_schema = 'nvhlpcis' and table_name like 'web_app_insured' order by ordinal_position
+
+--
+select * from information_schema.columns where table_name like 'web_ply_bnfc' order by column_name, table_schema
+
+/*************************************************************************************************************************************
+select 
+    ifnull(substring_index(company_code1,',',1),'@N') company_code1
+    ,ifnull(substring_index(company_code2,',',1),'@N') company_code2
+    ,ifnull(substring_index(cst_no,',',1),'@N') cst_no
+    ,ifnull(substring_index(open_time,',',1),'@N') open_time
+    ,ifnull(substring_index(close_time,',',1),'@N') close_time
+    ,ifnull(substring_index(acc_name,',',1),'@N') acc_name
+    ,ifnull(substring_index(cst_sex,',',1),'@N') cst_sex
+    ,ifnull(substring_index(nation,',',1),'@N') nation
+    ,ifnull(substring_index(id_type,',',1),'@N') id_type
+    ,ifnull(substring_index(id_no,',',1),'@N') id_no
+    ,ifnull(substring_index(id_deadline,',',1),'@N') id_deadline
+    ,ifnull(substring_index(occupation_code,',',1),'@N') occupation_code
+    ,ifnull(substring_index(occupation,',',1),'@N') occupation
+    ,ifnull(substring_index(income,',',1),'-9999') income
+    ,ifnull(substring_index(contact1,',',1),'@N') contact1
+    ,ifnull(substring_index(contact2,',',1),'@N') contact2
+    ,ifnull(substring_index(contact3,',',1),'@N') contact3
+    ,ifnull(substring_index(address1,',',1),'@N') address1
+    ,ifnull(substring_index(address2,',',1),'@N') address2
+    ,ifnull(substring_index(address3,',',1),'@N') address3
+    ,ifnull(substring_index(company,',',1),'@N') company
+from (
+	select     
+	    group_concat(company_code1 order by id_type, id_no)  company_code1
+	    , group_concat(company_code2 order by id_type, id_no)  company_code2
+	    , group_concat(cst_no order by id_type, id_no)  cst_no
+	    , group_concat(open_time order by id_type, id_no)  open_time
+	    , group_concat(close_time order by id_type, id_no)  close_time
+	    , group_concat(acc_name order by id_type, id_no)  acc_name
+	    , group_concat(cst_sex order by id_type, id_no)  cst_sex
+	    , group_concat(nation order by id_type, id_no)  nation
+	    ,id_type
+	    ,id_no
+	    , group_concat(id_deadline order by id_type, id_no)  id_deadline
+	    , group_concat(occupation_code order by id_type, id_no)  occupation_code
+	    , group_concat(occupation order by id_type, id_no)  occupation
+	    , group_concat(income order by id_type, id_no)  income
+	    , group_concat(contact1 order by id_type, id_no)  contact1
+	    , group_concat(contact2 order by id_type, id_no)  contact2
+	    , group_concat(contact3 order by id_type, id_no)  contact3
+	    , group_concat(address1 order by id_type, id_no)  address1
+	    , group_concat(address2 order by id_type, id_no)  address2
+	    , group_concat(address3 order by id_type, id_no)  address3
+	    , group_concat(company order by id_type, id_no)  company
+	from (
+		select 
+		    null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,null cst_sex
+		    ,nation nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,null id_deadline
+		    ,occupation_code occupation_code
+		    ,occupation occupation
+		    ,null income
+		    ,null contact1
+		    ,null contact2
+		    ,null contact3
+		    ,null address1
+		    ,null address2
+		    ,null address3
+		    ,null company
+		FROM pers_web_app_grp_member
+		union 
+		SELECT 
+		    null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,cst_sex cst_sex
+		    ,nation nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,id_deadline id_deadline
+		    ,occupation_code occupation_code
+		    ,null occupation
+		    ,income income
+		    ,contact1 contact1
+		    ,contact2 contact2
+		    ,contact3 contact3
+		    ,address1 address1
+		    ,address2 address2
+		    ,address3 address3
+		    ,company company
+		FROM pers_web_app_insured
+		union 
+		SELECT 
+		    null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,null cst_sex
+		    ,null nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,null id_deadline
+		    ,null occupation_code
+		    ,null occupation
+		    ,null income
+		    ,contact1 contact1
+		    ,null contact2
+		    ,null contact3
+		    ,null address1
+		    ,null address2
+		    ,null address3
+		    ,null company
+		FROM pers_web_clm_bank
+		union
+		SELECT 
+		    null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,cst_sex cst_sex
+		    ,nation nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,id_deadline id_deadline
+		    ,occupation_code occupation_code
+		    ,occupation occupation
+		    ,null income
+		    ,contact1 contact1
+		    ,null contact2
+		    ,null contact3
+		    ,address1 address1
+		    ,null address2
+		    ,null address3
+		    ,company company
+		FROM pers_web_ply_applicant
+		union
+		SELECT 
+		    null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,cst_sex cst_sex
+		    ,nation nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,null id_deadline
+		    ,null occupation_code
+		    ,null occupation
+		    ,null income
+		    ,contact1 contact1
+		    ,contact2 contact2
+		    ,null contact3
+		    ,null address1
+		    ,null address2
+		    ,null address3
+		    ,null company
+		FROM pers_web_ply_bnfc
+	) vw
+	group by id_type, id_no
+) vw
+*************************************************************************************************************************************/

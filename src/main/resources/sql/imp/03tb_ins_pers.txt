@@ -21,29 +21,171 @@ contact2 	联系方式2	@N
 contact3 	联系方式3	@N
 address2	住所地或工作单位地址2	@N
 address3	住所地或工作单位地址3	@N
-*/
-select b.C_DPT_CDE as Company_code1, -- 机构网点代码，内部的机构编码
-       '@N' as Company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
-       a.C_APP_CDE as Cst_no, -- 客户号
-       date_format(a.T_CRT_TM,'%Y%m%d') as Open_time,-- 客户号创建日期
-       '' as Close_time, -- 结束业务日期，如果尚有有效保单就填 @N
-       a.C_APP_NME as Acc_name, -- 客户名称
-       a.C_SEX as Cst_sex,-- 性别
-       a.C_COUNTRY as Nation, -- 国籍
-       RIGHT(a.C_CERTF_CLS, 2) as Id_type, -- 身份证件类型
-			 a.C_CERTF_CDE as Id_no , -- 身份证件号码
-	date_format(a.T_CERTF_END_DATE,'%Y%m%d') as Id_deadline,-- 身份有效期限，到期日
-       a.C_OCCUP_CDE as Occupation_code, -- 职业代码
-       '@N' as Occupation, -- 职业
-       '-9999' as Income, -- 年收入
-       a.C_MOBILE as Contact1,-- 联系方式
-       a.C_TEL as Contact2,-- 其他联系方式1
-       a.C_FAX as Contact3,-- 其他联系方式2
-       a.C_CLNT_ADDR as Address1,-- 地址1
-			 '@N' as Address2,-- 地址2
-			 '@N' as Address3,-- 地址3
-       a.C_WORK_DPT as Company,-- 工作单位名称
-       '' as Sys_name -- 系统名称
-  from ods_cthx_web_ply_applicant PARTITION(pt20190625000000) a
-  left join ods_cthx_web_ply_base PARTITION(pt20190625000000) b on a.C_PLY_NO=b.C_PLY_NO
-where a.C_CLNT_MRK='1'
+
+SELECT * FROM sys_fields WHERE TABLE_NAME IN ('web_ply_bnfc-','web_ply_applicant-','web_ply_insured')
+
+mapping
+性别（1：男    2：女）to 11:男;12:女
+
+身份证类型
+120001	居民身份证 -> 11
+120002	护照 -> 13
+120003	军人证 ->12
+120004	回乡证 ->13
+120005	港澳居民居住证 -> 14
+120006	台湾居民居住证 -> 14
+120009	其它 -> 18
+mapping to
+11:居民身份证或临时身份证;
+12:军人或武警身份证件;
+13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;
+14:港澳台居民居住证;
+16:户口簿;
+17:出生证;
+18:其他类个人身份证件,
+---------------------------------
+---------------------------------
+国家
+c_country(1:中国) to CHN
+
+-----------------------------------------
+
+
+-- 申请人 
+select b.c_dpt_cde as company_code1, -- 机构网点代码，内部的机构编码
+    '@N' as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
+    a.c_app_cde as cst_no, -- 客户号
+    date_format(a.t_crt_tm,'%Y%m%d') as Open_time,-- 客户号创建日期
+    '' as Close_time, -- 结束业务日期，如果尚有有效保单就填 @n
+    a.c_app_nme as acc_name, -- 客户名称
+    case 
+        when a.c_sex = '1' then '11' -- 11:男
+        when a.c_sex = '2' then '12' -- 12:女
+    else 
+        '-1' -- 其它
+    end  as cst_sex,-- 性别
+    case 
+        when a.c_country = '1' then 'CHN' -- 居民身份证
+        else 
+            'CHN' -- 其它
+    end  as nation, -- 国籍
+    case 
+        when a.c_certf_cls = '120001' then 11 -- 居民身份证
+        when a.c_certf_cls = '120002' then 13 -- 护照
+        when a.c_certf_cls = '120003' then 12 -- 军人证
+        when a.c_certf_cls = '120004' then 13 -- 回乡证
+        when a.c_certf_cls = '120005' then 14 -- 港澳居民居住证
+        when a.c_certf_cls = '120006' then 14 -- 台湾居民居住证
+        when a.c_certf_cls = '120009' then 18 -- 其它
+    else 
+        18 -- 其它
+    end as id_type, -- 身份证件类型
+    a.c_certf_cde as id_no , -- 身份证件号码
+    date_format(a.t_certf_end_date,'%Y%m%d') as id_deadline,-- 身份有效期限，到期日
+    a.c_occup_cde as occupation_code, -- 职业代码
+    '@N' as occupation, -- 职业
+    '-9999' as income, -- 年收入
+    a.c_mobile as contact1,-- 联系方式
+    a.c_tel as contact2,-- 其他联系方式1
+    a.c_fax as contact3,-- 其他联系方式2
+    a.c_clnt_addr as address1,-- 地址1
+    '@N' as address2,-- 地址2
+    '@N' as address3,-- 地址3
+    a.c_work_dpt as company,-- 工作单位名称
+    '' as sys_name -- 系统名称
+from ods_cthx_web_ply_applicant partition(pt20190625000000) a
+    left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+where a.c_clnt_mrk='1'
+union all
+-- 受益人
+select
+    b.c_dpt_cde as company_code1,
+    '@N' as company_code2,
+    a.c_bnfc_cde,
+    date_format(a.t_crt_tm,'%Y%m%d') as Open_time,-- 客户号创建日期
+    '' as close_time, -- 结束业务日期，如果尚有有效保单就填 @n
+    a.c_bnfc_nme,
+    case 
+        when a.c_sex = '1' then '11' -- 11:男
+        when a.c_sex = '2' then '12' -- 12:女
+    else 
+        '-1' -- 其它
+    end  as cst_sex,-- 性别,
+    case 
+        when a.c_country = '1' then 'CHN' -- 居民身份证
+        else 
+            'CHN' -- 其它
+    end  as nation, -- 国籍
+    case 
+        when a.c_certf_cls = '120001' then 11 -- 居民身份证
+        when a.c_certf_cls = '120002' then 13 -- 护照
+        when a.c_certf_cls = '120003' then 12 -- 军人证
+        when a.c_certf_cls = '120004' then 13 -- 回乡证
+        when a.c_certf_cls = '120005' then 14 -- 港澳居民居住证
+        when a.c_certf_cls = '120006' then 14 -- 台湾居民居住证
+        when a.c_certf_cls = '120009' then 18 -- 其它
+    else 
+        18 -- 其它
+    end as id_type, -- 身份证件类型
+    a.c_certf_cde,
+    null t_certf_end_date,
+    null c_occup_cde,
+    '@N' as occupation, -- 职业
+    '-9999' as income, -- 年收入
+    a.c_mobile as contact1,-- 联系方式
+    a.c_tel as contact2,-- 其他联系方式1
+    '' as contact3,-- 其他联系方式2
+    '' as address1,-- 地址1
+    '@N' as address2,-- 地址2
+    '@N' as address3,-- 地址3
+    '' as company,-- 工作单位名称
+    '' as sys_name -- 系统名称        
+from ods_cthx_web_ply_bnfc partition(pt20190625000000) a
+    left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+where a.c_clnt_mrk='1'
+union all
+-- 被保险人
+select distinct b.c_dpt_cde as company_code1, -- 机构网点代码，内部的机构编码
+    '@N' as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
+    a.c_insured_cde as cst_no, -- 客户号
+    date_format(a.t_crt_tm,'%Y%m%d') as open_time,-- 客户号创建日期
+    '' as close_time, -- 结束业务日期，如果尚有有效保单就填 @n
+    a.c_insured_nme as acc_name, -- 客户名称      
+    case 
+        when a.c_sex = '1' then '11' -- 居民身份证
+        when a.c_sex = '2' then '12' -- 居民身份证
+    else 
+        '-1' -- 其它
+    end  as cst_sex,-- 性别
+    case 
+        when a.c_country = '1' then 'CHN' -- 居民身份证
+    else 
+        'CHN' -- 其它
+    end  as nation, -- 国籍国籍
+    case 
+        when a.c_certf_cls = '120001' then 11 -- 居民身份证
+        when a.c_certf_cls = '120002' then 13 -- 护照
+        when a.c_certf_cls = '120003' then 12 -- 军人证
+        when a.c_certf_cls = '120004' then 13 -- 回乡证
+        when a.c_certf_cls = '120005' then 14 -- 港澳居民居住证
+        when a.c_certf_cls = '120006' then 14 -- 台湾居民居住证
+        when a.c_certf_cls = '120009' then 18 -- 其它
+    else 
+        18 -- 其它
+    end as id_type, -- 身份证件类型
+    a.c_certf_cde as id_no , -- 身份证件号码
+    date_format(a.t_certf_end_date,'%Y%m%d') as id_deadline,-- 身份有效期限，到期日
+    a.c_occup_cde as occupation_code, -- 职业代码
+    '@N' as occupation, -- 职业
+    n_income as income, -- 年收入
+    a.c_mobile as contact1,-- 联系方式
+    a.c_tel as contact2,-- 其他联系方式1
+    a.c_fax as contact3,-- 其他联系方式2
+    a.c_clnt_addr as address1,-- 地址1
+    '@N' as address2,-- 地址2
+    '@N' as address3,-- 地址3
+    a.c_work_dpt as company,-- 工作单位名称
+    '' as sys_name -- 系统名称
+from ods_cthx_web_ply_insured partition(pt20190625000000) a
+    left join ods_cthx_web_ply_base partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+where a.c_clnt_mrk='1'

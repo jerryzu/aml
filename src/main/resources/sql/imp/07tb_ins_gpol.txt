@@ -24,38 +24,62 @@ del_way	交费方式	mapping
 del_period	缴费间隔	mapping
 subject	保险标的物	@N
 tsf_flag	现转标识	mapping
+
+0	直销业务	193
+1	战略客户	193
+2	个人代理	193
+3	专业代理	193
+4	兼业代理	193
+5	经纪业务	193
+6	创新渠道	193
+7	重客渠道	193
+
+
+人身保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:第三方平台;19:其他; 
+财产保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:农村网点;17:营业网点;18:第三方平台;19:其他;
+
+分析财产险与非财产险
+
+团单标志:C_GRP_MRK[web_ply_base]: 0 个单; 1 团单
+11:非团险;12:团险
+
+保单状态:c_ply_sts[web_ply_base]: i: 非终止(有效或满期) t: terminated 终止(注退)
+11:有效;12:终止;13:中止;14:其他;以保险合同效力为判断依据,人身保险填写当前状态,财产保险,取数时点保单在保险期间内视为有效
+
 */
+
 select
-'' as Company_code1,-- 机构网点代码
-'' as Company_code2,-- 金融机构编码
-'' as Company_code3,-- 保单归属机构网点代码
-a.C_PLY_NO as Pol_no,-- 保单号
-a.C_APP_NO as App_no,-- 投保单号
-a.C_PLY_STS as Ins_state,-- 保单状态
-a.C_GRP_MRK as App_type,-- 保单类型
-a.C_BSNS_TYP as Sale_type,-- 销售渠道
-a.C_BSNS_SUBTYP as Sale_name,-- 销售渠道名称
-date_format(a.T_APP_TM,'%Y%m%d') as Ins_date,-- 投保日期
-date_format(a.T_INSRNC_BGN_TM,'%Y%m%d') as Eff_date,-- 合同生效日期
-b.C_APP_NME as App_name,-- 投保人名称
-b.C_APP_CDE as App_cst_no,-- 投保人客户号
-RIGHT(b.C_CERTF_CLS, 2) as App_id_type,-- 投保人身份证件类型
-b.C_CERTF_CDE as App_id_no,-- 投保人证件号码
-'' as State_owned,-- 国有属性
-'' as Ins_num,-- 被保险人数量
-a.C_PROD_NO as Ins_no,-- 险种代码
- '' as ur_code,-- 币种
-'' as Pre_amt,-- 本期交保费金额
-'' as Usd_amt,-- 折合美元金额
-'' as Del_way,-- 交费方式
-'' as Del_period,-- 缴费间隔
-'' as `Limit`,-- 交费期数
-RIGHT(c.C_TGT_ADDR, 100) as Subject,-- 保险标的物
-'' as Tsf_flag,-- 现转标识
-'' as Acc_name,-- 交费账号名称
-'' as Acc_no,-- 交费账号
-'' as Acc_bank,-- 交费账户开户机构名称
-'' as Receipt_no-- 作业流水号,唯一标识号
-from ods_cthx_web_ply_base PARTITION(pt20190625000000) a
-left join ods_cthx_web_ply_applicant PARTITION(pt20190625000000) b on a.c_ply_no=b.c_ply_no
-left join ods_cthx_web_ply_ent_tgt PARTITION(pt20190625000000) c on a.c_ply_no=c.c_ply_no
+    '' as company_code1,-- 机构网点代码
+    '' as company_code2,-- 金融机构编码
+    '' as company_code3,-- 保单归属机构网点代码
+    a.c_ply_no as pol_no,-- 保单号
+    a.c_app_no as app_no,-- 投保单号
+    a.c_ply_sts as ins_state,-- 保单状态
+    a.c_grp_mrk as app_type,-- 保单类型
+    a.c_bsns_typ as sale_type,-- 销售渠道
+    a.c_bsns_subtyp as sale_name,-- 销售渠道名称
+    date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- 投保日期
+    date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
+    b.c_app_nme as app_name,-- 投保人名称
+    b.c_app_cde as app_cst_no,-- 投保人客户号
+    b.c_certf_cls as app_id_type,-- 投保人身份证件类型
+    b.c_certf_cde as app_id_no,-- 投保人证件号码
+    '' as state_owned,-- 国有属性
+    '' as ins_num,-- 被保险人数量
+    a.c_prod_no as ins_no,-- 险种代码
+     '' as ur_code,-- 币种
+    '' as pre_amt,-- 本期交保费金额
+    '' as usd_amt,-- 折合美元金额
+    '' as del_way,-- 交费方式
+    '' as del_period,-- 缴费间隔
+    '' as `limit`,-- 交费期数
+    right(c.c_tgt_addr, 100) as subject,-- 保险标的物
+    '' as tsf_flag,-- 现转标识
+    '' as acc_name,-- 交费账号名称
+    '' as acc_no,-- 交费账号
+    '' as acc_bank,-- 交费账户开户机构名称
+    '' as receipt_no-- 作业流水号,唯一标识号
+from ods_cthx_web_ply_base partition(pt20190625000000) a
+    left join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+    left join ods_cthx_web_ply_ent_tgt partition(pt20190625000000) c on a.c_ply_no=c.c_ply_no
+where b.c_clnt_mrk='0'

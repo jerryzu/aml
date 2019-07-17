@@ -18,39 +18,112 @@ id_deadline3	控股股东或者实际控制人身份证件有效期限到期日	
 id_type4	授权办理业务人员身份证件类型	mapping
 id_deadline4	授权办理业务人员身份证件有效期限到期日	YYYYMMDD@N
 
-*/
-select b.C_DPT_CDE as Company_code1, -- 机构网点代码，内部的机构编码
-       '@N' as Company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
-       a.C_APP_CDE as Cst_no, -- 客户号
-       date_format(a.T_CRT_TM,'%Y%m%d') as Open_time,-- 客户号创建日期
-       '' as Close_time, -- 结束业务日期，如果尚有有效保单就填 @N
-       a.C_APP_NME as Acc_name, -- 客户名称
-       a.C_CLNT_ADDR as Address1,-- 地址1
-       a.C_MANAGE_AREA as Operate,-- 经营范围
-       '21' as Set_file,-- 依法设立的执照名称，21营业执照、22其他
-       a.C_BUSLICENCE_NO as License,-- 营业执照号码
-       date_format(a.C_BUSLICENCE_VALID,'%Y%m%d') as Id_deadline,-- 营业执照有效期
-       a.C_ORGANIZATION_NO as Org_no,-- 组织机构代码
-       a.C_CEVENUE_NO as Tax_no,-- 税务登记证号码
-       a.C_LEGAL_NME as Rep_name,-- 法定代表人姓名
-       a.C_LEGAL_CERTF_CLS as Id_type2,-- 法定代表人证件类型
-			 a.C_LEGAL_CERTF_CDE as Id_no2,-- 法定代表人身份证件号码
-			 date_format(a.T_LEGAL_CERTF_END_TM,'%Y%m%d') as Id_deadline2,-- 法定代表人证件号码有效期限
-       a.C_ACTUALHOLDING_NME as Man_name,-- 控股股东或实际控制人姓名
-       a.C_ACTH_CERTF_CLS as Id_type3,-- 控股股东或者实际控制人身份证件类型
-       a.C_ACTH_CERTF_CDE as Id_no3,-- 控股股东或者实际控制人身份证件号码
-       date_format(a.T_ACTH_CERTF_END_TM,'%Y%m%d') as Id_deadline3,-- 控股股东或者实际控制人身份证件有效期限到期日
-			 a.C_LEGAL_REP as Ope_name,-- 控股股东或实际控制人姓名
-       a.C_IDENTIFICATION_NO_TYP as Id_type4,-- 控股股东或者实际控制人身份证件类型
-       a.C_IDENTIFICATION_NO as Id_no4,-- 控股股东或者实际控制人身份证件号码
-       date_format(a.C_CERTIFICATE_VALID,'%Y%m%d') as Id_deadline4,-- 控股股东或者实际控制人身份证件有效期限到期日
-       a.C_TRD_CDE as Industry_code,-- 行业代码
-       '' as Industry,-- 行业代码对应行业名称
-       '' as Reg_amt,-- 注册资金
-       '' as Code, -- 注册资金币种
-       '' as Sys_name -- 系统名称
-  from ods_cthx_web_ply_applicant PARTITION(pt20190625000000) a
-  left join ods_cthx_web_ply_base PARTITION(pt20190625000000) b on a.C_PLY_NO=b.C_PLY_NO
-where a.C_CLNT_MRK='0'
+100111	税务登记证	100
+100112	统一社会信用代码	110
+110001	组织机构代码	110
+110002	工商注册号码	110
+110003	营业执照	110
 
- 
+11:居民身份证或临时身份证;
+12:军人或武警身份证件;
+13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;
+14:港澳台居民居住证;
+16:户口簿;
+17:出生证;
+18:其他类个人身份证件
+
+    case 
+        when a.c_certf_cls = '120001' then 11 -- 居民身份证
+        when a.c_certf_cls = '120002' then 13 -- 护照
+        when a.c_certf_cls = '120003' then 12 -- 军人证
+        when a.c_certf_cls = '120004' then 13 -- 回乡证
+        when a.c_certf_cls = '120005' then 14 -- 港澳居民居住证
+        when a.c_certf_cls = '120006' then 14 -- 台湾居民居住证
+        when a.c_certf_cls = '120009' then 18 -- 其它
+    else 
+        18 -- 其它
+    end as id_type, -- 身份证件类型
+*/
+
+--------------------------------------------------------
+申请人
+select b.c_dpt_cde as company_code1, -- 机构网点代码，内部的机构编码
+    '@n' as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
+    a.c_app_cde as cst_no, -- 客户号
+    date_format(a.t_crt_tm,'%Y%m%d') as open_time,-- 客户号创建日期
+    '' as close_time, -- 结束业务日期，如果尚有有效保单就填 @n
+    a.c_app_nme as acc_name, -- 客户名称
+    a.c_clnt_addr as address1,-- 地址1
+    a.c_manage_area as operate,-- 经营范围
+    '21' as set_file,-- 依法设立的执照名称，21营业执照、22其他
+    a.c_buslicence_no as license,-- 营业执照号码
+    date_format(a.c_buslicence_valid,'%Y%m%d') as id_deadline,-- 营业执照有效期
+    a.c_organization_no as org_no,-- 组织机构代码
+    a.c_cevenue_no as tax_no,-- 税务登记证号码
+    a.c_legal_nme as rep_name,-- 法定代表人姓名
+    a.c_legal_certf_cls as id_type2,-- 法定代表人证件类型
+    a.c_legal_certf_cde as id_no2,-- 法定代表人身份证件号码
+    date_format(a.t_legal_certf_end_tm,'%Y%m%d') as id_deadline2,-- 法定代表人证件号码有效期限
+    a.c_actualholding_nme as man_name,-- 控股股东或实际控制人姓名
+    a.c_acth_certf_cls as id_type3,-- 控股股东或者实际控制人身份证件类型
+    a.c_acth_certf_cde as id_no3,-- 控股股东或者实际控制人身份证件号码
+    date_format(a.t_acth_certf_end_tm,'%Y%m%d') as id_deadline3,-- 控股股东或者实际控制人身份证件有效期限到期日
+    a.c_legal_rep as ope_name,-- 授权办理业务人员名称
+    a.c_identification_no_typ as id_type4,-- 授权办理业务人员身份证件类型
+    a.c_identification_no as id_no4,-- 授权办理业务人员身份证件号码
+    date_format(a.c_certificate_valid,'%Y%m%d') as id_deadline4,-- 授权办理业务人员身份证件有效期限到期日
+    a.c_trd_cde as industry_code,-- 行业代码
+    '' as industry,-- 行业代码对应行业名称
+    '' as reg_amt,-- 注册资金
+    '' as code, -- 注册资金币种
+    '' as sys_name -- 系统名称
+from ods_cthx_web_ply_applicant PARTITION(pt20190625000000) a
+    left join ods_cthx_web_ply_base PARTITION(pt20190625000000) b on a.C_PLY_NO=b.C_PLY_NO
+     -- left join ods_cthx_web_cus_org_info PARTITION(pt20190625000000) c on a.c_app_cde = c.c_clnt_cde --c.n_rgst_mny,目前无值
+where a.C_CLNT_MRK='0'  -- 客户分类,客户分类,0 法人，1 个人
+
+------------------------------------------------
+受益人
+无可用信息
+
+-------------------------------------------------------
+被保险人
+select b.c_dpt_cde as company_code1, -- 机构网点代码，内部的机构编码
+       '@N' as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
+       a.c_insured_cde as Cst_no, -- 客户号
+       date_format(a.t_crt_tm,'%Y%m%d') as open_time,-- 客户号创建日期
+       '' as close_time, -- 结束业务日期，如果尚有有效保单就填 @n
+       a.c_insured_nme as acc_name, -- 客户名称
+--       a.C_MANAGE_AREA as Operate,-- 经营范围
+       '21' as set_file,-- 依法设立的执照名称，21营业执照、22其他
+--       a.c_buslicence_no as license,-- 营业执照号码
+--       date_format(a.c_buslicence_valid,'%y%m%d') as id_deadline,-- 营业执照有效期
+--       a.c_organization_no as org_no,-- 组织机构代码
+--       a.c_cevenue_no as tax_no,-- 税务登记证号码
+       a.c_legal_nme as rep_name,-- 法定代表人姓名
+       a.c_legal_certf_cls as id_type2,-- 法定代表人证件类型
+			 a.c_legal_certf_cde as id_no2,-- 法定代表人身份证件号码
+			 date_format(a.t_legal_certf_end_tm,'%Y%m%d') as id_deadline2,-- 法定代表人证件号码有效期限
+--       a.c_actualholding_nme as man_name,-- 控股股东或实际控制人姓名
+--       a.c_acth_certf_cls as id_type3,-- 控股股东或者实际控制人身份证件类型
+--       a.c_acth_certf_cde as id_no3,-- 控股股东或者实际控制人身份证件号码
+--       date_format(a.t_acth_certf_end_tm,'%Y%m%d') as id_deadline3,-- 控股股东或者实际控制人身份证件有效期限到期日
+--			 a.c_legal_rep as ope_name,-- 授权办理业务人员名称
+--       a.c_identification_no_typ as id_type4,-- 授权办理业务人员身份证件类型
+-- ?      a.c_identification_no as id_no4,-- 授权办理业务人员身份证件号码
+-- ?       date_format(a.c_certificate_valid,'%y%m%d') as id_deadline4,-- 授权办理业务人员身份证件有效期限到期日
+-- ?       a.c_trd_cde as industry_code,-- 行业代码
+       '' as industry,-- 行业代码对应行业名称
+       '' as reg_amt,-- 注册资金
+       '' as code, -- 注册资金币种
+       '' as sys_name -- 系统名称
+  from ods_cthx_web_ply_insured PARTITION(pt20190625000000) a
+    left join ods_cthx_web_ply_base PARTITION(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+where a.c_clnt_mrk='0'
+
+
+
+
+
+
+

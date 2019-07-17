@@ -1,0 +1,1651 @@
+太科数据结构分析
+--
+保单实体
+select c_app_no -- 申请单号
+    , c_ply_no -- 保单号
+    , n_edr_prj_no -- 批改次数
+    , c_edr_no -- 批单号
+    , c_prod_no -- 产品代码
+    , c_dpt_cde -- 机构代码
+    , c_bsns_typ	-- 业务来源
+    , c_bsns_subtyp	-- 业务来源细分
+    , c_renew_mrk	-- 续保标志:'0'新保;'1'续保 renewal flag
+    , c_amt_cur	-- 保额币种 currency of amount {code}
+    , n_amt	-- 保额合计 amount insured
+    , c_prm_cur	-- 保费币种 currency of premium
+    , n_calc_prm --	计算保费合计,系统自动计算的保费金额
+    , n_prm	-- 保费合计 premium
+    , n_prm_rmb_exch -- 保费人民币汇率
+    , c_ply_sts -- 保单状态 policy status，i: 非终止(有效或满期) t: terminated 终止(注退)
+    , t_termn_tm -- 保单终止时间 time of policy termination，初始为保险止期，注退后填上注退时间
+    , c_inwd_mrk -- 分入业务标志('0'非分入;'1'分入) reinsurance inward flag
+    , t_app_tm -- 投保日期 applying time
+    , t_insrnc_bgn_tm -- 保险起期 policy effective date
+    , t_insrnc_end_tm -- 保险止期 policy expire date
+    , c_grp_mrk -- 团单标志('0'个单;'1'团单) group insurance flag
+    , c_foreign_mrk -- 境内外标志(0:境内;1:境外) domestic/foreign flag
+    , t_issue_tm -- 签单日期 issue time
+    , t_udr_tm -- 核保日期 underwrite time
+    , c_udr_dpt_cde -- 核保机构 underwriting department no
+    , c_udr_cde -- 核保人代码 underwriter''s no
+    , c_udr_mrk -- 核保标志
+    , t_next_edr_bgn_tm -- 批改生效起期 beginning of successive edorsement  effective time
+    , t_next_edr_end_tm -- 批改生效止期 end of successive edorsement effective time
+    , c_latest_mrk -- 最新保单标志 '0'否,'1'是
+from ods_cthx_web_ply_base  partition(pt20190625000000) a
+where c_ply_no = 'p336401001201800000002'
+
+--产品表,财产险与非财产险是产品还是险种
+select *
+from ods_cthx_web_prd_prod  partition(pt20190625000000) a
+where c_prod_no = '01001'
+
+select c_inst_flag -- 分期付款标志
+from web_prd_prod_rule
+
+--险种
+select * from web_prd_kind
+01	企业财产险	property
+02	货物运输险	cargo
+03	机动车辆保险	vehicle
+04	责任险	liability
+05	保证保险	guarantee
+06	意外险	accident
+07	短期健康保险	shorthealth
+08	家庭财产险	wealth
+09	工程险	engineer
+10	农业险	agro
+11	船舶保险	ship
+12	信用保险	credit
+15	综合险	(null)
+16	农业保险	(null)
+17	养殖业	yzy
+18	林业险	forestry
+19	特殊风险保险	specialrisk
+
+主附加险关联表web_prd_cvrg_rel
+
+-- 产品险别关联表
+select c_prod_no -- 产品号码
+    , c_cvrg_no -- 险别号码
+    , c_chk -- 投保必选标志 0-否,1-是
+    , c_typ -- 0:主险;1:附加险;2:扩展责任
+    , c_biaodi_lb -- 标的项目类别,财产险用
+from ods_cthx_web_prd_prod_cvrg_rel  partition(pt20190625000000) 
+where c_prod_no = '01001'
+
+--机构分析
+自己的机构
+select * from ods_cthx_web_org_dpt partition(pt20190625000000) a;  
+不知道
+select * from ods_cthx_web_org_department_map partition(pt20190625000000) a;  
+
+------------------------------------------------------------------------------------------------------------------
+select distinct a.c_app_cde, a.c_sex, a.c_country, a.c_certf_cls, a.c_occup_cde[无数据源]
+from  web_ply_applicant  a
+
+select distinct a.c_bnfc_cde, a.c_sex, a.c_country, a.c_certf_cls, a.c_occup_cde[不存在]
+from  web_ply_bnfc  a
+
+select distinct a.c_insured_cde, a.c_sex, a.c_country, a.c_certf_cls, a.c_occup_cde[不确定]
+from  web_ply_insured  a
+
+select c_cde, c_cnm, c_par_cde from web_bas_comm_code where c_cde in(select distinct a.c_certf_cls from  web_ply_applicant  a) order by c_cde
+select c_cde, c_cnm, c_par_cde from web_bas_comm_code where c_cde in(select distinct a.c_certf_cls from  web_ply_bnfc  a) order by c_cde
+select c_cde, c_cnm, c_par_cde from web_bas_comm_code where c_cde in(select distinct a.c_certf_cls from  web_ply_insured  a) order by c_cde
+
+客户机构关系表
+select * from ods_cthx_web_cus_org_info partition(pt20190625000000) a;
+
+--客户机构关系表 
+select 
+    c_clnt_cde	-- 客户代码
+    c_ara_cde	-- 国家地区
+    c_prvn_cde	-- 省市
+    c_upr_dep_cde	-- 上级机构
+    c_chn_reg_addr	-- 中文注册地址
+    c_eng_reg_addr	-- 英文注册地址
+    c_trd_cde	-- 行业
+    c_orgz_typ_cde	-- 企业组织形式
+    c_orgz_stru	-- 客户组织结构
+    c_orgz_lvl	-- 客户组织层次
+    n_rgst_mny	-- 注册资本
+    n_emly_num	-- 员工人数
+    c_clnt_scle_cde	-- 保费规模
+    c_scale_cde	-- 企业规模码
+    c_ownership_cde	-- 所有制
+    c_tax_no	-- 税务号
+    c_web_addr	-- 网站地址
+    t_crt_tm	-- 成立时间
+    c_stock_mrk	-- 股东标志
+    c_stock_cde	-- 股票代码
+    t_crt_tm2	-- 创建时间
+    c_crt_cde	-- 创建人代码
+    t_upd_tm	-- 修改时间
+    c_upd_cde	-- 修改人编码
+    c_trans_mrk	-- 迁移标识
+    t_trans_tm	-- 迁移时间
+    c_manage_area	-- 经营范围
+    c_licence_nme	-- 依法设立或依法开展经营、社会活动的执照、证明名称
+    c_licence_no	-- 依法设立或依法开展经营、社会活动的执照、证明号码
+    t_licence_end_tm	-- 依法设立或依法开展经营、社会活动的执照、证明有效期
+    c_stock_nme	-- 控股股东或实际控制人姓名
+    c_stock_id_no	-- 控股股东或实际控制人身份证号码
+    c_stock_certf_cls	-- 控股股东或实际控制人其他身份证明种类
+    c_stock_certf_cde	-- 控股股东或实际控制人其他身份证明号码
+    t_stock_certf_end_tm	-- 控股股东或实际控制人其他身份证明效期
+    c_legal_nme	-- 法定代表人或负责人姓名
+    c_legal_id_no	-- 法定代表人或负责人姓名身份证号码
+    c_legal_certf_cls	-- 法定代表人或负责人其他身份证明种类
+    c_legal_certf_cde	-- 法定代表人或负责人其他身份证明号码
+    t_legal_certf_end_tm	-- 法定代表人或负责人其他身份证明有效期
+    c_agent_nme	-- 授权办理人姓名
+    c_agent_id_no	-- 授权办理人身份证号码
+    c_agent_certf_cls	-- 授权办理人其他身份证明种类
+    c_agent_certf_cde	-- 授权办理人其他身份证明号码
+    t_agent_certf_end_tm	-- 授权办理人其他身份证明有效期
+    c_work_kind	-- 单位性质
+from nvhlpcis.web_cus_org_info a;
+
+-------------------------客户信息包括投保人，被保人，(暂末发现受益人)，同时保存了个人与作业两类客户信息-------------------------------------------------------------------------------------------------------
+--客户信息
+select distinct c.c_clnt_cde
+from web_cus_org_info c
+
+--
+国家代码全是１，受益人全为空，
+性别性别（1：男    2：女），受益人全为空
+身份证类型被保人最全,
+--企业
+100111	税务登记证	100
+100112	统一社会信用代码	110
+110001	组织机构代码	110
+110002	工商注册号码	110
+110003	营业执照	110
+110009	其它		110	
+------------------------------
+    case 
+        when a.c_certf_cls = '100111' then -- 税务登记证	100
+        when a.c_certf_cls = '100112' then -- 统一社会信用代码	110
+        when a.c_certf_cls = '110001' then -- 组织机构代码	110
+        when a.c_certf_cls = '110002' then -- 工商注册号码	110
+        when a.c_certf_cls = '110003' then -- 营业执照	110
+        when a.c_certf_cls = '110009' then -- 其它	110
+        when a.c_certf_cls = '120009' then -- 其它	110
+---------------------------------------
+--个人
+120001	居民身份证	120
+120002	护照	120
+120003	军人证	120
+120004	回乡证	120
+120005	港澳居民居住证	120
+120006	台湾居民居住证	120
+120009	其它	120
+---------------------------------------
+    case 
+        when a.c_certf_cls = '120001' then 11 -- 居民身份证
+        when a.c_certf_cls = '120002' then 13 -- 护照
+        when a.c_certf_cls = '120003' then 12 -- 军人证
+        when a.c_certf_cls = '120004' then 13 -- 回乡证
+        when a.c_certf_cls = '120005' then 14 -- 港澳居民居住证
+        when a.c_certf_cls = '120006' then 14 -- 台湾居民居住证
+        when a.c_certf_cls = '120009' then 18 -- 其它
+    else 
+        18 -- 其它
+    end as id_type, -- 身份证件类型
+---------------------------------------------------------------------------------------------------------------------------
+select distinct 'applicant' type, a.c_ply_no, a.c_app_cde, c.c_clnt_cde
+from  web_ply_applicant  a
+  inner join  web_cus_org_info  c on a.c_app_cde = c.c_clnt_cde
+union all
+-- 不存在受益人？
+select distinct 'bnfc' type, a.c_ply_no, a.c_bnfc_cde, c.c_clnt_cde
+from  web_ply_bnfc  a
+  inner join  web_cus_org_info  c on a.c_bnfc_cde = c.c_clnt_cde
+union all
+select distinct 'insured' type, a.c_ply_no, a.c_insured_cde, c.c_clnt_cde
+from  web_ply_insured  a
+  inner join  web_cus_org_info  c on a.c_insured_cde = c.c_clnt_cde 
+order by c_ply_no, type
+
+销售渠道
+0	直销业务	193
+1	战略客户	193
+2	个人代理	193
+3	专业代理	193
+4	兼业代理	193
+5	经纪业务	193
+6	创新渠道	193
+7	重客渠道	193
+
+人身保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:第三方平台;19:其他; 
+财产保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:农村网点;17:营业网点;18:第三方平台;19:其他;
+
+分析财产险与非财产险
+转换后险种是11,产品代码01打头
+
+团单标志:c_grp_mrk[web_ply_base]: 0 个单; 1 团单
+11:非团险;12:团险
+
+保单状态:c_ply_sts[web_ply_base]: i: 非终止(有效或满期) t: terminated 终止(注退)
+11:有效;12:终止;13:中止;14:其他;以保险合同效力为判断依据,人身保险填写当前状态,财产保险,取数时点保单在保险期间内视为有效
+
+----------------------------------------
+投保人、被保人之间的关系
+11:本单位;12:本单位董事、监事或高级管理人员;13:雇佣或劳务;14:其他;
+
+    case 
+        when a.c_app_relation = '601001' then 11 -- 配偶
+        when a.c_app_relation = '601002' then 11 -- 父母
+        when a.c_app_relation = '601003' then 11 -- 子女
+        when a.c_app_relation = '601004' then 11 -- 兄弟姐妹
+        when a.c_app_relation = '601005' then 11 -- 本人
+        when a.c_app_relation = '601006' then 11 -- 雇主
+        when a.c_app_relation = '601007' then 11 -- 雇员
+        when a.c_app_relation = '601008' then 11 -- 祖父母、外祖父母
+        when a.c_app_relation = '601009' then 11 -- 祖孙、外祖孙
+        when a.c_app_relation = '601010' then 11 -- 监护人
+        when a.c_app_relation = '601012' then 11 -- 朋友
+        when a.c_app_relation = '601013' then 11 -- 未知
+        when a.c_app_relation = '601014' then 11 -- 其他
+
+--批改记录,未找到对应关系
+select c_app_no, c_ply_no, n_edr_prj_no, c_edr_no, c_edr_rsn_bundle_cde, t_edr_app_tm, t_edr_bgn_tm, c_edr_ctnt
+from ods_cthx_web_ply_base partition(pt20190625000000) a
+where c_ply_no = 'p997301001201900000008'
+
+----------- 无受益人 --------------------------------------------------------------------------
+select *
+from ods_cthx_web_ply_base partition(pt20190625000000) a
+where c_ply_no = 'p997301001201900000008'
+/c_app_no/
+t997301001201900000026
+t997301001201900000028
+t997301001201900000029
+t997301001201900000030
+t997301001201900000031
+t997301001201900000040
+t997301001201900000041
+t997301001201900000042
+t997301001201900000049
+t997301001201900000050
+t997301001201900000051
+
+select *
+from ods_cthx_web_ply_applicant partition(pt20190625000000) a
+where c_ply_no = 'p997301001201900000008'
+
+select *
+from ods_cthx_web_ply_insured partition(pt20190625000000) a
+where c_ply_no = 'p997301001201900000008'
+
+select *
+from ods_cthx_web_ply_bnfc partition(pt20190625000000) a
+where c_ply_no = 'p997301001201900000008'
+
+-- 有受益人
+select c_ply_no, count(1) reccnt
+from ods_cthx_web_ply_bnfc partition(pt20190625000000) a
+group by c_ply_no
+having count(1) > 1
+order by reccnt desc
+
+select *
+from ods_cthx_web_ply_base partition(pt20190625000000) a
+where c_ply_no = 'p997306019201900000009'
+/c_app_no/
+t997306019201900000022
+t997306019201900000023
+t997306019201900000024
+t997306019201900000025
+t997306019201900000035
+t997306019201900000036
+t997306019201900000037
+
+select *
+from ods_cthx_web_ply_applicant partition(pt20190625000000) a
+where c_ply_no = 'p997306019201900000009'
+
+select *
+from ods_cthx_web_ply_insured partition(pt20190625000000) a
+where c_ply_no = 'p997306019201900000009'
+
+select *
+from ods_cthx_web_ply_bnfc partition(pt20190625000000) a
+where c_ply_no = 'p997306019201900000009'
+
+
+团险分析
+select c_ply_no, count(1) recnt
+from ods_cthx_web_ply_base  partition(pt20190625000000) a
+where c_grp_mrk = 1
+group by c_ply_no
+order by recnt desc
+/*
+p997306017201800000004
+p997307101201800000004
+p997306018201900000002
+p997306019201900000003
+p997306020201900000001*/
+
+团单被保人,受益人不存在?
+select * from ods_cthx_web_ply_base  partition(pt20190625000000) a where c_grp_mrk = 1 and c_ply_no in ('p997306017201800000004', 'p997307101201800000004','p997306018201900000002','p997306019201900000003','p997306020201900000001')
+
+select * from ods_cthx_web_ply_applicant partition(pt20190625000000) a where c_ply_no in ('p997306017201800000004', 'p997307101201800000004','p997306018201900000002','p997306019201900000003','p997306020201900000001')
+
+select * from ods_cthx_web_ply_insured partition(pt20190625000000) a where c_ply_no in ('p997306017201800000004', 'p997307101201800000004','p997306018201900000002','p997306019201900000003','p997306020201900000001')
+
+select * from ods_cthx_web_ply_bnfc partition(pt20190625000000) a where c_ply_no in ('p997306017201800000004', 'p997307101201800000004','p997306018201900000002','p997306019201900000003','p997306020201900000001')
+
+
+
+
+--------------------------------------------
+('web_clm_rpt','web_clmnv_endcase','web_clm_bank')
+
+
+-- 共保分析
+select c_ply_no, count(1) rcdnt
+from web_ply_ci
+group by c_ply_no
+order by rcdnt desc
+/*
+p997306602201700000009	24
+p997301001201900000008	22
+p997305101201900000013	18
+p997301700201800000008	18
+p997305097201900000008	16
+p997301002201900000012	16
+*/
+select 
+  c_app_no -- 申请单号,批改申请单号
+  ,c_ply_no -- 保单号,保单号 
+  ,n_edr_prj_no -- 批改序号,批改次数times of endorsement
+  ,c_edr_no -- 批单号
+  ,n_seq_no -- 序号
+  ,c_ci_agrmnt_no -- 共保协议号
+  ,c_major_agrmnt_mrk -- 主从协议标志
+  ,c_coinsurer_cde -- 共保人
+  ,c_chief_mrk -- 主共标志
+  ,c_issue_mrk -- 出单标志,出单机构标志
+  ,n_ci_share -- 共保比例
+  ,n_ci_amt -- 共保保额
+  ,n_ci_rate -- 共保费率
+  ,n_ci_prm -- 共保保费
+  ,n_comm -- 代理经纪费
+  ,n_ply_fee -- 出单及相关费用
+  ,n_ci_amt_var -- 保额变化
+  ,n_ci_prm_var -- 保费变化
+  ,n_comm_var -- 代理经纪费变化
+  ,n_ply_fee_var -- 出单费变化
+  ,c_self_mrk -- 本公司标志,表示本公司
+  ,c_latest_mrk -- 最新保单标志,0否,1是
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_ci_sub_comp -- 共保子公司
+  ,c_dpt_mrk -- 司内、司外标志
+  ,n_ply_fee_rate -- 共保手续费比例
+from  web_ply_ci
+where c_ply_no in ('p997306602201700000009','p997301001201900000008')
+order by c_ply_no, n_edr_prj_no, c_edr_no, n_seq_no
+
+--保单标的分析
+select c_ply_no, count(1) rcdnt
+from web_ply_tgt_obj
+group by c_ply_no
+order by rcdnt desc
+
+/*
+p997304102201900000004	441
+p997304002201800000011	408
+p997304602201800000024	207
+p997304802201800000007	207
+p997304102201900000008	126
+p997304102201900000007	126
+p997304102201900000009	126
+p997304002201800000014	100
+p997304002201800000013	100
+p997304602201800000025	100
+p997304006201900000003	80
+p997304102201900000011	63
+p997304102201900000005	63
+p997304102201900000002	63
+*/
+select *
+from web_ply_tgt_obj
+where c_ply_no in ('p997304102201900000004-','p997304102201900000002')
+order by c_ply_no
+
+show create table web_ply_tgt_obj
+
+--受益人信息分析
+select c_ply_no, count(1) rcdnt
+from web_ply_bnfc
+group by c_ply_no
+order by rcdnt desc
+
+/*
+p997304805201700000001	7
+p997306019201900000009	7
+p997307201201800000027	6
+p997306018201900000012	6
+p997307201201800000026	6
+p997306018201900000011	6
+*/
+select *
+from web_ply_bnfc
+where c_ply_no in ('p997304805201700000001','p997306018201900000011')
+order by c_ply_no
+
+show create table web_ply_bnfc
+
+/*****************************************************************
+  ,c_app_no -- 申请单号
+  ,c_app_typ --  a 投保单, e 批改申请单, q 报价单, o 开口保单
+  ,c_ply_no -- 保单号 policy no
+  ,n_edr_prj_no -- 批改次数 times of endorsement
+  ,c_edr_no -- 批单号
+  ,c_rel_ply_no -- 依赖关联保单号 ，如财产险与利损险，车险商业与交强险
+  ,c_prod_no -- 产品代码 product code
+  ,c_dpt_cde -- 机构代码 department no
+  ,c_bsns_typ -- 业务来源 source type of business
+  ,c_bsns_subtyp -- 业务来源细分 source subtype of business
+  ,c_brkr_cde -- 代理人/经纪人 agent/broker no
+  ,c_agt_agr_no -- 代理协议或合作协议号 agency agreement no
+  ,n_sub_co_no -- 补充协议号 supplemental agreement no
+  ,c_oc_ply_no -- 开口保单业务的预约保单号
+  ,n_disc_rate -- 整张单的折扣率
+  ,n_rate -- 费率,整张保单的费率
+  ,n_comm_rate -- 手续费比例 proportion of commission to premium
+  ,c_renew_mrk -- 续保标志: 0 新保; 1 续保 renewal flag 
+  ,c_orig_ply_no -- 续保单上年保单号 original policy no of renewal
+  ,c_orig_insurer -- 上年保险公司 former insurer
+  ,c_amt_cur -- 保额币种 currency of amount {code}
+  ,n_amt -- 保额合计 amount insured
+  ,n_amt_rmb_exch -- 保费汇率 exchange rate of premium
+  ,c_prm_cur -- 保费币种 currency of premium
+  ,n_calc_prm -- 计算保费合计,系统自动计算的保费金额
+  ,n_prm -- 保费合计 premium
+  ,n_prm_rmb_exch -- 保费人民币汇率
+  ,n_indem_lmt -- 赔偿限额合计 limits of idemnity
+  ,c_ratio_typ -- 短期费率方式 part-term rate type
+  ,n_ratio_coef -- 短期系数 part-term coefficient
+  ,n_saving_amt -- 储金  amount of saving fund
+  ,c_prm_sts -- 保费实收状态，0 未实收 1 部分实收 2 保费收齐
+  ,c_ply_sts -- 保单状态 policy status，i: 非终止(有效或满期) t: terminated 终止(注退)
+  ,t_termn_tm -- 保单终止时间 time of policy termination，初始为保险止期，注退后填上注退时间
+  ,c_inwd_mrk -- 分入业务标志( 0 非分入; 1 分入) reinsurance inward flag
+  ,c_ci_mrk -- 共保标志( 0 非共保 1 共保) coinsurance flag
+  ,c_ci_typ -- 共保方式代码 coinsurance type {code}
+  ,n_ci_jnt_amt -- 共保总保额 joint amount of coinsurance
+  ,n_ci_jnt_prm -- 共保总保费 joint premium of coinsurance
+  ,c_long_term_mrk -- 多年期标志( 0 短期; 1 多年期) long term flag
+  ,t_app_tm -- 投保日期 applying time
+  ,c_prn_no -- 印刷号 print no
+  ,t_insrnc_bgn_tm -- 保险起期 policy effective date
+  ,t_insrnc_end_tm -- 保险止期 policy expire date
+  ,c_tm_sys_cde -- 时制(0-24时/12-12时) time system code (0-24hr/12-12hr)
+  ,c_grp_mrk -- 团单标志( 0 个单; 1 团单) group insurance flag
+  ,c_mult_insrnt_mrk --  0 否  , 1 是
+  ,c_listorcol_mrk -- 清单/汇总标志( 0 输入清单, 1 输入汇总  ; )，人身险需要
+  ,c_master_mrk -- 统括保单标志 master policy flag
+  ,c_bid_mrk -- 投标业务标志
+  ,n_prm_disc -- 套餐优折扣
+  ,c_reg_mrk -- 记名标志: 0 不记名; 1 记名 registered flag
+  ,c_dec_mrk -- 法定申报标志(0非申报;1申报) legal declaration flag
+  ,c_juri_cde -- 司法管辖代码 jurisdition code
+  ,c_agri_mrk -- 涉农标志  agriculture related flag
+  ,c_foreign_mrk -- 境内外标志(0:境内;1:境外) domestic/foreign flag
+  ,c_imporexp_mrk -- 进出口标志
+  ,c_manual_mrk -- 手工出单标志(0非手工1手工)
+  ,c_inst_mrk -- 分期付款标志 installment flag
+  ,c_vip_mrk -- vip标志 vip flag
+  ,c_open_cover_no -- 预约协议 open cover no
+  ,c_dispt_sttl_cde -- 诉讼方式 dispute settle method {code}
+  ,c_dispt_sttl_org -- 仲裁机构  dispute settle organ
+  ,c_chk_cde -- 复核人代码 checker s no
+  ,t_issue_tm -- 签单日期 issue time
+  ,t_udr_tm -- 核保日期 underwrite time
+  ,c_udr_dpt_cde -- 核保机构 underwriting department no
+  ,c_udr_cde -- 核保人代码 underwriter s no
+  ,c_udr_mrk -- 核保标志
+  ,c_ri_fac_mrk -- 临分标志 facultative reinsurance flag
+  ,c_ri_chk_cde -- 再保审核人代码 reinsurance approver s no
+  ,c_ri_mrk -- 再保确认标志 reinsurance approved flag
+  ,t_next_edr_bgn_tm -- 批改生效起期 beginning of successive edorsement  effective time 
+  ,t_next_edr_end_tm -- 批改生效止期 end of successive edorsement effective time 
+  ,t_next_edr_udr_tm -- 下次批改核保日期 underwriting time of endorsement in succession
+  ,c_revert_mrk -- 批改回退标志 0 无回退/新记录 1 被回退记录 2 目的记录
+  ,c_remark '备注 remark
+  ,t_edr_app_tm -- 批改申请日期
+  ,t_edr_bgn_tm -- 批改生效起期
+  ,t_edr_end_tm -- 批改生效止期
+  ,c_edr_mrk -- 申请类型,1 内部批单，2 客户申请
+  ,c_edr_type -- 批改类型,1 一般批改，2 注销，3退保  4、组合批改  5 满期返还  9 批单撤销
+  ,c_edr_rsn_bundle_cde -- 批改原因或组合代码
+  ,n_bef_edr_prj_no -- 批改业务原保单记录序批改号 predecessor endorsement prj no
+  ,n_bef_edr_amt -- 批改前保额
+  ,n_bef_edr_prm -- 批改前保费
+  ,c_latest_mrk --  0 否, 1 是
+  ,n_amt_var -- 保额变化，批单保额-上一批单（保单）保额
+  ,n_calc_prm_var -- 计算保费变化
+  ,n_prm_var -- 保费变化，批单保费上一批单（保单）保费
+  ,n_indem_lmt_var -- 赔偿限额变化
+  ,c_grant_dpt_cde -- 经营单位
+  ,c_vip_cus -- vip客户
+  ,n_max_fee_prop -- 费用最高比例
+  ,c_fin_typ -- 财政来源类型,英文名
+  ,n_orig_times -- 续保次数
+  ,c_dpt_attr -- 部门属性
+  ,c_salegrp_cde -- 销售团队
+  ,c_frz_mrk -- 0 正常，1 质押/挂失
+  ,c_fee_cal_typ -- 费用计算基数
+  ,c_rate_no -- 费率码
+  ,c_common_flag -- 大客户标志 默认为''0''
+  ,c_save_mrk -- 留存标志 默认为''0''
+  ,n_bef_edr_saving -- 批改前储金
+  ,n_saving_var -- 储金变化
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_data_src -- 系统来源
+  ,c_quote_no -- 报价码
+  ,n_base_prm -- 应交基准保费
+  ,n_all_prm -- 整期保费
+  ,n_irr_ratio -- 浮动率
+  ,c_prod_no_old -- 老系统产品代码
+  ,c_quota_mrk -- 是否定额单 1 定额单 0 非定额单
+  ,c_large_business -- 大额交易标记 0非大额 1 是大额交易
+  ,c_sus_business -- 可疑交易标记 0非可疑交易 1是可疑交易
+  ,c_cha_type -- 渠道中级分类
+  ,c_cha_subtype -- 渠道子类
+  ,c_sur_formula '退保公式
+  ,c_noendclm_mrk -- 有在途赔案标记 1 有 0 没有
+  ,n_tax_amt 车船税-冗余字段
+  ,t_repstopext_bgn_tm -- 停驶起期
+  ,t_repstopext_end_tm -- 停驶展期
+  ,c_repstopext_rle_app_no -- 报停展期的总天数
+  ,t_repstopext_last_end_tm -- 上次展期
+  ,t_src_insrnc_bgn_tm -- 原始保单起期
+  ,t_src_insrnc_end_tm -- 原始保单止期
+  ,c_repstopext_status -- 停展状态 t停  z展  n 非停展状态
+  ,c_repstopext_src_app_no -- 做报停展期批改前的最新投保单，如果是做第二此报停展期批改则还是原来的最新投保单号
+  ,c_sls_cde_old -- 老系统业务员代码
+  ,c_dpt_cde_old -- 老系统承保机构代码
+  ,c_brk_sls_cde -- 代理业务员
+  ,c_tender_no -- 政府采购任务编码
+  ,c_approve_cde -- 保险公司审批人员代码
+  ,c_preferential -- 减免信息
+  ,n_commission_rate_upper -- 手续费支付比例上限(宁波手续费上传)
+  ,c_trd_cde -- 国民经济行业分类与代码
+  ,c_dduct_desc -- 免赔说明(new)
+  ,n_dduct_rate -- 免赔率(new)
+  ,n_dduct_amt -- 绝对免赔额(new)
+  ,c_ri_fac_opn '临分意见
+  ,n_ci_own_amt -- 共保我司净保额
+  ,n_ci_own_prm -- 共保我司净保费
+  ,c_ci_inp_typ -- [共保]录单方式
+  ,c_ci_pri_typ -- [共保]单证打印方式
+  ,c_area_flag -- 地区标识
+  ,c_certf_no -- 代理业务跟单销售人员职业证号
+  ,c_needfee_flag -- 是否规定见费出单标志 0 否 1 是
+  ,c_canclfee_flg -- 特殊取消见费出单标志 0 否 1 是
+  ,c_canclfeersn_cde --  特殊取消见费出单原因
+  ,t_last_bill_date -- 上张保单签单日期
+  ,t_last_start_date -- 上张保单起保日期/浮动因素计算期间起期
+  ,t_last_end_date -- 上张保单终保日期/浮动因素计算区间止期
+  ,t_run_bgn_tm -- 追溯起期
+  ,t_run_end_tm -- 追溯止期
+  ,c_payment_mrk -- 是否已经将团单收付变为个单进行传送  0：未传送  1：已经传送
+  ,c_unfix_spc_change -- 是否修改特别约定（是否走自核）：0-否；1-是；
+  ,c_unfix_spc_hidden '隐藏特别约定
+  ,c_danzheng_typ -- 单证类型
+  ,n_surr_rate -- 注销手续费率
+  ,c_monitor_id -- 时间监控id
+  ,n_charge_prm -- 换算保额(人民币)
+  ,c_islog_back -- 是否ilog返回修改，1为ilog返回修改，0为自核通过，或者自核转人工
+  ,c_quick_flag -- 是否快速出单：0-否；1-是；
+  ,c_unfix_spc_ilog -- 特别约定按照:特约编号---特约内容###特约编号---特约内容,传递给ilog
+  ,c_undr_opn 'ilog申请核保返回修改原因
+  ,c_glass_typ -- 玻璃类型,玻璃类型 glass type
+  ,c_brk_sls_name -- 代理业务员名称
+  ,c_edr_ratio_typ -- 批改短期费率类型
+  ,n_fund_rate -- 计提救助基金比例
+  ,n_fund_amount -- 计提救助基金金额
+  ,c_market_id
+  ,t_agree_start_tm
+  ,t_agree_stop_tm
+  ,c_agreement_days
+  ,c_water_mark -- 是否涉海|涉水 0 否 1是
+  ,c_oc_agr_no -- 开口保单协议号
+  ,c_spec_no -- 特别约定序号集
+  ,c_intro_dptcde -- 服务机构
+  ,c_recei_title_cde -- 发票抬头
+  ,c_recei_title_nme -- 发票标题
+  ,c_country_flag -- 县/区
+  ,c_app_area_code -- 指定查询区域
+  ,c_pure_prm_flag -- 纯风险保费标识
+  ,c_recei_hs -- y为回收发票，n未回收（发票丢失）
+  ,c_province -- 省份(支票)
+  ,c_paper_mrk -- 是否需要纸质保单及发票,0：不需要 ，1：需要
+  ,c_send_per -- 配送人
+  ,c_send_mobile -- 配送人电话
+  ,c_send_addr -- 配送地址
+  ,c_order_no -- 订单号
+  ,c_joint_no -- 联合投保号,为null是为非联合投保
+  ,n_price -- 保费收入
+  ,n_vat -- 增值税
+  ,n_price_var -- 保费收入变化值
+  ,n_vat_var -- 增值税变化
+  ,c_cha_vat_type -- 代理人缴税类型
+  ,c_resv_txt_14 -- 产品方案号
+  ,t_modify_tm -- 修改时间戳
+  ,c_sps_tas -- 可疑交易
+  ,c_sps_typ -- 可疑类型'
+*********************************************************************************/
+
+select c_ply_no, n_edr_prj_no, count(1) rcdnt
+from web_ply_applicant
+group by c_ply_no, n_edr_prj_no
+order by rcdnt desc
+
+/*
+p997301802201700000001	12
+p997307101201800000004	11
+p997306017201800000004	11
+p997301001201900000008	11
+p997306018201900000002	10
+p997306019201900000003	9
+p997301701201800000005	9
+*/
+select *
+from web_ply_applicant
+where c_ply_no = 'p997301802201700000001'
+
+
+show create table web_ply_applicant
+
+======================收付记录==============================================
+select c_ply_no, count(1) rcdnt
+from web_ply_pay
+group by c_ply_no
+order by rcdnt desc
+
+/*
+p997301802201700000001	86
+p997307101201800000004	54
+p997306017201800000004	51
+p997301001201900000008	48
+p997306020201900000001	46
+p997301001201900000016	15
+p336401003201800000010	14
+*/
+select   c_app_no -- 批改申请单号
+  ,c_ply_no -- 保单号 policy no
+  ,n_edr_prj_no -- 批改次数 times of endorsement
+  ,c_edr_no -- 批单号
+  ,n_tms -- 期别 premium term
+  ,c_prod_no -- 产品编号 product no
+  ,c_payor_nme -- 付款人姓名 payer''s name
+  ,c_payor_cde -- 付款人代码 payer s client no
+  ,n_payable_prm -- 应付保费 payable premium
+  ,c_pay_mode_cde -- 付款方式 payment mode code
+  ,t_pay_bgn_tm -- 缴费起始日期 beginning of payment period
+  ,t_pay_end_tm -- 缴费截止日期 end of payment period
+  ,t_paid_tm -- 收费日期 payment time
+  ,c_vch_typ -- 单证类型 voucher type
+  ,c_recpt_no -- 收据号 receipt no
+  ,n_paid_prm -- 实收保费 paid-in premium
+  ,c_cur_cde -- 付款币种 currency code
+  ,c_bank_cde -- 开户银行
+  ,c_ac_no -- 账户 account no
+  ,c_latest_mrk -- 最新保单标志,''0''否,''1''是
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_prm_var -- 保费变化
+  ,n_vat -- 应缴增值税
+  ,n_price
+  ,c_payor_nme_type -- 付款人类型
+from web_ply_pay
+where c_ply_no = 'p997301802201700000001'
+
+show create table web_ply_pay
+
+--被保人
+select c_ply_no, count(1) rcdnt
+from web_ply_insured
+group by c_ply_no
+order by rcdnt desc
+
+/**
+p997301802201700000001	12
+p997301001201900000008	11
+p997301702201800000008	9
+**/
+
+select *
+  ,c_app_no -- 申请单号,投保单号
+  ,c_ply_no -- 保单号,保单号 policy no
+  ,n_edr_prj_no -- 批改序号,批改次数 times of endorsement
+  ,c_edr_no -- 批单号
+  ,n_seq_no -- 序号
+  ,c_insured_cde -- 被保人编号,被保险人
+  ,c_insured_nme -- 被保人名称
+  ,c_insured_cls -- 被保人类别,包括： 0 主被保人, 1 副被保人, 2 连带被保人
+  ,c_rel_insured_cde -- 副被保人对应主被保人码,副被保人对应主被保人代码
+  ,c_certf_cls -- 证件类型
+  ,c_certf_cde -- 证件号码
+  ,c_clnt_mrk -- 客户分类,客户分类,0 法人，1 个人
+  ,c_cus_lvl -- 客户等级
+  ,c_stk_mrk -- 股东客户标志
+  ,c_trd_cde -- 行业代码
+  ,c_sub_trd_cde -- 行业细分代码
+  ,c_cntr_nme -- 联系人,投保人联系人
+  ,c_tel -- 固定电话,电话
+  ,c_mobile -- 移动电话
+  ,c_country -- 国家
+  ,c_province -- 省份
+  ,c_city -- 地市
+  ,c_county -- 县
+  ,c_suffix_addr -- 街
+  ,c_clnt_addr -- 地址
+  ,c_zip_cde -- 邮编
+  ,c_email -- email
+  ,c_resid_addr -- 居住地址
+  ,c_resid_zip -- 居住地址邮编
+  ,c_work_dpt -- 工作单位
+  ,c_work_dpt_addr -- 工作单位地址
+  ,c_work_dpt_zip -- 工作单位邮编
+  ,c_sex -- 性别
+  ,t_birthday -- 出生日期,出生年月
+  ,c_health_cde -- 健康状况代码
+  ,c_health_desc -- 健康状况说明
+  ,c_occup_cde -- 职业代码
+  ,c_sideline_mrk -- 副业标志
+  ,c_position -- 职位
+  ,c_duty -- 职务,职务内容
+  ,n_income -- 年收入,年薪
+  ,c_edu_lvl_cde -- 文化程度代码,文化程度
+  ,c_mrg_cde -- 婚姻状况代码,婚姻状况
+  ,c_chld_sts_cde -- 子女状况
+  ,n_drv_age -- 驾龄
+  ,c_conveyance_cde -- 日常主要代步工具代码,日常主要代步工具
+  ,c_ins_history` text -- 以住三年保险记录
+  ,c_latest_mrk -- 最新保单标志,''0''否,''1''是
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_cus_risk_lvl -- 客户风险等级,新客户、普通客户等
+  ,t_certf_end_date -- 证件有效期止
+  ,c_cus_typ -- 客户类型
+  ,c_legal_nme -- 法定代表人姓名
+  ,c_legal_certf_cls -- 法定代表人证件类型
+  ,c_legal_certf_cde -- 法定代表人证件号码
+  ,t_legal_certf_end_tm -- 法定代表人证件有效期限
+  ,c_operater_certf_cde -- 经办人身份证号码
+  ,t_operater_certf_end_tm -- 经办人身份证有效期至
+  ,c_fax -- 传真
+  ,n_age -- 年龄
+  ,c_org_valid -- 组织机构代码有效期
+  ,c_buslicence_valid -- 营业执照号有效期
+  ,c_cust_risk_rank -- 反洗钱客户风险等级
+  ,c_cert_valid -- 税务有效期
+  ,c_work_ctt -- 经营范围
+  ,c_cust_riskrank_lvl -- 反洗钱客户风险等级
+  ,t_modify_tm -- 修改时间戳
+  ,c_atn_typ -- 关注类型
+  ,c_aml_country -- 国籍
+  ,c_aml_addr -- 住所
+  ,c_aml_limit_mrk -- 长期标志
+  ,c_actualholding_nme -- 实际控股人
+  ,c_acth_certf_cls -- 实际控股人证件类型
+  ,c_acth_certf_cde -- 实际控股人证件号码
+  ,t_acth_certf_end_tm -- 实际控股人证件有效期止
+  ,c_app_relation -- 与投保人关系
+  ,c_app_relation_detail -- 与投保人其他关系描述
+  ,c_manage_area -- 经营范围
+  ,c_strategy_mark-- 是否战略客户 1-是，0-否
+  ,c_strategy_nam -- 集团战略客户简称
+from web_ply_insured
+where c_ply_no = 'p997301802201700000001'
+
+show create table web_ply_insured
+
+
+----------------------------------------------------保险标的,只有申请c_app_no,没有c_ply_no-----------------------------------------------------
+select c_app_no, count(1) rcdnt
+from web_app_ent_tgt_obj
+group by c_app_no
+order by rcdnt desc
+
+/**
+t997302001201910000832	6
+t997304607201800000003	4
+t997304607201800000004	4
+t997309001201800000008	3
+**/
+
+select 
+  c_app_no -- 申请单号,投保单号
+  ,n_seq_no -- 序号
+  ,c_prj_typ -- 项目类别
+  ,c_prj_nme -- 项目名称
+  ,c_tgt_qty -- 标的数量
+  ,c_amt_determine_method_cde -- 保险金额确定方式
+  ,c_cur_typ -- 币种
+  ,n_amt -- 保险金额
+  ,n_rate -- 费率
+  ,n_prm -- 保费
+  ,n_tgt_no -- 保险标的序号,保险标的
+  ,c_dduct_desc -- 免赔说明
+  ,c_cancel_mark -- 取消标志
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_dduct_rate -- 免赔率（永安新增）
+  ,n_dduct_amt -- 免赔额（永安新增）
+from web_app_ent_tgt_obj
+where c_app_no = 't997302001201910000832'
+
+show create table web_app_ent_tgt_obj
+-------------------------------------------------------------------------
+
+select c_app_no, count(1) rcdnt
+from web_app_ent_tgt
+group by c_app_no
+order by rcdnt desc
+
+/**
+t997304006201900000009	4
+t997309002201800000006	4
+t997304607201800000003	4
+t997309002201800000025	4
+t997304006201900000010	4
+t997304607201800000004	4
+t997301808201800000007	3
+t997304006201900000006	3
+t997308003201800000045	3
+**/
+
+select 
+  c_app_no -- 申请单号,批改申请单号
+  ,n_seq_no -- 标的序号
+  ,c_tgt_addr -- 标的地址
+  ,c_tgt_zip -- 标的邮编
+  ,c_material -- 主要原料及辅料
+  ,c_process_tech -- 生产工艺
+  ,c_juri_cde -- 司法管辖
+  ,c_trd_cde -- 行业类型
+  ,c_sub_trd_cde -- 行业细分
+  ,c_bld_typ_cde -- 建筑类型
+  ,c_impkid_cde -- 占用性质
+  ,c_nearby_river_mrk -- 临近河流标志
+  ,c_nearby_way_mrk -- 临近公路标志
+  ,c_nearby_flam_explo_mrk -- 临近易燃易爆物标志,临近易燃易爆物标志 nearby flamable, explosive goods flag
+  ,c_nearby_other_bld_mrk -- 临近其它建筑物标志
+  ,c_nclm_desc -- 免赔说明
+  ,c_cur_typ -- 币种
+  ,n_amt -- 保额
+  ,n_prm -- 保费
+  ,n_amt_var -- 保额变化,保额变化，批单保额-上一批单（保单）保额
+  ,n_prm_var -- 保费变化,保费变化，批单保费上一批单（保单）保费
+  ,t_crt_tm -- 创建时间
+  ,c_crt_cde -- 创建人代码
+  ,t_upd_tm -- 修改时间
+  ,c_upd_cde -- 修改人代码
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_app_ent_tgt
+where c_app_no = 't997304006201900000009'
+
+show create table web_app_ent_tgt
+
+-----------------------------------------申请单账户信息----------------------------------------------------------------------------
+select c_app_no, count(1) rcdnt
+from web_app_acctinfo
+group by c_app_no
+order by rcdnt desc
+
+/**
+t997307201201900000003	1
+t997304006201900000030	1
+**/
+
+select 
+  c_app_no -- 申请单号
+  ,c_acct_nme -- 账户名,特别约定代码
+  ,c_acct_no -- 账号,中文名
+  ,c_bank_rel_cde -- 收款行联行号
+  ,c_bank_pro -- 银行省
+  ,c_bank_area -- 银行市
+  ,c_bank_county -- 银行县
+  ,c_bank_cde -- 开户行
+  ,c_crt_cde -- 创建人代码
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人代码
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_bank_rel_typ -- 收款银行大类
+  ,c_bank_cnaps -- cnaps号
+  ,c_bank_addr -- 开户行地址
+  ,c_pub_pri -- 对公对私
+  ,c_settlement_typ
+  ,t_modify_tm -- 修改时间戳
+from web_app_acctinfo
+where c_app_no = 't997307201201900000003'
+
+show create table web_app_acctinfo
+
+
+----------------------------申请单货物明细信息---------------------
+select c_app_no, count(1) rcdnt
+from web_app_cargo_list
+group by c_app_no
+order by rcdnt desc
+
+/**
+t997305099201900000017	2
+t997305099201900000015	2
+t997305097201900000032	1
+t997305099201900000029	1
+**/
+
+select 
+  c_app_no -- 申请单号,批改申请单号
+  ,n_seq_no -- 序号
+  ,c_marks_no -- 标记
+  ,c_desc_god -- 保险货物项目
+  ,c_qty -- 数量
+  ,c_pack -- 包装
+  ,c_weit -- 重量
+  ,c_crt_cde -- 创建人代码
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人代码
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_resv_txt_5 -- 是否联运加费
+  ,c_resv_txt_6 -- 是否省内
+from web_app_cargo_list
+where c_app_no = 't997305099201900000017'
+
+show create table web_app_cargo_list
+
+----------------------------------------------申请单费用信息--------------------
+select c_app_no, count(1) rcdnt
+from web_app_fee
+group by c_app_no
+order by rcdnt desc
+
+/**
+t997302001201900000123	5
+t997312001201900000001	4
+t997308001201800000046	3
+t997309002201800000004	2
+t997306001201910000006	1
+**/
+
+select 
+   c_app_no -- 批改申请单号
+   ,c_feetyp_cde -- y0-手续费(佣金) y1-业务员绩效工资 y2-团队主管业务绩效工资 y3-业务系列人员基本工资及福利 y4-团队销售管理费用 y5-营销服务部管理费用 y6-支公司销售管理费用 y7-中心支公司销售管理费用 y8-分公司销售管理费用
+   ,n_fee_prop -- 费用比例
+   ,n_fee -- 费用
+   ,n_got_prm -- n_got_prm
+   ,c_crt_cde -- 创建人员
+   ,t_crt_tm -- 创建时间
+   ,c_upd_cde -- 修改人员
+   ,t_upd_tm -- 修改时间
+   ,c_trans_mrk -- 迁移标志
+   ,t_trans_tm -- 迁移时间
+   ,n_upd_fee -- 新费用金额
+   ,n_fee_vat -- 手续费增值税
+   ,n_fee_price -- 手续费真实价值
+   ,t_modify_tm -- 修改时间戳
+   ,c_prm_cur -- 币种 premium cprmcur
+   ,c_brkr_cde -- 机构名称 premium cbrkrcde
+from web_app_fee
+where c_app_no = 't997302001201900000123'
+
+show create table web_app_fee
+
+-----------------------------------------申请单险别信息---------------------------------------------
+select c_app_no, count(1) rcdnt
+from web_app_cvrg
+group by c_app_no
+order by rcdnt desc
+
+/**
+t997306020201900000064	10
+t997306203201900000070	10
+**/
+
+select 
+  ,c_app_no -- 申请单号
+  ,n_seq_no -- 序号sequence no
+  ,c_cvrg_no -- 险别（扩展条款）编号 coverage code
+  ,c_cust_cvrg_nme -- 自定义险别名称 customized coverage name
+  ,c_cust_cl_ctnt  -- 自定义条款内容 customized clause content
+  ,n_amt -- 保额 amount insured
+  ,n_rate -- 费率 premium rate
+  ,n_base_prm -- 基本保费 base premium
+  ,n_bef_prm -- 折前保费 premium without discount
+  ,n_dis_coef -- 优惠系数 discount coefficient
+  ,n_calc_prm -- 计算保费 calculated premium
+  ,n_prm -- 保费 premium
+  ,n_bef_ann_prm -- 年折前保费 annual premium without discount
+  ,n_calc_ann_prm -- 年计算保费 calculated annual premium
+  ,t_prm_chg_tm -- 保费变化时间，缺省为保单起保日期
+  ,n_dut_prm -- 已了责任保费，缺省为0
+  ,c_remark -- 备注 remark
+  ,c_tgt_typ -- 标的类型代码 subject-matter type
+  ,c_tgt_nme -- 标的名称 subject-matter name
+  ,n_tgt_qty -- 标的数量 quantity of subject-matters
+  ,n_indem_lmt -- 赔偿限额 indemnity limit
+  ,c_dduct_mrk -- 不计免赔标志, 0  否, 1  是
+  ,n_dduct_rate -- 免赔率 deductable rate
+  ,c_dduct_desc -- 免赔说明 deductable description
+  ,n_dduct_amt -- 绝对免赔额 straight deductible amount
+  ,c_cancel_mrk -- 退保标志 cancel flag，缺省为 1 ，当批改退保时为‘0’
+  ,c_indem_lmt_lvl -- 赔偿限额档次(车险) level of indemnity limit,起付限额[063013产品]
+  ,n_liab_days_lmt -- 责任时限(车险) days limit of liability
+  ,n_per_amt -- 每标的保额  amount for each subject-matter
+  ,n_per_indem_lmt -- 每标的赔偿限额 indemnity limit for each subject-matter
+  ,n_per_prm -- 每标的保费 premium for each subject-matter
+  ,n_once_indem_lmt -- 单次赔偿限额 indemnity limit for any one claim
+  ,n_saving_amt -- 储金 amount of saving fund
+  ,t_bgn_tm -- 保单为保单的保险起期，批单为批单的生效起期
+  ,t_end_tm -- 保单为保单的保险止期，批单为批单的生效止期
+  ,n_amt_var -- 保额变化
+  ,n_prm_var -- 保费变化
+  ,n_calc_prm_var -- 计算保费 calculated premium
+  ,n_indem_var -- 赔偿限额变化
+  ,c_crt_cde -- 创建人代码
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人代码
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_dduct_prm -- 不计免赔保费
+  ,c_under_insurance_flag -- 不足额投保标志:0:足额投保,1:不足额投保
+  ,c_cvrg_no_old -- 老系统险别代码
+  ,n_float_rate -- 基础费率
+  ,n_exem_period -- 免责期（天）
+  ,c_plan_no -- 方案号
+  ,c_formula -- cformula保费计算过程  c_formula
+  ,n_prm_zb -- 分入全单保费
+  ,n_compen_rate -- 赔付比例
+  ,c_add_mrk -- 增加险别标志
+  ,c_glass_typ -- 玻璃单独破碎险-玻璃类型
+  ,n_amt_zb -- 分入全单保额
+  ,if_by_ratiocoef -- 是否需要乘短期费率系数
+  ,c_ext_area_rad -- 扩展区域半径 字段（机动车出境保险 使用）
+  ,c_accident_typ -- 事故类型 字段（约定区域通行费特约 使用）
+  ,c_agreement_ratio -- 协定比例 字段（新车特约a，新车特约b 使用）
+  ,c_dduct_money_mrk -- 添加 免赔额标记 字段（可选不计免赔 使用）
+  ,n_auto_che_coef -- 自主核保系数
+  ,n_dduct_bef_prm -- 不计免赔折前保费
+  ,n_dduct_prm_var -- 不计免赔变化值
+  ,n_franchise_rate -- 可选免赔额费率
+  ,n_base_pure_prm -- 基准纯风险保费
+  ,n_vat -- 增值税
+  ,n_price -- 保费收入
+  ,n_vat_var -- 增值税变化
+  ,n_price_var -- 保费收入变化
+  ,t_modify_tm -- 修改时间戳
+  ,n_rate_nvat -- 不含税费率 premium nratenvat
+  ,n_rate_nvat_else -- 其它不含税费率 premium nratenvatelse
+from web_app_cvrg
+where c_app_no = 't997306020201900000064'
+
+show create table web_app_cvrg
+
+
+-----------------------------------------------------------申请单风险问询信息	web_app_risk_qust
+-----------------------------------------------------------申请单驾驶人信息	web_app_vhl_drv
+-----------------------------------------------------------画面信息	web_prd_tab
+-----------------------------------------------------------短信记录表	web_trd_sms
+-----------------------------------------------------------缴费信息表	web_pay_confirm_info
+select c_app_no, count(1) rcdnt
+from web_pay_confirm_info
+group by c_app_no
+order by rcdnt desc
+
+/**
+t997306203201910000293	1
+t997304101201900000010	1
+t997306202201910000019	1
+**/
+
+select 
+  ,c_unique_no -- 收据号,收付流水号
+   ,c_app_no -- 申请单号
+   ,c_app_typ -- a  投保单, e 批改申请单, q 报价单, o 开口保单
+   ,t_bgn_tm -- 有效起期,保险起期
+   ,t_end_tm -- 有效止期,保险止期
+   ,t_udr_tm -- 核保时间
+   ,c_dpt_cde -- 出单机构部门
+   ,c_cur_no -- 币种
+   ,c_prod_no -- 产品代码
+   ,n_prm -- 应缴保费
+   ,n_tax -- 应缴车船税
+   ,n_pay_amt -- 缴费金额,应缴保费＋应缴车船税＋印花税
+   ,c_pay_typ -- 缴费类型,1=刷卡缴费,2=支票缴费
+   ,c_pay_status -- 待缴费=0, 已缴费=1 ,修改缴费=2
+   ,n_trans_amt -- 转账金额，转账登记页面录入
+   ,c_ret_cde -- 返回码,pos机刷卡后银行返回是否成功标识
+   ,c_card_no -- 卡号
+   ,c_seq_no -- 流水号,刷卡重复确认时pos机返回检索号(北京工行)
+   ,c_biz_consult_no
+   ,c_mac_addr -- mac地址
+   ,c_cheque_no -- 支票号
+   ,c_print_no -- 收据流水号(支票行打印)
+   ,c_bank_nme -- 银行名称,支票录入
+   ,c_check_psn -- 支票审核人
+   ,t_check_tm -- 支票审核时间
+   ,c_pay_nme -- 付款人名称
+   ,c_bank_cde -- 银行编码
+   ,t_charge_tm -- 收费（票）时间
+   ,c_charge_cde -- 收费（票）人员
+   ,t_prn_cheque_tm -- 打印支票收讫收据时间
+   ,c_pay_remark -- 缴费说明,缴费返回说明信息
+   ,t_pay_conf_tm -- 缴费确认时间
+   ,c_pay_conf_cde -- 确认人员
+   ,c_plyedr_make_mrk -- 保批单生成标志,0=否,1=是
+   ,c_ply_no -- 保单号
+   ,n_edr_prj_no -- 批改序号
+   ,t_ply_edr_make_tm -- 保批单生成时间
+   ,c_reg_dpt_cde -- 挂帐机构
+   ,t_plyedr_prn_tm -- 保批单打印时间
+   ,c_pay_prsn_cde -- 缴费检索号,客户识别号后8位,平台交易号,针对上海地区,平台交易号,与平台进行保单缴费时产生
+   ,c_crt_cde -- 创建人员
+   ,t_crt_tm -- 创建时间
+   ,c_upd_cde -- 修改人员
+   ,t_upd_tm -- 修改时间
+   ,c_check_sts -- 缴费状态,00=待缴费,0=待登记,1=待审核,2=待修改,3=审核通过,4=待确认,5=缴费成功
+   ,c_check_opn -- 支票审核意见
+   ,n_tms -- 批次
+   ,c_trans_mrk -- 迁移标志
+   ,t_trans_tm -- 迁移时间
+   ,c_batch_no -- 批量业务号,多张刷卡的各张保单的批量业务号一样,单张刷卡时与收付流水号相同
+   ,c_deal_no -- 交易业务号,清空批量业务号时记录历史批量业务号
+   ,c_provinces -- 省份(支票)
+   ,c_city -- 城市(支票)
+   ,c_bankcode -- 银行网点(支票)
+   ,c_remark -- 备注
+   ,n_stamp_tax -- 印花税
+   ,c_com_cde -- pos机的公司代码
+   ,c_biz_no -- 商户号
+   ,c_ter_no -- 终端号
+   ,c_vip_flag -- vip标识
+   ,c_edr_no -- 批单号
+   ,c_addto -- 是否追加登记标志位
+   ,c_is_commit -- 是否审核标志位
+   ,c_bank_county -- 开户行县
+   ,c_bank_cnaps -- cnaps号
+   ,c_bank_addr -- 开户行地址
+   ,c_pub_pri -- 对公对私
+   ,n_cheque_prm -- 支票金额
+   ,c_seq_buiding_oper -- 缴费序号绑定操作员（无线pos收费人）
+   ,c_seq_unbuiding_oper -- 缴费序号解除绑定操作员
+   ,c_pay_sequence
+   ,c_check_code -- 支付申请校验码
+   ,c_abstract -- 资金系统对账码
+   ,t_modify_tm -- 修改时间戳
+from web_pay_confirm_info
+where c_app_no = 't997306203201910000293'
+
+show create table web_pay_confirm_info
+-----------------------------------------------------------要素明细信息	web_prd_tab_dtl
+-----------------------------------------------------------见费出单配置信息	web_pay_seemoney_config
+
+
+select 
+  ,c_dptacc_cde -- 做账机构,v6用到
+  ,c_prod_no -- 产品编号
+  ,t_bgn_tm -- 开始时间
+  ,c_flag -- 处理标识,0 不处理1 处理,v6用到
+  ,c_conn_bank -- 连接银行,unionpay （通用版本）银联icbc 北京分公司专,v6用到
+  ,c_cust_type -- 客户类型,预留
+  ,c_bank_cde -- 银行代码,关联表web_bas_fin_bank,v6用到
+  ,c_abby_flag -- 安邦邦业标识,1 安邦2 邦业公估
+  ,c_computer_code -- 计算机代码,北京地区用
+  ,c_bfn_no -- 商户号,上海地区才配置
+  ,n_control_days -- 缴费控制天数,如果是刷卡缴费，缴费日期必须控制在保单起期x天前；如果是支票审核，必须控制在保单起期x天前
+  ,n_interval -- 时间间隔
+  ,n_times -- 次数,通赔用
+  ,n_min_amt -- 审核最小值,通赔用
+  ,n_max_amt -- 审核最大值,通赔用
+  ,c_dpt_level -- 机构等级,通赔用
+  ,c_audit_flag -- 审核标识,通赔用
+  ,c_crt_cde -- 创建人代码
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人代码
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,n_ext_len -- 报文扩充长度,v6用到
+  ,c_dpt_cde
+  ,c_bsns_typ -- 业务来源, source type of business,预留
+  ,c_brkr_cde -- 渠道,代理人/经纪人 agent/broker no
+  ,c_pay_typ
+  ,c_is_valid
+  ,c_status -- 状态,0停用,1启用
+  ,t_adb_tm -- 失效时间,删除操作时间
+  ,c_conn_pos_mrk -- 是否连pos机标志,0 不连接pos刷卡缴费,1 连接pos刷卡缴费
+  ,t_modify_tm -- 修改时间戳
+from web_pay_seemoney_config
+
+show create table web_pay_seemoney_config
+
+-----------------------------------------------------------车船税金额配置表	web_bas_tax_amount
+-----------------------------------------------------------车辆使用性质与车辆种类关联表	web_bas_vhl_typ
+-----------------------------------------------------------车险关联投保表	web_ply_relation
+select 
+  `c_ply_app_no
+  `n_id
+  `c_prod_no
+  `c_ply_no -- 保单号
+  `t_insrnc_bgn_tm -- 保险起期
+  `t_insrnc_end_tm -- 保险止期
+  `c_status
+  `t_crt_tm -- 创建时间
+  `c_crt_cde -- 创建人代码
+  `t_upd_tm -- 修改时间
+  `c_upd_cde -- 修改人代码
+  `c_trans_mrk -- 迁移标志
+  `t_trans_tm -- 迁移时间
+  `c_dpt_cde -- 机构代码,机构代码 department no
+  `c_app_cde -- 投保人代码,投保人唯一客户代码
+  `c_app_nme -- 投保人名称
+  `c_plate_no -- 车牌号码,车牌号码 plate number
+  `c_eng_no -- 发动机号码,发动机号码 engine no
+  `c_joint_mrk -- 是否快速出单联合投保：1-是；0-否；空-否
+  `c_frm_no -- 车架号
+  `t_modify_tm -- 修改时间戳
+from web_ply_relation
+
+show create table web_ply_relation
+-----------------------------------------------------------险别信息表	web_prd_cvrg
+select 
+  ,c_cvrg_no -- '险别编码
+  ,c_kind_no -- 产品大类编码
+  ,c_risk_typ -- 责任类型
+  ,c_nme_cn -- 险别名称
+  ,c_nme_en -- 险别名称（英文）
+  ,c_rdr_typ -- 0-主险；1-附加险；2-扩展责任
+  ,c_cvrg_desc -- 险别说明
+  ,c_status -- 险别状态 0-不启用 1-启用
+  ,t_adb_tm -- 失效时间
+  ,t_upd_tm -- 修改时间
+  ,c_upd_cde -- 修改人
+  ,t_crt_tm -- 创建时间
+  ,c_crt_cde -- 创建人员
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_jy_flg
+  ,c_yworjk -- 0为意外险，1为健康险
+  ,c_ifmedical -- 0为医疗，1为疾病，2为失能，3为护理
+  ,c_feetyp -- 0为费用补偿性，1为定额给付型
+  ,t_modify_tm -- 修改时间戳
+from web_prd_cvrg
+
+show create table web_prd_cvrg
+
+-----------------------------------------------------------险别责任	web_prd_risk
+
+select 
+  ,c_risk_no -- 责任号码
+  ,c_kind_no -- 所属大类编码
+  ,c_risk_cls -- 1 责任,2明细费用
+  ,c_nme_cn -- 责任名称（中文）
+  ,c_nme_en -- 责任名称（英文）
+  ,c_status -- 启用状态
+  ,t_adb_tm -- 失效时间
+  ,t_upd_tm -- 修改时间
+  ,c_upd_cde -- 修改人
+  ,c_crt_cde -- 创建人
+  ,t_crt_tm -- 创建时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_prd_risk
+
+show create table web_prd_risk
+-----------------------------------------------------------险别责任关联表	web_prd_cvrg_risk_rel
+
+
+select 
+  c_cvrg_no -- 险别号码
+  ,c_risk_no -- 责任号码
+  ,t_upd_tm -- 修改时间
+  ,c_upd_cde -- 修改人
+  ,t_crt_tm -- 创建时间
+  ,c_crt_cde -- 创建人
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_prd_cvrg_risk_rel
+
+show create table web_prd_cvrg_risk_rel
+
+-----------------------------------------------------------验车码表	web_bas_vhl_exam
+
+
+
+*******************************************************************************************************
+中支机构映射关系表	web_vch_transdptmap
+*******************************************************************************************************
+单据类型	web_vch_type
+
+select 
+  ,c_vch_type -- 单证类型代码
+  ,c_nme_cn -- 单证类型名称
+  ,c_prn_type -- 单据类型代码
+  ,c_comb_prn_flag -- ‘0’否 ‘1’是多个业务单据号是否可以对应一个该单证类型的流水号进行打印销号
+  ,c_filiale_press_flag -- ‘0’否 ‘1’是
+  ,c_imme_down -- ‘0’否 ‘1’是
+  ,c_imme_up -- ‘0’否 ‘1’是
+  ,c_imme_handover -- ‘0’否 ‘1’是
+  ,c_avai_flag -- ‘0’否 ‘1’是
+  ,t_adb_tm -- 失效时间
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_ply_flag -- ‘0’ 非保单类单证  ‘1’保单类单证
+  ,c_upd_cde_old -- 原修改人
+  ,c_crt_cde_old -- 原创建人
+  ,c_dpt_cde -- 适用机构
+  ,n_spa_vch_sto_cnt -- 空白单证库存量
+  ,n_back_days -- 回销天数
+  ,n_each_for_cnt -- 每次申领量
+from web_vch_type
+
+show create table web_vch_type
+
+*******************************************************************************************************
+单证价格表	web_vch_price
+select
+   c_price_version -- 价格版本
+  ,c_vch_type -- 单证类型代码
+  ,c_dpt_cde -- 机构部门
+  ,n_price -- 价格
+  ,t_eff_tm --   生效日期
+  ,c_avai_flag --  ‘0’否 ‘1’是
+  ,t_adb_tm --   失效时间
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_printery_no -- 印刷厂编号
+  ,c_pact_no -- 合同编号
+  ,t_modify_tm -- 修改时间戳
+from web_vch_price
+
+show create table web_vch_price
+
+*******************************************************************************************************
+单证任务表	web_vch_transtask
+select
+  c_vch_type -- 单证类型代码
+  ,c_bgn_prn_no --   起始印刷号
+  ,c_end_prn_no --   若是对单个印刷号操作，则终止印刷号等于起始印刷号
+  ,c_status --   最新状态
+  ,c_oper_type --   操作类型
+  ,t_oper_tm  -- 操作时间
+  ,c_new_dpt_cde --   目的机构代码
+  ,c_new_dpt_cnm --   目的机构名称
+  ,c_new_handle --   目的经手人代码
+  ,c_new_handle_cnm --   目的经手人名称
+  ,c_old_dpt_cde --   原机构代码
+  ,c_old_dpt_cnm --   原机构名称
+  ,c_old_handle --   原经手人代码
+  ,c_old_handle_cnm --   原经手人名称
+  ,t_upd_tm  --   修改时间
+  ,c_upd_cde --   修改人员
+  ,t_crt_tm  --   创建时间
+  ,c_crt_cde --   创建人员
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm  -- 迁移时间 
+  ,c_issue_type -- 下发类型 0:按申领库存 1:无申领库存 2:按申领印刷厂 3:无申领印刷厂
+  ,c_issue_state -- 下发状态 0:已下发 1:未下发
+  ,c_apply_no -- 申领单号
+  ,c_apply_dpt -- 申领机构
+  ,n_apply_num -- 申领份数
+  ,n_apply_stock -- 申领机构库存
+  ,n_stock -- 本地库存
+  ,n_issue_num  -- 下发数量
+  ,c_audit_state -- 审核标志 0:需要 1:不需要
+  ,c_audit_dpt -- 审核机构代码
+  ,c_audit_dpt_cnm -- 审核机构名称
+  ,c_no -- 流水号（下发ck、交接jj、回收hs）
+  ,t_modify_tm -- 修改时间戳
+from web_vch_price
+
+show create table web_vch_price
+
+*******************************************************************************************************
+单证信息主表	web_vch_base
+select 
+  c_dpt_cde -- 机构代码
+  ,c_dpt_cnm -- 机构名称
+  ,c_handle -- 经手人代码
+  ,c_handle_cnm -- 经手人名称
+  ,c_vch_type -- 单证类型代码
+  ,c_prn_no -- 单证印刷号
+  ,c_price_version -- 单证价格
+  ,n_chg_tms -- 单证印刷号的每次调整，该字段累加
+  ,c_status -- ‘0’库存‘1’领用‘2’打印‘3’作废‘4’遗失‘5’出库待确认‘6’手工打印‘7’销毁
+  ,t_press_in_tm -- 印刷入库时间
+  ,t_first_draw_tm -- 指第一次下发给出单员的日期
+  ,t_new_draw_tm -- 只用于领用状态的单证，指最新下发给出单员的日期
+  ,t_ret_ver_tm -- 超过回销日期的领用单证不能进行打印销号
+  ,c_oper_type -- ‘00’印刷入库‘01’下发出库‘02’取消下发出库‘03’接收下发入库‘04’领用出库‘05’回收入库‘06’上缴出库‘07’取消上缴出库‘08’接收上缴入库‘09’交接出库‘10’取消交接出库‘11’接收交接入库‘12’打印销号‘13’手工打印销号‘14’作废销号‘15’遗失销号‘16’撤消销号‘17’销毁‘18’直接下发出库‘19’直接上缴出库‘20’直接交接出库‘21’单证归档
+  ,c_old_dpt_cde -- 原机构代码
+  ,c_old_dpt_cnm -- 原机构名称
+  ,c_old_handle -- 原经手人代码
+  ,c_old_handle_cnm -- 原经手人名称
+  ,c_pgh_flag -- ‘0’未归档 ‘1’已归档
+  ,c_pgh_no -- 归档号
+  ,c_cmpny_agt_cde -- 代理人
+  ,c_send_mark -- 见交强险平台70/71接口
+  ,booking_code -- 批量业务预约码
+  ,booking_code_mark -- 批量业务处理成功标志
+  ,c_set_place -- 存放位置说明
+  ,c_remark -- 备注
+  ,t_crt_tm -- 创建时间
+  ,c_crt_cde -- 创建人员
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_back_tm -- 回销时间
+  ,c_back_status -- 回销状态:0未回销,1已回销,2已归档
+  ,c_back_handle -- 回销人
+  ,t_deal_tm -- 销号处理时间：打印、遗失、作废、停用、撤销等处理时间
+  ,n_price -- 价格
+  ,t_modify_tm -- 修改时间戳
+from web_vch_base
+
+show create table web_vch_base
+*******************************************************************************************************
+单证大类	web_prn_type
+select
+  c_prn_type   -- 单据类型代码
+  ,c_nme_cn   -- 单据类型名称
+  ,c_belong_to   -- ‘ply’承保 ‘clm’理赔 ‘fin’收付 ‘ri’再保
+  ,c_prn_rule   -- 如投保单必须在申请核保成功产生投保单号后才能打印，保单抄件必须在报案成功后才能打印等
+  ,c_manavch_flag   -- ‘0’否 ‘1’是 是则纳入单证管理，可设置单证类型
+  ,c_avai_flag   -- ‘0’否 ‘1’是
+  ,t_adb_tm   -- 失效时间
+  ,c_crt_cde   -- 创建人员
+  ,t_crt_tm   -- 创建时间
+  ,c_upd_cde   -- 修改人员
+  ,t_upd_tm   -- 修改时间
+  ,n_disp_order   -- 显示顺序
+  ,c_comb_prn_flag   -- 合并打印标志
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_crt_cde_old -- 原创建人员
+  ,c_upd_cde_old -- 原更新人员
+  ,t_modify_tm -- 修改时间戳
+from web_prn_type
+
+show create table web_prn_type
+*******************************************************************************************************
+单证归档主表	web_vch_pgh
+select 
+  ,c_pgh_no -- 归档号
+  ,c_dpt_cde -- 此代码为机构内部代码，存储在业务表中的代码此代码为系统自动生成的流水号，可以用6位的序列号
+  ,n_pgh_tms -- 新增归档为第一次归档，后续可以进行补归档，每次补归档＋1
+  ,c_pgh_dpt_cde -- 归档机构
+  ,c_pgh_handle -- 归档人
+  ,t_pgh_tm -- 只保留最新的归档时间
+  ,c_pgh_remark -- 归档说明
+  ,c_set_place -- 存放位置说明
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 审核说明
+  ,t_trans_tm -- 审核时间
+  ,c_status -- 状态
+  ,c_img_id -- 影像资料
+  ,t_modify_tm -- 修改时间戳
+from web_vch_pgh
+
+show create table web_vch_pgh
+*******************************************************************************************************
+单证操作轨迹	web_vch_oper_log
+select
+   c_prn_no -- 单证印刷号',
+  ,c_vch_type -- 单证类型',
+  ,c_status -- 最新状态',
+  ,c_oper_type -- 操作类型',
+  ,c_oper_dpt_cde -- 操作机构代码',
+  ,c_oper_dpt_cnm -- 操作机构名称',
+  ,c_oper_cde -- 操作人员代码',
+  ,c_oper_cnm -- 操作人员名称',
+  ,t_oper_tm -- 操作日期',
+  ,c_new_dpt_cde -- 目的机构代码',
+  ,c_new_dpt_cnm -- 目的机构名称',
+  ,c_new_handle -- 目的经手人代码',
+  ,c_new_handle_cnm -- 目的经手人名称',
+  ,c_old_dpt_cde -- 原机构代码',
+  ,c_old_dpt_cnm -- 原机构名称',
+  ,c_old_handle -- 原经手人代码',
+  ,c_old_handle_cnm -- 原经手人名称',
+  ,c_oper_object -- 下发领用或回收入库时，需要区分是针对“出单员”还是“代理人”操作：‘0’出单员‘1’代理人',
+  ,c_cmpny_agt_cde -- 只保存单证下发给代理人时的信息',
+  ,c_memo -- 备注',
+  ,c_crt_cde -- 创建人员',
+  ,t_crt_tm -- 创建时间',
+  ,c_upd_cde -- 修改人员',
+  ,t_upd_tm -- 修改时间',
+  ,c_trans_mrk -- 迁移标志',
+  ,t_trans_tm -- 迁移时间',
+  ,n_chg_tms -- 单证印刷号的每次调整，该字段累加',
+  ,t_modify_tm -- 修改时间戳'
+from web_vch_oper_log
+
+show create table web_vch_oper_log
+*******************************************************************************************************
+单证核销表	web_vch_prnexpend
+select 
+  c_dpt_cde -- 机构部门
+  ,c_vch_type -- 单证类型代码
+  ,c_prn_no -- 单证印刷号
+  ,n_seq -- 可能存在1个印刷号对应n个保单号，如发票的合并打印
+  ,c_prn_type -- 单据类型
+  ,c_doc_no -- 单据号可能会和保单号、批单号、赔案号、其他单证号重复
+  ,c_ply_no -- 保单号
+  ,c_edr_no -- 批单号
+  ,c_clm_no -- 赔案号
+  ,c_other_no -- 预留，待收付、再保的单证号使用
+  ,t_prnexpend_tm -- 销号时间
+  ,c_is_valid -- 是否有效
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,t_modify_tm -- 修改时间戳
+from web_vch_prnexpend
+
+show create table web_vch_prnexpend
+*******************************************************************************************************
+单证格式文件	web_prn_fmp
+*******************************************************************************************************
+归档单证明细	web_vch_pghlist_dtl
+select 
+  c_pgh_no -- 归档号
+  ,n_seq -- 序号
+  ,c_dpt_cde -- 机构部门
+  ,c_vch_type -- 单证类型代码
+  ,c_prn_no -- 单证印刷号
+  ,c_ply_no -- 保单号
+  ,c_doc_no -- 业务单证号
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 审核说明
+  ,t_trans_tm -- 审核时间
+  ,t_modify_tm -- 修改时间戳
+from web_vch_pghlist_dtl
+
+show create table web_vch_pghlist_dtl
+*******************************************************************************************************
+归档对应号段表	web_vch_pghlist
+select 
+  c_pgh_no -- 归档号
+  ,n_seq -- 序号
+  ,c_dpt_cde -- 机构部门
+  ,c_vch_type -- 保单的单证类型
+  ,c_bgn_prn_no -- 起始印刷号
+  ,c_end_prn_no -- 若是对单个印刷号操作，则终止印刷号等于起始印刷号
+  ,n_num -- 份数
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 审核说明
+  ,t_trans_tm -- 审核时间
+  ,c_pgh_dpt -- 最终归档机构
+  ,c_pgh_dpt_show -- 最终归档机构名称
+  ,t_modify_tm -- 修改时间戳
+from web_vch_pghlist
+
+show create table web_vch_pghlist
+*******************************************************************************************************
+打印模板映射	web_prnvch_map
+
+select 
+  c_dpt_cde -- 机构部门(fk(web_department.c_dpt_cde))
+  ,c_prod_no -- 产品代码
+  ,c_prn_type -- 单据类型代码(fk(web_prn_type.c_prn_type))
+  ,c_language -- 打印语言:c 中文,  e 英文, （其他可增加）
+  ,c_condition -- 该字段的值直接作为sql语句的where条件
+  ,c_prn_fmp -- 模板代码
+  ,c_vch_type -- 销号单证类型
+  ,c_avai_flag -- 是否有效:0 否,  1 是 
+  ,t_adb_tm -- 失效时间
+  ,c_crt_cde -- 创建人员
+  ,t_crt_tm -- 创建时间
+  ,c_upd_cde -- 修改人员
+  ,t_upd_tm -- 修改时间
+  ,c_trans_mrk -- 迁移标志
+  ,t_trans_tm -- 迁移时间
+  ,c_upd_cde_old -- 原修改人员
+  ,c_crt_cde_old -- 原创建人员
+  ,c_resid -- 模版节点id
+  ,t_modify_tm -- 修改时间戳
+from web_prnvch_map
+
+show create table web_prnvch_map
+
+

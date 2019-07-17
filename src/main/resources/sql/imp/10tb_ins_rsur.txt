@@ -51,4 +51,25 @@ b.c_clnt_mrk as cus_pro,-- 投保人客户类型
 '' as receipt_no,-- 作业流水号,唯一标识号
 a.c_edr_no as endorse_no-- 批单号
 from ods_cthx_web_ply_base partition(pt20190625000000) a
-left join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+	inner join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+	inner join ods_cthx_web_bas_edr_rsn   partition(pt20190625000000) c on a.c_edr_rsn_bundle_cde=c.c_rsn_cde and substr(a.c_prod_no,1,2)=c.c_kind_no
+where c.c_rsn_cde in ('08','s1','s2')
+	-- and a.t_edr_bgn_tm between and 
+/*
+*08	减少保额
+*08	减少保额或减少附加险
+45	费率调整
+55	费用比例调整
+56	征信咨询费金额调整
+70	变更一般信息
+J1	减少被保险人
+PZ	增加方案
+Z1	增加被保险人
+
+c1	全单注销
+c1	注销保单
+*s1	全单退保
+s1	未起保申请注销退保
+*s2	一般退保
+s2	退保
+*/

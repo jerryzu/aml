@@ -30,8 +30,8 @@ date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
 '' as cur_code1,-- 币种
 '' as pre_amt_all,-- 累计保费金额
 '' as usd_amt_all,-- 累计保费折合美元金额
- b.c_app_nme as app_name,-- 投保人名称
- b.c_app_cde as app_cst_no,-- 投保人客户号
+b.c_app_nme as app_name,-- 投保人名称
+b.c_app_cde as app_cst_no,-- 投保人客户号
 b.c_certf_cde as app_id_no,-- 投保人证件号码
 b.c_clnt_mrk as app_cus_pro,-- 投保人客户类型
 c.c_insured_nme as ins_name,-- 被保险人客户名称
@@ -57,7 +57,7 @@ d.c_bnfc_nme as benefit_name,-- 受益人名称
 '' as acc_bank,-- 收款账户开户机构名称
 '' as receipt_no-- 作业流水号,唯一标识号
 from ods_cthx_web_ply_base partition(pt20190625000000) a
-left join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
-left join ods_cthx_web_app_insured partition(pt20190625000000) c on a.C_APP_NO=c.C_APP_NO
-left join ods_cthx_web_ply_bnfc partition(pt20190625000000) d on  a.c_ply_no=d.c_ply_no
-
+	left join ods_cthx_web_ply_applicant partition(pt20190625000000) b on a.c_ply_no=b.c_ply_no
+	left join ods_cthx_web_app_insured partition(pt20190625000000) c on a.c_app_no=c.c_app_no
+	left join ods_cthx_web_ply_bnfc partition(pt20190625000000) d on  a.c_ply_no=d.c_ply_no
+	left join ods_cthx_web_app_grp_member partition(pt20190625000000) g
