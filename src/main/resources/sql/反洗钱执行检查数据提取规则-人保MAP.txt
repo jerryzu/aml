@@ -1,0 +1,93 @@
+biz_type: 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+
+create table ply_per_unit_sts
+as
+-- ????????????????????????????? --
+select cst_no, 'P336401001201800000001' c_ply_no, '20190719' bgn_tm, '99991231' end_tm, -1 c_clnt_mrk, 10 biz_type
+from pers_web_clm_bank
+
+union
+select concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no, b.c_ply_no
+    , date_format(t_insrnc_bgn_tm, '%Y%m%d') bgn_tm
+    , date_format(greatest(t_insrnc_bgn_tm,t_udr_tm,coalesce(t_edr_bgn_tm,t_insrnc_bgn_tm)), '%Y%m%d') end_tm
+    , a.c_clnt_mrk, 21 biz_type
+from web_ply_applicant a
+    inner join web_ply_base b on a.c_app_no = b.c_app_no
+where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+    and b.t_next_edr_bgn_tm > now()
+
+union
+select concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no, b.c_ply_no
+    , date_format(t_insrnc_bgn_tm, '%Y%m%d') bgn_tm
+    , date_format(greatest(t_insrnc_bgn_tm,t_udr_tm,coalesce(t_edr_bgn_tm,t_insrnc_bgn_tm)), '%Y%m%d') end_tm
+    , a.c_clnt_mrk, 31 biz_type
+from web_app_insured a
+    inner join web_ply_base b on a.c_app_no = b.c_app_no
+where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+    and b.t_next_edr_bgn_tm > now()
+
+union
+select concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no, b.c_ply_no
+    , date_format(t_insrnc_bgn_tm, '%Y%m%d') bgn_tm
+    , date_format(greatest(t_insrnc_bgn_tm,t_udr_tm,coalesce(t_edr_bgn_tm,t_insrnc_bgn_tm)), '%Y%m%d') end_tm
+    , a.c_clnt_mrk, 41 biz_type
+from web_ply_bnfc a
+    inner join web_ply_base b on a.c_app_no = b.c_app_no
+where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+    and b.t_next_edr_bgn_tm > now()
+
+union 
+select concat(rpad(m.c_bnfc_cert_typ, 6, '0') , rpad(m.c_bnfc_cert_no, 18, '0')) cst_no, b.c_ply_no
+    , date_format(t_insrnc_bgn_tm, '%y%m%d') bgn_tm
+    , date_format(greatest(t_insrnc_bgn_tm,b.t_udr_tm,coalesce(t_edr_bgn_tm,t_insrnc_bgn_tm)), '%y%m%d') end_tm
+    , a.c_clnt_mrk
+    , 43 biz_type
+from web_ply_applicant a
+    inner join web_ply_base b on a.c_app_no = b.c_app_no
+    inner join web_app_grp_member m on a.c_app_no = m.c_app_no
+where c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+
+union 
+select  concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0')) cst_no, b.c_ply_no
+    , date_format(t_insrnc_bgn_tm, '%Y%m%d') bgn_tm
+    , date_format(greatest(t_insrnc_bgn_tm,t_udr_tm,coalesce(t_edr_bgn_tm,t_insrnc_bgn_tm)), '%Y%m%d') end_tm
+    , a.c_clnt_mrk
+	, 22 biz_type
+from web_ply_applicant a
+    inner join web_ply_base b on a.c_app_no = b.c_app_no
+where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+
+union
+select concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no, b.c_ply_no
+    , date_format(t_insrnc_bgn_tm, '%Y%m%d') bgn_tm
+    , date_format(greatest(t_insrnc_bgn_tm,t_udr_tm,coalesce(t_edr_bgn_tm,t_insrnc_bgn_tm)), '%Y%m%d') end_tm
+    , a.c_clnt_mrk, 32 biz_type
+from web_app_insured a
+    inner join web_ply_base b on a.c_app_no = b.c_app_no
+where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+    and b.t_next_edr_bgn_tm > now()
+
+union 
+select concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no, b.c_ply_no
+    , date_format(t_insrnc_bgn_tm, '%Y%m%d') bgn_tm
+    , date_format(greatest(t_insrnc_bgn_tm,t_udr_tm,coalesce(t_edr_bgn_tm,t_insrnc_bgn_tm)), '%Y%m%d') end_tm
+    , a.c_clnt_mrk, 42 biz_type
+from web_ply_bnfc a
+    inner join web_ply_base b on a.c_app_no = b.c_app_no
+where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+    and b.t_next_edr_bgn_tm > now()
+
+union 
+select concat(rpad(m.c_bnfc_cert_typ, 6, '0') , rpad(m.c_bnfc_cert_no, 18, '0')) cst_no, b.c_ply_no
+    , date_format(t_insrnc_bgn_tm, '%y%m%d') bgn_tm
+    , date_format(greatest(t_insrnc_bgn_tm,b.t_udr_tm,coalesce(t_edr_bgn_tm,t_insrnc_bgn_tm)), '%y%m%d') end_tm
+    , a.c_clnt_mrk
+    , 44 biz_type
+from web_ply_applicant a
+    inner join web_ply_base b on a.c_app_no = b.c_app_no
+    inner join web_app_grp_member m on a.c_app_no = m.c_app_no
+where c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+
+
+
+

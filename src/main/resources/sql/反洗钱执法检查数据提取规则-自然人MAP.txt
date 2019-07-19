@@ -1,0 +1,250 @@
+/*************************************************************************************************************************************
+原始数据导入
+身份证号码正常:c_bnfc_cert_typ+c_bnfc_cert_no
+select  distinct
+    concat(rpad(c_bnfc_cert_typ, 6, '0') , rpad(c_bnfc_cert_no, 18, '0'))  cst_no -- 被保人编码  
+    ,c_bnfc_nme acc_name -- 受益人 
+    ,c_country nation  -- 国籍
+    ,c_bnfc_cert_typ  id_type -- 受益人证件类型
+    ,c_bnfc_cert_no id_no -- 受益人证件号码 
+    ,concat(c_occup_cde, '-', c_occup_sub_cde) occupation_code -- 职业代码
+    ,'' occupation   -- 职业细分
+from web_app_grp_member
+
+身份证号码正常:c_certf_cls+c_certf_cde
+select distinct
+    concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no -- 被保人编码  
+    ,c_insured_nme acc_name -- 被保人名称
+    ,c_sex cst_sex -- 性别
+    ,c_aml_country nation -- 国籍
+    ,c_certf_cls id_type -- 证件类型
+    ,c_certf_cde id_no -- 证件号码
+    ,t_certf_end_date id_deadline -- 证件有效期止
+    ,c_occup_cde occupation_code -- 职业代码  
+    ,n_income income -- 年薪
+    ,c_mobile contact1 -- 移动电话
+    ,c_tel contact2 -- 电话
+    ,c_fax contact3 -- 传真
+    ,c_clnt_addr address1 -- 地址
+    ,c_resid_addr address2 -- 居住地址
+    ,c_work_dpt_addr address3 -- 工作单位地址
+    ,c_work_dpt company -- 工作单位
+    ,c_country  -- 国家
+    ,c_aml_addr  -- 住所
+    ,c_clnt_mrk  -- 客户分类,0 法人，1 个人
+from web_app_insured
+where c_clnt_mrk = 1
+
+身份证号码正常:c_card_type+c_card_cde
+select distinct
+    concat(rpad(c_card_type, 6, '0') , rpad(c_card_cde, 18, '0')) cst_no -- 收款人编号
+    ,c_payee_nme acc_name -- 收款人名称
+    ,'' c_id_card -- 收款人身份证号
+    ,c_card_type id_type -- 证件类型
+    ,c_card_cde id_no -- 证件号码 
+    ,c_tel_no contact1-- 收款人手机号码
+from web_clm_bank		
+
+身份证号码正常:c_certf_cls+c_certf_cde
+select  distinct
+    concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no -- 投保人代码,投保人唯一客户代码
+ ,c_app_nme acc_name -- 投保人名称
+ ,c_sex cst_sex -- 性别
+ ,c_aml_country nation -- 国籍
+ ,c_certf_cls id_type -- 证件类型
+ ,c_certf_cde id_no -- 证件号码
+ ,t_certf_end_date id_deadline -- 证件有效期止
+ ,c_occup_cde occupation_code -- 职业代码
+ ,c_mobile occupation -- 移动电话
+ ,c_tel contact1 -- 固定电话,电话
+ ,c_clnt_addr address1 -- 地址
+ ,c_work_dpt company -- 工作单位
+from web_ply_applicant
+where c_clnt_mrk = 1
+
+身份证号码正常:c_certf_cls+c_certf_cde
+select distinct
+    concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no-- 受益人代码,受益人唯一客户代码
+ ,c_bnfc_nme acc_name -- 受益人名称
+ ,c_sex  cst_sex -- 性别
+ ,c_country nation -- 国家
+ ,c_certf_cls  id_type -- 证件类型
+ ,c_certf_cde id_no --  证件号码
+ ,c_tel  contact1 -- 固定电话
+ ,c_mobile  contact2 -- 移动电话
+from web_ply_bnfc
+where c_clnt_mrk = 1
+and 财产险不取
+
+取自然人唯一信息
+biz_type: 1: 收款人, 2: 投保人, 3:被保人, 8: 团单受益人, 7: 个单受益人
+
+select 
+    ifnull(substring_index(company_code1,',',1),'@N') company_code1
+    ,ifnull(substring_index(company_code2,',',1),'@N') company_code2
+    ,ifnull(substring_index(cst_no,',',1),'@N') cst_no
+    ,ifnull(substring_index(open_time,',',1),'@N') open_time
+    ,ifnull(substring_index(close_time,',',1),'@N') close_time --没有投保,被保,时提供(另有受益,领款人填写@N)
+    ,ifnull(substring_index(acc_name,',',1),'@N') acc_name
+    ,ifnull(substring_index(cst_sex,',',1),'@N') cst_sex
+    ,ifnull(substring_index(nation,',',1),'@N') nation
+    ,ifnull(substring_index(id_type,',',1),'@N') id_type
+    ,ifnull(substring_index(id_no,',',1),'@N') id_no
+    ,ifnull(substring_index(id_deadline,',',1),'@N') id_deadline
+    ,ifnull(substring_index(occupation_code,',',1),'@N') occupation_code
+    ,ifnull(substring_index(occupation,',',1),'@N') occupation
+    ,ifnull(substring_index(income,',',1),'-9999') income
+    ,ifnull(substring_index(contact1,',',1),'@N') contact1
+    ,ifnull(substring_index(contact2,',',1),'@N') contact2
+    ,ifnull(substring_index(contact3,',',1),'@N') contact3
+    ,ifnull(substring_index(address1,',',1),'@N') address1
+    ,ifnull(substring_index(address2,',',1),'@N') address2
+    ,ifnull(substring_index(address3,',',1),'@N') address3
+    ,ifnull(substring_index(company,',',1),'@N') company
+from (
+	select     
+	    group_concat(company_code1 order by biz_type)  company_code1
+	    , group_concat(company_code2 order by biz_type)  company_code2
+	    , group_concat(cst_no order by biz_type)  cst_no
+	    , group_concat(open_time order by biz_type)  open_time
+	    , group_concat(close_time order by biz_type)  close_time
+	    , group_concat(acc_name order by biz_type)  acc_name
+	    , group_concat(cst_sex order by biz_type)  cst_sex
+	    , group_concat(nation order by biz_type)  nation
+	    , group_concat(id_type order by biz_type)  id_type
+	    , group_concat(id_no order by id_no)  id_no
+	    , group_concat(id_deadline order by biz_type)  id_deadline
+	    , group_concat(occupation_code order by biz_type)  occupation_code
+	    , group_concat(occupation order by biz_type)  occupation
+	    , group_concat(income order by biz_type)  income
+	    , group_concat(contact1 order by biz_type)  contact1
+	    , group_concat(contact2 order by biz_type)  contact2
+	    , group_concat(contact3 order by biz_type)  contact3
+	    , group_concat(address1 order by biz_type)  address1
+	    , group_concat(address2 order by biz_type)  address2
+	    , group_concat(address3 order by biz_type)  address3
+	    , group_concat(company order by biz_type)  company
+	from (
+		select 8 biz_type
+		    ,null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,null cst_sex
+		    ,nation nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,null id_deadline
+		    ,occupation_code occupation_code
+		    ,occupation occupation
+		    ,null income
+		    ,null contact1
+		    ,null contact2
+		    ,null contact3
+		    ,null address1
+		    ,null address2
+		    ,null address3
+		    ,null company
+		FROM pers_web_app_grp_member
+		union 
+		SELECT 3 biz_type
+		    ,null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,cst_sex cst_sex
+		    ,nation nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,id_deadline id_deadline
+		    ,occupation_code occupation_code
+		    ,null occupation
+		    ,income income
+		    ,contact1 contact1
+		    ,contact2 contact2
+		    ,contact3 contact3
+		    ,address1 address1
+		    ,address2 address2
+		    ,address3 address3
+		    ,company company
+		FROM pers_web_app_insured
+		union 
+		SELECT 1 biz_type
+		    ,null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,null cst_sex
+		    ,null nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,null id_deadline
+		    ,null occupation_code
+		    ,null occupation
+		    ,null income
+		    ,contact1 contact1
+		    ,null contact2
+		    ,null contact3
+		    ,null address1
+		    ,null address2
+		    ,null address3
+		    ,null company
+		FROM pers_web_clm_bank
+		union
+		SELECT 2 biz_type
+		    ,null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,cst_sex cst_sex
+		    ,nation nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,id_deadline id_deadline
+		    ,occupation_code occupation_code
+		    ,occupation occupation
+		    ,null income
+		    ,contact1 contact1
+		    ,null contact2
+		    ,null contact3
+		    ,address1 address1
+		    ,null address2
+		    ,null address3
+		    ,company company
+		FROM pers_web_ply_applicant
+		union
+		SELECT 7 biz_type
+		    ,null company_code1
+		    ,null company_code2
+		    ,cst_no cst_no
+		    ,null open_time
+		    ,null close_time
+		    ,acc_name acc_name
+		    ,cst_sex cst_sex
+		    ,nation nation
+		    ,id_type id_type
+		    ,id_no id_no
+		    ,null id_deadline
+		    ,null occupation_code
+		    ,null occupation
+		    ,null income
+		    ,contact1 contact1
+		    ,contact2 contact2
+		    ,null contact3
+		    ,null address1
+		    ,null address2
+		    ,null address3
+		    ,null company
+		FROM pers_web_ply_bnfc
+	) vw
+	group by cst_no
+) vw
+*************************************************************************************************************************************/

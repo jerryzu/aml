@@ -1,0 +1,199 @@
+保险金额的数据来源
+select
+	c_app_no ,
+	c_app_typ,
+	n_edr_prj_no ,
+	c_prod_no ,
+	c_edr_no ,
+	c_dpt_cde ,
+	c_ply_no,
+	c_prod_no,
+	n_amt,
+	n_amt_var,
+	n_prm,
+	n_prm_var,
+	t_insrnc_bgn_tm,
+	t_udr_tm,
+	t_edr_bgn_tm,
+	c_grp_mrk,
+	t_next_edr_bgn_tm,
+	t_next_edr_end_tm,
+	t_next_edr_udr_tm,
+	greatest(t_insrnc_bgn_tm,t_udr_tm,nvl(t_edr_bgn_tm,t_insrnc_bgn_tm)) as t_inure_tm --'生效时间
+from
+	web_ply_base a
+where
+	c_ply_no = 'P336401001201800000010'
+
+签单保费: 
+c_tran_flag:1,3
+or 
+c_con_dpt_cde = c_main_con_cde
+
+批增,批减
+c_tran_flag:1,3
+or 
+c_con_dpt_cde = c_main_con_cde
+
+select  
+	a.c_tran_flag -- 1, 3 业务单据标识 (自营，共保)',
+	, a.n_price_amt --大于零批增,小于零批减 签单保费
+	, a.c_con_dpt_cde -- 共保人
+	, a.c_main_con_cde  -- 主共保人
+	,a.C_EDR_NO<>'*' --批单号
+	,C_GRP_MRK -- 团队标志 0：个单  1：团单',
+from web_fin_prm_due a
+
+
+select sum(nvl(a.n_amt_var_yuan, 0))  -- 保险金额 
+from rpt_plyedr a  
+where a.T_INURE_TM >= to_date('V_S', 'YYYYMMDD hh24:mi:ss')    
+	and a.T_INURE_TM <= to_date('V_E', 'YYYYMMDD hh24:mi:ss') V_DPT
+
+
+
+已决赔款
+select t_rpt_tm -- 报案时间 end 
+	a.t_chkclm_tm -- start, end t_vc_tm -- '核赔时间'	
+web_clm_main
+
+select t_pend_tm -- 未决调整时间 < end
+	,n_pend_tms -- 未决调整次数
+	,c_case_no
+	,c_clm_no
+	,n_dtmd_amt --   当前最新总己决：所有任务在各自最新状态下的己决之和
+	,n_fee_dtmd_amt --   当前最新费用总己决：所有任务在各自最新状态下的费用己决之和
+web_clm_pend
+
+
+保单样例 
+个单,自然人
+-- 0. 个单, : P336401001201800000010
+select c_grp_mrk, c_app_no, c_ply_no, n_edr_prj_no
+from web_ply_base
+where c_ply_no = 'P336401001201800000010'
+
+select *
+from web_ply_applicant
+where c_ply_no = 'P336401001201800000010'
+
+select c_clnt_mrk --1: 自然人
+from web_app_insured
+where c_app_no in(select c_app_no from web_ply_applicant where c_ply_no = 'P336401001201800000010')
+
+select *
+from web_app_bnfc
+where c_app_no in(select c_app_no from web_ply_applicant where c_ply_no = 'P336401001201800000010')
+
+select table_schema, table_name, column_name, column_comment from information_schema.columns where column_name like '%c_clnt_mrk%'
+
+select *
+from web_ply_base
+where n_edr_prj_no > 0
+and c_grp_mrk = 0
+and c_ply_no in (
+select c_ply_no
+from web_ply_applicant
+where c_app_no in (select c_app_no from web_app_bnfc) -- none
+-- where c_app_no in (select c_app_no from web_app_bnfc group by c_app_no having count(1) > 1) --none
+and c_clnt_mrk = 0)
+
+-- 0. 个单,法人 : P336401001201800000010
+select c_grp_mrk, c_app_no, c_ply_no, n_edr_prj_no
+from web_ply_base
+where c_ply_no = 'P997306019201900000009'
+
+select *
+from web_ply_applicant
+where c_ply_no = 'P997306019201900000009'
+
+select * -- 0: 法人
+from web_app_insured
+where c_app_no in(select c_app_no from web_ply_applicant where c_ply_no = 'P997306019201900000009')
+
+select *
+from web_app_bnfc
+where c_app_no in(select c_app_no from web_ply_applicant where c_ply_no = 'P997306019201900000009')
+
+
+select c_app_no -- 0: 法人
+from web_app_insured
+group by c_app_no
+having count(1) > 1
+
+select c_app_no,count(1) -- 0: 法人
+from web_app_bnfc
+group by c_app_no
+having count(1) > 1
+
+-------------------------------------------------------------------------
+团单,法人
+
+select *
+from web_ply_base
+where 1 = 1
+    -- n_edr_prj_no > 0
+    and c_grp_mrk = 1 --
+    and c_ply_no in (select c_ply_no from web_ply_applicant 
+        where c_clnt_mrk = 0 
+            and c_app_no in (select c_app_no from web_app_grp_member) -- none
+            and c_app_no in (select c_app_no from web_app_insured group by c_app_no having count(1) > 1)
+    -- where c_app_no in (select c_app_no from web_app_bnfc group by c_app_no having count(1) > 1) --none
+    )
+
+-- 1. 团单,0: 法人 : P997306002201800000002
+select c_grp_mrk, c_app_no, c_ply_no, n_edr_prj_no
+from web_ply_base
+where c_ply_no = 'P997306002201800000002'
+
+select *
+from web_ply_applicant
+where c_ply_no = 'P997306002201800000002'
+
+---没有被保险人
+select * -- 0: 法人 -- NONE
+from web_app_insured
+where c_app_no in(select c_app_no from web_ply_applicant where c_ply_no = 'P997306002201800000002')
+
+-- 团单受益人
+select *
+from web_app_grp_member
+where c_app_no in(select c_app_no from web_ply_applicant where c_ply_no = 'P997306002201800000002')
+/*
+T997306002201800000002
+T997306002201800000003
+T997306002201800000004
+T997306002201800000005
+*/
+
+------------------------------------------------------------------------------------
+??????团单没有用被保险人web_app_insured
+-- 1. 团单,1: 自然人 : P997306002201900000010
+select c_grp_mrk, c_app_no, c_ply_no, n_edr_prj_no
+from web_ply_base
+where c_ply_no = 'P997306002201900000010'
+
+select *
+from web_ply_applicant
+where c_ply_no = 'P997306002201900000010'
+
+select * -- 0: 法人 -- NONE
+from web_app_insured
+where c_app_no in(select c_app_no from web_ply_applicant where c_ply_no = 'P997306002201900000010')
+
+-- 团单受益人
+select *
+from web_app_grp_member
+where c_app_no in(select c_app_no from web_ply_applicant where c_ply_no = 'P997306002201900000010')
+/*
+T997306002201900000026
+T997306002201900000027
+T997306002201900000028
+T997306002201900000029
+T997306002201900000030
+T997306002201900000031
+T997306002201900000033
+T997306002201900000034
+*/
+
+

@@ -247,7 +247,113 @@ create table `ods_cthx_web_ply_base` (
 ) engine=innodb default charset=utf8 comment='保批单基本信息'
 /*!50500 partition by range  columns(pt)
 
+/*************************RPT_CLM_MAIN*********************************************
+select 
+    a.t_crt_tm -- '创建时间'
+    ,a.t_upd_tm -- '修改时间'
+    ,a.c_ply_no -- '保单号'
+    ,a.c_clm_no -- '赔案号'
+    ,a.t_rpt_tm -- '报案时间'
+    ,a.c_dpt_cde -- '机构编码'
+    ,a.c_dpt_cde c_inter_cde -- '机构内部码'
+    ,c.c_kind_no -- '险种大类'
+    ,a.c_prod_no -- '险种编码'
+    ,a.n_edr_prj_no -- '批改序号'
+    ,a.c_agri_mrk -- '涉农标志：1涉农、2非涉农、3农险'
+    ,a.c_app_no -- '投保申请单号'
+    ,a.c_cnl_mrk -- '撤销案标志（“1” 的时候为销案 ，“0”的时候为撤案）'
+    ,a.t_chkclm_tm t_vc_tm -- '核赔时间'
+    ,a.t_rgst_tm t_clm_rgst_tm -- '立案时间'
+    ,a.t_end_clm_tm t_cls_tm -- '结案时间'
+    ,b.c_grp_mrk -- '团单标志(''0''个单''1''团单) group insurance flag'
+    ,a.c_gup_mrk -- '注销标志：0否、1是'
+    ,a.c_rfu_mrk c_lotusviolet_mrk -- '拒赔'
+    ,a.c_duty_typ -- '事故责任：1全责、2主责、3同责、4次责、5无责、9无法判定'
+    ,a.c_agri_mrk c_tgt_txt_fld_3 -- '农险属性'
+    ,a.c_rpt_no -- '报案号'
+    ,a.t_gup_tm -- '注销时间'
+    ,a.t_acdnt_tm -- '出险时间'
+from web_clm_main a
+  left join web_ply_base b on a.c_ply_no = b.c_ply_no
+  left join web_prd_prod c on a.c_prod_no = c.c_prod_no
 
+-----------------------------------------------------------------------------------------------------
+SELECT
+    t_crt_tm --'创建时间';
+    ,    t_upd_tm --'修改时间';
+    ,    c_ply_no --'保单号';
+    ,    c_edr_no --'批单号';
+    ,    c_dpt_cde --'机构编码';
+    ,    c_dpt_cde c_inter_cde --'机构内码';
+    ,    c.c_kind_no --'险种大类';
+    ,    c.c_prod_no --'险种编码';
+    ,    NVL(c_edr_type,0) AS c_edr_type --'批改类型';
+    ,    t_insrnc_bgn_tm --'保险起期';
+    ,    t_insrnc_end_tm --'保险止期';
+    ,    t_app_tm --'投保时间';
+    ,    T_ISSUE_TM AS t_sign_tm --'签单日期';
+    ,    t_udr_tm --'核保日期';
+    ,    n_edr_prj_no --'批改次数';
+    ,    n_amt --'保险金额';
+    ,    n_amt AS n_amt_yuan --'保险金额(折合人民币)';
+    ,    CASE
+        WHEN c_app_typ = 'E'
+        THEN n_amt_var
+        ELSE n_amt
+    END AS n_amt_var --'保险金额(保单为保险金额，批单为保险金额变化值)';
+    ,    CASE
+        WHEN c_app_typ = 'E'
+        THEN n_amt_var
+        ELSE n_amt
+    END AS n_amt_var_yuan --'保险金额折合人民币(保单为保险金额折合人民币，批单为保险金额变化值折合人民币)';
+    ,    n_prm --'保费';
+    ,    n_prm AS n_prm_yuan --'保费(折合人民币)';
+    ,    n_prm_var --'保费(保单为保费，批单为保费变化值)';
+    ,    CASE
+        WHEN c_app_typ = 'E'
+        THEN n_prm_var
+        ELSE n_prm
+    END AS n_prm_var_yuan --'保费折合人民币(保单为保费折合人民币，批单为保费变化值折合人民币)';
+    ,    N_INDEM_LMT n_clm_lmt_sum --'赔偿限额';
+    ,    c_udr_cde --'核保人';
+    ,    n_price --'不含税保费';
+    ,    n_price_var --'不含税保费变化';
+    ,    c_app_no --'申请单号';
+    ,    t_edr_bgn_tm --'批改生效起期';
+    ,    t_edr_end_tm --'批改生效止期';
+    ,    t_edr_app_tm --'批改申请日期';
+    ,    c_app_typ --'''A'' 投保单,''E''批改申请单,''Q''报价单,''O''开口保单';
+    ,    c_cha_subtype c_bsns_typ --'业务来源';
+    ,    c_cha_type --'渠道中级分类';
+    ,    c_cha_subtype --'渠道子类';
+    ,    C_CI_TYP AS c_coninsrnc_cde --'共保方式,"0"=非共保业务,"1"=内部共保（我方主共）,"2"=内部共保（我方从共）,"3"=外部共保（我方主共）,"4"=    -- 外部共保（我方从共）';
+    ,    c_grp_mrk --'团单标志(''0''个单;''1''团单) Group Insurance Flag';
+    ,    CASE
+        WHEN c_app_typ = 'E'
+        THEN 0
+        ELSE C_CLNT_CDE_num
+    END n_tgt_num_fld_8 --'承保人次';
+    ,    c_agri_mrk --'涉农标志(1:涉农，2：非涉农，3：农险)';
+    ,    n_vat --'增值税';
+    ,    n_vat_var --'增值税变化';
+    ,    greatest(T_INSRNC_BGN_TM,T_UDR_TM,NVL(T_EDR_BGN_TM,T_INSRNC_BGN_TM)) AS t_inure_tm --'生效时间
+    -- (财务挂帐时间)'
+FROM
+    web_ply_base a
+LEFT JOIN
+    (
+        SELECT
+            c_app_no                   c_app_no1,
+            COUNT(DISTINCT C_CLNT_CDE) C_CLNT_CDE_num
+        FROM
+            WEB_APP_GRP_MEMBER
+        GROUP BY
+            c_app_no) b
+ON
+    a.c_app_no=b.c_app_no1
+LEFT JOIN web_prd_prod c ON a.c_prod_no=c.c_prod_no
+
+**********************************************************************************/
 
 财险无需提取受益人信息,寿险业务无需提取保险标的信息,所有字段均为必填,如果系统末采集某数据项目内容字符型数据项用"@N"替代,数值型数据项用"-9999",金额值默认单位为元
 1.tb_compnay:机构对照表
@@ -490,174 +596,3 @@ select ordinal_position, column_name, column_comment from information_schema.col
 
 --
 select * from information_schema.columns where table_name like 'web_ply_bnfc' order by column_name, table_schema
-
-/*************************************************************************************************************************************
-select 
-    ifnull(substring_index(company_code1,',',1),'@N') company_code1
-    ,ifnull(substring_index(company_code2,',',1),'@N') company_code2
-    ,ifnull(substring_index(cst_no,',',1),'@N') cst_no
-    ,ifnull(substring_index(open_time,',',1),'@N') open_time
-    ,ifnull(substring_index(close_time,',',1),'@N') close_time
-    ,ifnull(substring_index(acc_name,',',1),'@N') acc_name
-    ,ifnull(substring_index(cst_sex,',',1),'@N') cst_sex
-    ,ifnull(substring_index(nation,',',1),'@N') nation
-    ,ifnull(substring_index(id_type,',',1),'@N') id_type
-    ,ifnull(substring_index(id_no,',',1),'@N') id_no
-    ,ifnull(substring_index(id_deadline,',',1),'@N') id_deadline
-    ,ifnull(substring_index(occupation_code,',',1),'@N') occupation_code
-    ,ifnull(substring_index(occupation,',',1),'@N') occupation
-    ,ifnull(substring_index(income,',',1),'-9999') income
-    ,ifnull(substring_index(contact1,',',1),'@N') contact1
-    ,ifnull(substring_index(contact2,',',1),'@N') contact2
-    ,ifnull(substring_index(contact3,',',1),'@N') contact3
-    ,ifnull(substring_index(address1,',',1),'@N') address1
-    ,ifnull(substring_index(address2,',',1),'@N') address2
-    ,ifnull(substring_index(address3,',',1),'@N') address3
-    ,ifnull(substring_index(company,',',1),'@N') company
-from (
-	select     
-	    group_concat(company_code1 order by id_type, id_no)  company_code1
-	    , group_concat(company_code2 order by id_type, id_no)  company_code2
-	    , group_concat(cst_no order by id_type, id_no)  cst_no
-	    , group_concat(open_time order by id_type, id_no)  open_time
-	    , group_concat(close_time order by id_type, id_no)  close_time
-	    , group_concat(acc_name order by id_type, id_no)  acc_name
-	    , group_concat(cst_sex order by id_type, id_no)  cst_sex
-	    , group_concat(nation order by id_type, id_no)  nation
-	    ,id_type
-	    ,id_no
-	    , group_concat(id_deadline order by id_type, id_no)  id_deadline
-	    , group_concat(occupation_code order by id_type, id_no)  occupation_code
-	    , group_concat(occupation order by id_type, id_no)  occupation
-	    , group_concat(income order by id_type, id_no)  income
-	    , group_concat(contact1 order by id_type, id_no)  contact1
-	    , group_concat(contact2 order by id_type, id_no)  contact2
-	    , group_concat(contact3 order by id_type, id_no)  contact3
-	    , group_concat(address1 order by id_type, id_no)  address1
-	    , group_concat(address2 order by id_type, id_no)  address2
-	    , group_concat(address3 order by id_type, id_no)  address3
-	    , group_concat(company order by id_type, id_no)  company
-	from (
-		select 
-		    null company_code1
-		    ,null company_code2
-		    ,cst_no cst_no
-		    ,null open_time
-		    ,null close_time
-		    ,acc_name acc_name
-		    ,null cst_sex
-		    ,nation nation
-		    ,id_type id_type
-		    ,id_no id_no
-		    ,null id_deadline
-		    ,occupation_code occupation_code
-		    ,occupation occupation
-		    ,null income
-		    ,null contact1
-		    ,null contact2
-		    ,null contact3
-		    ,null address1
-		    ,null address2
-		    ,null address3
-		    ,null company
-		FROM pers_web_app_grp_member
-		union 
-		SELECT 
-		    null company_code1
-		    ,null company_code2
-		    ,cst_no cst_no
-		    ,null open_time
-		    ,null close_time
-		    ,acc_name acc_name
-		    ,cst_sex cst_sex
-		    ,nation nation
-		    ,id_type id_type
-		    ,id_no id_no
-		    ,id_deadline id_deadline
-		    ,occupation_code occupation_code
-		    ,null occupation
-		    ,income income
-		    ,contact1 contact1
-		    ,contact2 contact2
-		    ,contact3 contact3
-		    ,address1 address1
-		    ,address2 address2
-		    ,address3 address3
-		    ,company company
-		FROM pers_web_app_insured
-		union 
-		SELECT 
-		    null company_code1
-		    ,null company_code2
-		    ,cst_no cst_no
-		    ,null open_time
-		    ,null close_time
-		    ,acc_name acc_name
-		    ,null cst_sex
-		    ,null nation
-		    ,id_type id_type
-		    ,id_no id_no
-		    ,null id_deadline
-		    ,null occupation_code
-		    ,null occupation
-		    ,null income
-		    ,contact1 contact1
-		    ,null contact2
-		    ,null contact3
-		    ,null address1
-		    ,null address2
-		    ,null address3
-		    ,null company
-		FROM pers_web_clm_bank
-		union
-		SELECT 
-		    null company_code1
-		    ,null company_code2
-		    ,cst_no cst_no
-		    ,null open_time
-		    ,null close_time
-		    ,acc_name acc_name
-		    ,cst_sex cst_sex
-		    ,nation nation
-		    ,id_type id_type
-		    ,id_no id_no
-		    ,id_deadline id_deadline
-		    ,occupation_code occupation_code
-		    ,occupation occupation
-		    ,null income
-		    ,contact1 contact1
-		    ,null contact2
-		    ,null contact3
-		    ,address1 address1
-		    ,null address2
-		    ,null address3
-		    ,company company
-		FROM pers_web_ply_applicant
-		union
-		SELECT 
-		    null company_code1
-		    ,null company_code2
-		    ,cst_no cst_no
-		    ,null open_time
-		    ,null close_time
-		    ,acc_name acc_name
-		    ,cst_sex cst_sex
-		    ,nation nation
-		    ,id_type id_type
-		    ,id_no id_no
-		    ,null id_deadline
-		    ,null occupation_code
-		    ,null occupation
-		    ,null income
-		    ,contact1 contact1
-		    ,contact2 contact2
-		    ,null contact3
-		    ,null address1
-		    ,null address2
-		    ,null address3
-		    ,null company
-		FROM pers_web_ply_bnfc
-	) vw
-	group by id_type, id_no
-) vw
-*************************************************************************************************************************************/
