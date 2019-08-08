@@ -68,9 +68,7 @@ from ods_cthx_web_ply_base partition(pt20190714000000) a
 	 inner join ods_cthx_web_app_insured partition(pt20190714000000) c on a.c_app_no=c.c_app_no
      inner join ods_cthx_web_ply_bnfc partition(pt20190714000000) d on  a.c_ply_no=d.c_ply_no -- 多个受益人相应生成多条记录
 	 inner join ods_cthx_web_fin_clm_due partition(pt20190714000000) u on a.c_ply_no = u.c_ply_no and u.c_feetyp_cde ='CPPK'
-	 
-	 -- inner join ods_cthx_web_clm_rpt partition(pt20190714000000) e on g.c_clm_no=e.c_clm_no
-	 -- inner join ods_cthx_web_clm_bank partition(pt20190714000000) g on a.c_ply_no=g.c_rpt_no
-	 
+	 inner join ods_cthx_web_clm_bank partition(pt20190714000000) g on u.c_clm_no=g.c_clm_no
+	 inner join ods_cthx_web_clm_rpt partition(pt20190714000000) e on g.c_clm_no=e.c_clm_no
 where a.c_ply_no = 'P997304805201700000002'
--- where u.t_paid_tm between and 
+-- where u.t_paid_tm between and

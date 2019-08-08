@@ -87,7 +87,3 @@ from web_ply_applicant a
     inner join web_ply_base b on a.c_app_no = b.c_app_no
     inner join web_app_grp_member m on a.c_app_no = m.c_app_no
 where c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
-
-
-
-

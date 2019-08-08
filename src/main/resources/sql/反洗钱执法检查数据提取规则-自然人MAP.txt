@@ -48,34 +48,37 @@ from web_clm_bank
 身份证号码正常:c_certf_cls+c_certf_cde
 select  distinct
     concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no -- 投保人代码,投保人唯一客户代码
- ,c_app_nme acc_name -- 投保人名称
- ,c_sex cst_sex -- 性别
- ,c_aml_country nation -- 国籍
- ,c_certf_cls id_type -- 证件类型
- ,c_certf_cde id_no -- 证件号码
- ,t_certf_end_date id_deadline -- 证件有效期止
- ,c_occup_cde occupation_code -- 职业代码
- ,c_mobile occupation -- 移动电话
- ,c_tel contact1 -- 固定电话,电话
- ,c_clnt_addr address1 -- 地址
- ,c_work_dpt company -- 工作单位
+	,c_app_nme acc_name -- 投保人名称
+	,c_sex cst_sex -- 性别
+	,c_aml_country nation -- 国籍
+	,c_certf_cls id_type -- 证件类型
+	,c_certf_cde id_no -- 证件号码
+	,t_certf_end_date id_deadline -- 证件有效期止
+	,c_occup_cde occupation_code -- 职业代码
+	,c_mobile occupation -- 移动电话
+	,c_tel contact1 -- 固定电话,电话
+	,c_clnt_addr address1 -- 地址
+	,c_work_dpt company -- 工作单位
 from web_ply_applicant
 where c_clnt_mrk = 1
 
 身份证号码正常:c_certf_cls+c_certf_cde
 select distinct
     concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) cst_no-- 受益人代码,受益人唯一客户代码
- ,c_bnfc_nme acc_name -- 受益人名称
- ,c_sex  cst_sex -- 性别
- ,c_country nation -- 国家
- ,c_certf_cls  id_type -- 证件类型
- ,c_certf_cde id_no --  证件号码
- ,c_tel  contact1 -- 固定电话
- ,c_mobile  contact2 -- 移动电话
+	,c_bnfc_nme acc_name -- 受益人名称
+	,c_sex  cst_sex -- 性别
+	,c_country nation -- 国家
+	,c_certf_cls  id_type -- 证件类型
+	,c_certf_cde id_no --  证件号码
+	,c_tel  contact1 -- 固定电话
+	,c_mobile  contact2 -- 移动电话
 from web_ply_bnfc
 where c_clnt_mrk = 1
-and 财产险不取
+-- and 财产险不取
 
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------
 取自然人唯一信息
 biz_type: 1: 收款人, 2: 投保人, 3:被保人, 8: 团单受益人, 7: 个单受益人
 
