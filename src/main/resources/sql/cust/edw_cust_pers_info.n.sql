@@ -1,6 +1,6 @@
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=10240;
-alter table edw_cust_pers_info truncate partition pt{lastday}000000;
+alter table edw_cust_pers_info truncate partition pt20190808000000;
 
 INSERT INTO edw_cust_pers_info(
     c_dpt_cde,
@@ -42,7 +42,7 @@ select
     ,substring_index(c_mobile,',',1) c_mobile
     ,substring_index(c_clnt_addr,',',1) c_clnt_addr
     ,substring_index(c_work_dpt,',',1) c_work_dpt
-    ,'{lastday}' pt
+    ,'20190808' pt
 from (
 	select     
 	    group_concat(c_dpt_cde order by biz_type)  c_dpt_cde
@@ -79,9 +79,9 @@ from (
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
 		    ,null biz_type
-		from ods_cthx_web_app_grp_member  partition(pt{lastday}000000)  a
-            inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
-            -- inner join ods_cthx_web_ply_bnfc partition(pt{lastday}000000) bn  on bn.c_app_no = b.c_app_no
+		from ods_cthx_web_app_grp_member  partition(pt20190808000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
+            -- inner join ods_cthx_web_ply_bnfc partition(pt20190808000000) bn  on bn.c_app_no = b.c_app_no
 		-- where bn.c_clnt_mrk = 1
 		union 
 		select b.c_dpt_cde c_dpt_cde
@@ -101,8 +101,8 @@ from (
 		    ,c_clnt_addr -- 地址
 		    ,c_work_dpt -- 工作单位
 		    ,null biz_type
-		from ods_cthx_web_app_insured  partition(pt{lastday}000000)  a
-            inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
+		from ods_cthx_web_app_insured  partition(pt20190808000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1
 		union
 		select b.c_dpt_cde c_dpt_cde
@@ -122,9 +122,9 @@ from (
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
 		    ,null biz_type
-		from ods_cthx_web_clm_bank  partition(pt{lastday}000000)  a
-		    inner join ods_cthx_web_clm_main partition(pt{lastday}000000) c on a.c_clm_no = c.c_clm_no
-            inner join ods_cthx_web_ply_base  partition(pt{lastday}000000) b on c.c_ply_no = b.c_ply_no
+		from ods_cthx_web_clm_bank  partition(pt20190808000000)  a
+		    inner join ods_cthx_web_clm_main partition(pt20190808000000) c on a.c_clm_no = c.c_clm_no
+            inner join ods_cthx_web_ply_base  partition(pt20190808000000) b on c.c_ply_no = b.c_ply_no
 		union 
 		select b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no -- 投保人代码,投保人唯一客户代码
@@ -143,8 +143,8 @@ from (
 		    ,c_clnt_addr c_clnt_addr -- 地址
 		    ,c_work_dpt  -- 工作单位
 		    ,null biz_type
-		from ods_cthx_web_ply_applicant  partition(pt{lastday}000000)  a
-            inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
+		from ods_cthx_web_ply_applicant  partition(pt20190808000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1
 		union
 		select b.c_dpt_cde c_dpt_cde
@@ -164,8 +164,8 @@ from (
 		    ,null  c_clnt_addr -- 地址
 		    ,null c_work_dpt  -- 工作单位
 		    ,null biz_type
-		from ods_cthx_web_ply_bnfc  partition(pt{lastday}000000)  a
-            inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
+		from ods_cthx_web_ply_bnfc  partition(pt20190808000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1
 		) vw
 	group by c_cst_no

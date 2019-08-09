@@ -1,0 +1,56 @@
+select count(1) 
+from (
+    select c_cst_no  from edw_cust_pers_info
+    union all
+    select c_cst_no from edw_cust_units_info
+) v
+union all
+select count(1)
+from (
+    select distinct c_cst_no from edw_cust_ply_party
+) v
+
+
+select count(1)  from edw_cust_pers_info;
+
+select count(distinct c_certf_cde), count(1) from 		 ods_cthx_web_ply_applicant  partition(pt20190808000000)  a -- 663
+select count(distinct c_certf_cde), count(1) from 		 ods_cthx_web_app_insured  partition(pt20190808000000)  a -- 665
+select count(distinct c_certf_cde), count(1) from 		 ods_cthx_web_ply_bnfc  partition(pt20190808000000)  a -- 51
+
+select count(distinct c_card_cde), count(1) 		from ods_cthx_web_clm_bank  partition(pt20190808000000)  a
+		    inner join ods_cthx_web_clm_main partition(pt20190808000000) c on a.c_clm_no = c.c_clm_no
+            inner join ods_cthx_web_ply_base  partition(pt20190808000000) b on c.c_ply_no = b.c_ply_no -- 475
+
+
+select count(distinct c_bnfc_cert_no), count(1) from 		 ods_cthx_web_app_grp_member  partition(pt20190808000000)  a 
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no -- 2103
+            
+-------------
+select count(1)
+from edw_cust_pers_info a inner join 
+ ods_cthx_web_ply_applicant  partition(pt20190808000000)  a
+ 
+select c_sex
+from ods_cthx_web_ply_applicant  partition(pt20190808000000)  a
+where c_certf_cde = '12345678'
+ 
+select c_sex
+from ods_cthx_web_app_insured  partition(pt20190808000000)  a
+where c_certf_cde = '12345678'
+
+------------------------------------------------------------------------
+select count(1), count(distinct c_certf_cde) -- 3087
+from (
+select c_certf_cde from 		 ods_cthx_web_ply_applicant  partition(pt20190808000000)  a -- 663
+union all
+select c_certf_cde from 		 ods_cthx_web_app_insured  partition(pt20190808000000)  a -- 665
+union all
+select c_certf_cde from 		 ods_cthx_web_ply_bnfc  partition(pt20190808000000)  a -- 51
+union all
+select c_card_cde from ods_cthx_web_clm_bank  partition(pt20190808000000)  a
+		    inner join ods_cthx_web_clm_main partition(pt20190808000000) c on a.c_clm_no = c.c_clm_no
+            inner join ods_cthx_web_ply_base  partition(pt20190808000000) b on c.c_ply_no = b.c_ply_no -- 475
+union all
+select c_bnfc_cert_no from 		 ods_cthx_web_app_grp_member  partition(pt20190808000000)  a 
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no -- 2103
+) vw

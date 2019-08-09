@@ -1,6 +1,6 @@
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=10240;
-
+alter table edw_cust_units_info truncate partition pt20190808000000;
 insert into edw_cust_units_info(
     c_dpt_cde,
     c_cst_no,
@@ -61,9 +61,14 @@ select
 from (
 	select     
 	    group_concat(c_dpt_cde order by biz_type)  c_dpt_cde
-	    ,c_cst_no -- ,group_concat(c_cst_no order by biz_type)  c_cst_no
+
+        -- 1.个人(1),团体(2)	2.身份证类型	3.身份证号	4.序列号(忽略)	5.校验位(1位)
+        -- c_cst_no已经处理了2. 3. 4.暂时忽略, 这里只需要处理1.5.
+        -- 开始(1)标识为个人
+        -- c_cst_no已经编码由身份证类型6位,身份证号码18位组成,这里校验码取倒数第7位至倒数第2位与9取MOD
+        ,concat('2', c_cst_no, mod(substr(c_cst_no, -7, 6), 9)) c_cst_no
 	    ,min(t_open_time)  t_open_time
-	    ,max(t_close_time)  t_close_time
+	    ,max(ifnull(t_close_time,adddate('9999-12-31',0)))  t_close_time
 	    ,group_concat(c_acc_name order by biz_type)  c_acc_name
 	    ,group_concat(c_clnt_addr order by biz_type)  c_clnt_addr
 	    ,group_concat(c_manage_area order by biz_type)  c_manage_area
