@@ -77,7 +77,8 @@ from (
 		from ods_cthx_web_ply_bnfc  partition(pt{lastday}000000)  a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1
-) vw;
+) vw
+where c_cst_no is not null
 
 INSERT INTO edw_cust_ply_party(
     c_dpt_cde,
@@ -146,3 +147,4 @@ from (
 		where bn.c_clnt_mrk = 0
         */
 ) vw
+where c_cst_no is not null

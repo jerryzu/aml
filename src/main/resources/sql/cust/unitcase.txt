@@ -54,3 +54,74 @@ union all
 select c_bnfc_cert_no from 		 ods_cthx_web_app_grp_member  partition(pt20190808000000)  a 
             inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no -- 2103
 ) vw
+
+----- 
+SELECT
+    distinct 
+    -- c_dpt_cde,
+    -- c_cst_no,
+    -- c_ply_no,
+    -- t_bgn_tm, --2021-07-28 maxest
+    -- t_end_tm, --2021-07-28 maxest
+    -- c_clnt_mrk,
+    c_biz_type,
+    pt
+FROM
+    edw_cust_ply_party
+    where c_cst_no is not null
+
+
+SELECT distinct 
+    -- c_dpt_cde,
+    -- c_cst_no,
+    -- t_open_time, --2019-11-01 maxest
+    -- t_close_time, --2021-02-01 maxest
+    -- c_acc_name, -- has null
+    -- c_cst_sex, -- has null
+    -- c_country, -- has null
+    -- c_cert_cls,-- has null
+    -- c_cert_cde,-- has null
+    -- t_cert_end_date, --1987-06-07 mini
+    -- c_occup_cde,-- has null
+    -- c_occup_sub_cde,-- has null
+    -- n_income, null or 0
+    -- c_mobile,-- has null
+    -- c_clnt_addr,-- has null
+    -- c_work_dpt,-- has null
+    *,
+    pt
+FROM
+    edw_cust_pers_info
+where c_cst_no is not null    
+
+
+SELECT
+    c_dpt_cde,
+    c_cst_no,
+    t_open_time, --2019-02-28
+    t_close_time, --	2021-07-28
+    c_acc_name,
+    c_clnt_addr,
+    c_manage_area, --has null
+    c_buslicence_no,--has null
+    c_buslicence_valid,--has null
+    c_organization_no,--has null
+    c_cevenue_no,--has null
+    c_legal_nme,--has null
+    c_legal_certf_cls,--has null
+    c_legal_certf_cde,--has null
+    t_legal_cert_end_tm,--has null
+    c_actualholding_nme,--has null
+    c_acth_certf_cls,--has null
+    c_acth_certf_cde,--has null
+    t_acth_certf_end_tm,--has null
+    c_ope_name,--has null
+    c_ope_certf_cls,--has null
+    c_ope_certf_cde,--has null
+    t_ope_certf_end_tm,--has null
+    c_trd_cde,--has null
+    c_sub_trd_cde,--has null
+    n_reg_amt,--has null
+    pt
+FROM
+    edw_cust_units_info;

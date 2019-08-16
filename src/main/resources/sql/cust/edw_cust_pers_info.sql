@@ -168,5 +168,6 @@ from (
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1
 		) vw
+	where c_cst_no is not null
 	group by c_cst_no
 ) vw

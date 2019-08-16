@@ -186,4 +186,5 @@ from (
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
 		) vw
 	group by c_cst_no
+    where c_cst_no is not null
 ) vw
