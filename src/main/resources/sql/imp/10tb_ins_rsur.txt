@@ -16,6 +16,15 @@ cus_pro	投保人客户类型	mapping
 cur_code2	币种	mapping
 sur_amt	业务发生金额	保留两位小数
 tsf_flag	支付方式	mapping
+
+现在只有退保才有对方帐户信息,web_fin_rpprmcustomer退保账户信息C_CUSTOMER_ACCOUNTS收款方帐号C_ACCOUNTS_NAME收款人名称C_BANK_ACCOUNTS收款人开户行(select *  from web_bankname)
+
+select 
+c_customer_accounts -- 收款方帐号
+,c_accounts_name -- 收款人名称
+,c_bank_accounts -- 收款人开户行
+from  ods_cthx_web_fin_rpprmcustomer partition(pt20190808000000) 
+
 */
 
 select

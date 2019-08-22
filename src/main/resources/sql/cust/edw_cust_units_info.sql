@@ -4,6 +4,8 @@ alter table edw_cust_units_info truncate partition pt{lastday}000000;
 insert into edw_cust_units_info(
     c_dpt_cde,
     c_cst_no,
+    c_certf_cls,
+    c_certf_cde,
     t_open_time,
     t_close_time,
     c_acc_name,
@@ -33,6 +35,8 @@ insert into edw_cust_units_info(
 select 
     substring_index(c_dpt_cde,',',1) c_dpt_cde
     ,c_cst_no
+    ,substring_index(c_certf_cls,',',1) c_certf_cls
+    ,substring_index(c_certf_cde,',',1) c_certf_cde
     ,t_open_time t_open_time
     ,t_close_time  t_close_time
     ,substring_index(c_acc_name,',',1) c_acc_name
@@ -67,6 +71,8 @@ from (
         -- 开始(1)标识为个人
         -- c_cst_no已经编码由身份证类型6位,身份证号码18位组成,这里校验码取倒数第7位至倒数第2位与9取MOD
         ,concat('2', c_cst_no, mod(substr(c_cst_no, -7, 6), 9)) c_cst_no
+	    ,group_concat(c_certf_cls order by biz_type)  c_certf_cls
+	    ,group_concat(c_certf_cde order by biz_type)  c_certf_cde
 	    ,min(t_open_time)  t_open_time
 	    ,max(ifnull(t_close_time,adddate('9999-12-31',0)))  t_close_time
 	    ,group_concat(c_acc_name order by biz_type)  c_acc_name
@@ -94,6 +100,8 @@ from (
 	from (	  
         select b.c_dpt_cde c_dpt_cde
             ,concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0')) c_cst_no -- 客户号
+            ,a.c_certf_cls  -- 证件种类
+            ,a.c_certf_cde  -- 证件号码
 		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
 		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
             ,a.c_app_nme c_acc_name -- 客户名称，
@@ -118,13 +126,15 @@ from (
             ,a.c_trd_cde  -- 行业代码
             ,a.c_sub_trd_cde  -- 行业
             ,null n_reg_amt
-            ,2 biz_type
+            ,22 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
         from ods_cthx_web_ply_applicant partition(pt{lastday}000000) a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
         union 
         select b.c_dpt_cde c_dpt_cde
             ,concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0'))  c_cst_no -- 客户号
+            ,a.c_certf_cls  -- 证件种类
+            ,a.c_certf_cde  -- 证件号码
 		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
 		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
             ,a.c_insured_nme c_acc_name -- 客户名称，
@@ -149,13 +159,15 @@ from (
             ,a.c_trd_cde  -- 行业 --c_sub_trd_cde
             ,null  c_sub_trd_cde  -- 行业
             ,null  reg_amt -- 注册资本金
-            ,3 biz_type
+            ,32 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
         from ods_cthx_web_app_insured  partition(pt{lastday}000000) a -- 被保人
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
         union  
         select b.c_dpt_cde c_dpt_cde
             ,concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0')) c_cst_no -- 客户号
+            ,a.c_certf_cls  -- 证件种类
+            ,a.c_certf_cde  -- 证件号码
 		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
 		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
             ,a.c_bnfc_nme c_acc_name -- 客户名称，
@@ -180,11 +192,11 @@ from (
             ,null c_trd_cde
             ,null c_sub_trd_cde
             ,null reg_amt
-            ,4 biz_type
+            ,42 biz_type  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
         from ods_cthx_web_ply_bnfc partition(pt{lastday}000000) a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
 		) vw
-	group by c_cst_no
     where c_cst_no is not null
+	group by c_cst_no
 ) vw

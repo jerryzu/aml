@@ -25,9 +25,9 @@ b.c_certf_cde as app_id_no,-- 投保人证件号码
 a.c_prod_no as ins_no,-- 险种代码
 '' as renew_date,-- 业务发生日期
 '' as pay_date,-- 资金交易日期
-'' as cur_code,-- 币种
+'CNY' as cur_code,-- 币种
 '' as pre_amt,-- 本期交保费金额
-'' as usd_amt,-- 折合美元金额
+-9999 as usd_amt,-- 折合美元金额
 '' as tsf_flag,-- 现转标识
 '' as acc_name,-- 交费账号名称
 '' as acc_no,-- 交费账号

@@ -40,6 +40,30 @@ del_period	缴费间隔	mapping
 subject	保险标的物	@N
 tsf_flag	现转标识	mapping
 
+select 
+-- 11: 本人； 12：配偶； 13：父母； 14：子女 15：其他近亲属 16 雇佣或劳务 17：其他  --tb_ins_rpay  tb_ins_rpol
+-- 11：本单位； 12：本单位董事，监事或高级管理人员； 13：雇佣或劳务 14：其他  --tb_ins_fav_cst
+-- 11：本人；12：直系亲属；13：近亲属；14：雇佣或劳务；15：业务关系；16：其他 --tb_ins_rcla
+        distinct  case id.c_app_relation
+        when '601001' then ' ' -- 配偶
+        when '601002' then ' ' -- 父母
+        when '601003' then ' ' -- 子女  ++
+        when '601004' then ' ' -- 兄弟姐妹
+        when '601005' then ' ' -- 本人 ++
+        when '601006' then ' ' -- 雇主
+        when '601007' then ' ' -- 雇员
+        when '601008' then ' ' -- 祖父母、外祖父母
+        when '601009' then ' ' -- 祖孙、外祖孙
+        when '601010' then ' ' -- 监护人
+        when '601011' then ' ' -- 被监护人
+        when '601012' then ' ' -- 朋友
+        when '601013' then ' ' -- 未知
+        when '601014' then ' ' -- 其他
+        else
+        '@N' -- 其它
+        end as relation, c_clnt_mrk, id.c_app_relation
+from   ods_cthx_web_ply_insured partition(pt20190808000000) id  
+
 */
 select 
 	'' as Company_codel,-- 机构网点代码
@@ -67,7 +91,7 @@ select
 	d.C_BNFC_CDE as  Benefit_cst_no,-- 受益人客户号
 	d.C_CERTF_CDE as Benefit_id_no,-- 受益人身份证号码
   a.C_PROD_NO as Ins_no,-- 险种代码
-  'CNY' as Cur_code,-- 币种
+  a.c_prm_cur Cur_code,-- 币种
   '' as Pre_amt,-- 本期交保费金额
   '' as Usd_amt,-- 折合美元金额
   RIGHT(a.C_PROD_NO, 2) as  Prof_type,-- 业务种类
