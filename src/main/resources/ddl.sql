@@ -25,3 +25,8 @@ SELECT objectid, objectname, propertyid, propertyname
 FROM sys_properties
 where 1 = 2
 
+mysqldump  --no-data --set-gtid-purged=OFF -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -pTpstic123456 tpedw> tpedw.sql
+
+mysqldump  --no-data --set-gtid-purged=OFF -uroot tpedw> tpedw1.sql
+
+https://blog.51cto.com/ganbing/2085769?source=drt

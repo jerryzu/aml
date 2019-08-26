@@ -8,6 +8,10 @@ alter table rpt_fxq_tb_ins_bo_ms add partition (partition pt{lastday}000000 valu
 
 alter table rpt_fxq_tb_ins_bo_ms truncate partition pt{lastday}000000;
 */
+/**
+本段取法人投保，团单受益人是个人的单子
+**/
+
 truncate table rpt_fxq_tb_ins_bo_ms;
 
 INSERT INTO rpt_fxq_tb_ins_bo_ms(
@@ -55,7 +59,7 @@ from edw_cust_ply_party partition(pt{lastday}000000) a1
     inner join edw_cust_ply_party partition(pt{lastday}000000) a2 on a1.c_ply_no = a2.c_ply_no
     inner join  edw_cust_units_info partition(pt{lastday}000000)  u on a1.c_cst_no = u.c_cst_no
     inner join edw_cust_pers_info partition(pt{lastday}000000) p on a2.c_cst_no = p.c_cst_no
-where a1.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+where a1.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
    and a1.c_clnt_mrk='0' -- 受益人没有客户类别区分,申请人有客户类别区分
-   and a2.c_biz_type in (42, 44) -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人   
+   and a2.c_biz_type = 43 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
    and a2.c_clnt_mrk='1'

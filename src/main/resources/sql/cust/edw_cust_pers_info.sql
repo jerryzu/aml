@@ -14,7 +14,6 @@ INSERT INTO edw_cust_pers_info(
     c_cert_cde,
     t_cert_end_date,
     c_occup_cde,
-    c_occup_sub_cde,
     n_income,
     c_mobile,
     c_clnt_addr,
@@ -37,7 +36,6 @@ select
     ,substring_index(c_cert_cde,',',1) c_cert_cde
     ,substring_index(c_cert_end_date,',',1) c_cert_end_date
     ,substring_index(c_occup_cde,',',1) c_occup_cde
-    ,substring_index(c_occup_sub_cde,',',1) c_occup_sub_cde
     ,substring_index(n_income,',',1) n_income
     ,substring_index(c_mobile,',',1) c_mobile
     ,substring_index(c_clnt_addr,',',1) c_clnt_addr
@@ -56,7 +54,6 @@ from (
 	    ,group_concat(c_cert_cde order by biz_type)  c_cert_cde
 	    ,group_concat(c_cert_end_date order by biz_type)  c_cert_end_date
 	    ,group_concat(c_occup_cde order by biz_type)  c_occup_cde
-	    ,group_concat(c_occup_sub_cde order by biz_type)  c_occup_sub_cde
 	    ,group_concat(n_income order by biz_type)  n_income
 	    ,group_concat(c_mobile order by biz_type)  c_mobile
 	    ,group_concat(c_clnt_addr order by biz_type)  c_clnt_addr
@@ -73,12 +70,11 @@ from (
 		    ,c_certf_cde  -- 证件号码
 		    ,date_format(t_certf_end_date, '%Y%m%d') t_certf_end_date -- 证件有效期止
 		    ,c_occup_cde  -- 职业代码
-		    ,null c_occup_sub_cde
 		    ,null n_income
 		    ,c_mobile  -- 移动电话
 		    ,c_clnt_addr c_clnt_addr -- 地址
 		    ,c_work_dpt  -- 工作单位
-		    ,21 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+		    ,21 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
 		from ods_cthx_web_ply_applicant  partition(pt{lastday}000000)  a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
@@ -94,15 +90,35 @@ from (
 		    ,c_certf_cde -- 证件号码
 		    ,date_format(t_certf_end_date, '%Y%m%d')  c_cert_end_date -- 证件有效期止
 		    ,c_occup_cde -- 职业代码  
-		    ,null c_occup_sub_cde 
 		    ,n_income  -- 年薪
 		    ,c_mobile  -- 移动电话
 		    ,c_clnt_addr -- 地址
 		    ,c_work_dpt -- 工作单位
-		    ,31 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+		    ,31 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
 		from ods_cthx_web_app_insured  partition(pt{lastday}000000)  a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+		union 
+		select distinct b.c_dpt_cde c_dpt_cde
+		    ,concat(rpad(c_cert_typ, 6, '0') , rpad(c_cert_no, 18, '0'))  c_cst_no -- 被保人编码  
+		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
+		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
+		    ,c_nme c_acc_name -- 受益人 
+		    ,null c_cst_sex
+		    ,c_country  -- 国籍
+		    ,c_cert_typ  c_cert_cls -- 受益人证件类型
+		    ,c_cert_no c_cert_cde -- 受益人证件号码 
+		    ,null c_cert_end_date
+		    ,c_occup_cde -- 职业代码
+		    ,null n_income
+		    ,null c_mobile
+		    ,null c_clnt_addr
+		    ,null c_work_dpt
+		    ,33 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
+		from ods_cthx_web_app_grp_member  partition(pt{lastday}000000)  a -- 团单成员信息
+            inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
+            -- inner join ods_cthx_web_ply_bnfc partition(pt{lastday}000000) bn  on bn.c_app_no = b.c_app_no
+		-- where bn.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
 		union 
 		select b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no-- 受益人代码,受益人唯一客户代码
@@ -115,12 +131,11 @@ from (
 		    ,c_certf_cde --  证件号码
 		    ,null t_certf_end_date
 		    ,null occupation_code
-		    ,null occupation
 		    ,null n_income
 		    ,c_mobile  c_mobile -- 移动电话
 		    ,null  c_clnt_addr -- 地址
 		    ,null c_work_dpt  -- 工作单位
-		    ,41 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+		    ,41 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
 		from ods_cthx_web_ply_bnfc  partition(pt{lastday}000000)  a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
@@ -135,13 +150,12 @@ from (
 		    ,c_bnfc_cert_typ  c_cert_cls -- 受益人证件类型
 		    ,c_bnfc_cert_no c_cert_cde -- 受益人证件号码 
 		    ,null c_cert_end_date
-		    ,c_occup_cde -- 职业代码
-		    ,c_occup_sub_cde   -- 职业细分
+		    ,null c_occup_cde -- 职业代码
 		    ,null n_income
 		    ,null c_mobile
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
-		    ,43 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+		    ,43 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
 		from ods_cthx_web_app_grp_member  partition(pt{lastday}000000)  a -- 团单成员信息
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
             -- inner join ods_cthx_web_ply_bnfc partition(pt{lastday}000000) bn  on bn.c_app_no = b.c_app_no
@@ -158,12 +172,11 @@ from (
 		    ,c_card_cde c_cert_cde -- 证件号码 
 		    ,null c_cert_end_date
 		    ,null c_occup_cde
-		    ,null c_occup_sub_cde
 		    ,null n_income
 		    ,c_tel_no c_mobile-- 收款人手机号码
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
-		    ,null biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+		    ,10 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
 		from ods_cthx_web_clm_bank  partition(pt{lastday}000000)  a
 		    inner join ods_cthx_web_clm_main partition(pt{lastday}000000) c on a.c_clm_no = c.c_clm_no
             inner join ods_cthx_web_ply_base  partition(pt{lastday}000000) b on c.c_ply_no = b.c_ply_no

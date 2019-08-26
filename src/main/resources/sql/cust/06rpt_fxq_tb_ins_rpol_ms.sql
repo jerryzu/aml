@@ -58,7 +58,15 @@ select
         a.c_ply_no as  pol_no,-- 保单号
         a.c_app_no as app_no,-- 投保单号
         a.c_ply_sts as ins_state,-- 保单状态
-        a.c_bsns_typ as sale_type,-- 销售渠道
+        -- 0:直销业务;1:战略客户;2:个人代理;3:专业代理;4:兼业代理;5:经纪业务;6:创新渠道;7:重客渠道;9:共同渠道
+        -- 人身保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:第三方平台;19:其他; 
+        -- 财产保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:农村网点;17:营业网点;18:第三方平台;19:其他;
+        case a.c_prod_no 
+                when '1' then
+                case a.c_bsns_typ 
+                        when '0' then
+                end
+        end as sale_type,-- 销售渠道 select c_par_cde, c_cde, c_cnm from ods_cthx_web_bas_comm_code  partition(pt20190825000000) a1 where c_par_cde = '193'
         a.c_bsns_subtyp as sale_name,-- 销售渠道名称
         date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- 投保日期
         date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
@@ -153,13 +161,13 @@ select
         '{lastday}'		pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
         left join ods_cthx_web_ply_insured partition(pt{lastday}000000) id on a.c_ply_no=id.c_ply_no
-        left join edw_cust_ply_party partition(pt{lastday}000000) pa on a.c_ply_no=pa.c_ply_no and pa.c_biz_type =  21 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+        left join edw_cust_ply_party partition(pt{lastday}000000) pa on a.c_ply_no=pa.c_ply_no and pa.c_biz_type =  21 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
         left join edw_cust_pers_info partition(pt{lastday}000000) a1 on pa.c_cst_no =a1.c_cst_no
 
-        left join edw_cust_ply_party partition(pt{lastday}000000) pi on a.c_ply_no=pi.c_ply_no and pi.c_biz_type =  31 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人        
+        left join edw_cust_ply_party partition(pt{lastday}000000) pi on a.c_ply_no=pi.c_ply_no and pi.c_biz_type =  31 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
         left join edw_cust_pers_info partition(pt{lastday}000000) i on pi.c_cst_no =i.c_cst_no
         
-        left join edw_cust_ply_party partition(pt{lastday}000000) pb on a.c_ply_no=pb.c_ply_no and pb.c_biz_type =  41 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+        left join edw_cust_ply_party partition(pt{lastday}000000) pb on a.c_ply_no=pb.c_ply_no and pb.c_biz_type =  41 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
         left join edw_cust_pers_info partition(pt{lastday}000000) b on pb.c_cst_no =b.c_cst_no
         
 	-- left join ods_cthx_web_prd_prod partition(pt{lastday}000000) c on a.c_prod_no=c.c_prod_no

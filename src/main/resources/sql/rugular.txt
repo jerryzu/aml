@@ -1,0 +1,33 @@
+(select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.c_occup_cde)  -- 职业大类
+(select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.C_Resv_Txt_1)  -- 职业明细分类
+(select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.C_Position)  -- 职业名称
+(select c_cnm from  ods_cthx_web_bas_codelist    partition(pt20190821000000) v where v.c_par_cde like 'OccupationCategory'  and v.c_cde = c.C_Duty)  -- 职业类别
+
+在web_app_grp_member表中包括被保人、受益人、投保人(应该还是从投保人表取，这里是空的)，属性末标识都是被保人
+-------------------------
+select *
+--  from  ods_cthx_web_ply_bnfc  partition(pt20190821000000)
+--  from  ods_cthx_web_ply_insured  partition(pt20190821000000)
+from  ods_cthx_web_ply_applicant  partition(pt20190821000000)
+where c_ply_no in(
+select c_ply_no
+        from ods_cthx_web_app_grp_member partition(pt20190821000000)
+)
+
+select *
+--  from  ods_cthx_web_ply_bnfc  partition(pt20190821000000)
+--  from  ods_cthx_web_ply_insured  partition(pt20190821000000)
+from  ods_cthx_web_app_grp_member  partition(pt20190821000000)
+where c_ply_no in(
+select c_ply_no
+        from ods_cthx_web_ply_applicant  partition(pt20190821000000)
+)
+
+select distinct c_app_cer_typ
+,c_app_cert_no
+,c_app_nme
+from  ods_cthx_web_app_grp_member  partition(pt20190821000000)
+
+select p.c_app_no, p.c_ply_no, b.c_ply_no, b.c_app_no
+from ods_cthx_web_app_grp_member  partition(pt20190821000000) p
+left join  ods_cthx_web_ply_applicant  partition(pt20190821000000) b on p.c_ply_no = b.c_ply_no

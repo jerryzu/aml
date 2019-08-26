@@ -65,7 +65,6 @@ select
 from (
 	select     
 	    group_concat(c_dpt_cde order by biz_type)  c_dpt_cde
-
         -- 1.个人(1),团体(2)	2.身份证类型	3.身份证号	4.序列号(忽略)	5.校验位(1位)
         -- c_cst_no已经处理了2. 3. 4.暂时忽略, 这里只需要处理1.5.
         -- 开始(1)标识为个人
@@ -126,7 +125,7 @@ from (
             ,a.c_trd_cde  -- 行业代码
             ,a.c_sub_trd_cde  -- 行业
             ,null n_reg_amt
-            ,22 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+            ,22 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
         from ods_cthx_web_ply_applicant partition(pt{lastday}000000) a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
@@ -159,7 +158,7 @@ from (
             ,a.c_trd_cde  -- 行业 --c_sub_trd_cde
             ,null  c_sub_trd_cde  -- 行业
             ,null  reg_amt -- 注册资本金
-            ,32 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+            ,32 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
         from ods_cthx_web_app_insured  partition(pt{lastday}000000) a -- 被保人
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
@@ -192,7 +191,7 @@ from (
             ,null c_trd_cde
             ,null c_sub_trd_cde
             ,null reg_amt
-            ,42 biz_type  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+            ,42 biz_type  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
         from ods_cthx_web_ply_bnfc partition(pt{lastday}000000) a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人

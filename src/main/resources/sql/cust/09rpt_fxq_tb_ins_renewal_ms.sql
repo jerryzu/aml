@@ -43,7 +43,7 @@ select
     '' as company_code4,-- 受理业务机构网点代码
     a.c_ply_no as pol_no,-- 保单号
     a.c_app_no as app_no,-- 投保单号
-    date_format(a.t_app_tm,'%y%m%d') as ins_date,-- 投保日期
+    date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- 投保日期
     b.c_app_nme as app_name,-- 投保人名称
     b.c_app_cde as app_cst_no,-- 投保人客户号
     right(b.c_certf_cls, 2) as app_id_type,-- 投保人身份证件类型

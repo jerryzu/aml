@@ -125,3 +125,40 @@ SELECT
     pt
 FROM
     edw_cust_units_info;
+
+
+/*************************************************************/
+select c_insured_nme  -- 被保人名称
+    ,c_sex  -- 性别
+    ,c_aml_country  -- 国籍
+    ,c_certf_cls -- 证件类型
+    ,c_certf_cde -- 证件号码
+    ,t_certf_end_date -- 证件有效期止
+    ,c_occup_cde -- 职业代码  
+    ,n_income  -- 年薪
+    ,c_mobile  -- 移动电话
+    ,c_clnt_addr -- 地址
+    ,c_work_dpt -- 工作单位
+from ods_cthx_web_app_insured  partition(pt20190808000000)  a
+
+select distinct c_nme c_acc_name -- 受益人 
+        ,c_country  -- 国籍
+        ,c_cert_typ  c_cert_cls -- 受益人证件类型
+        ,c_cert_no c_cert_cde -- 受益人证件号码 
+        ,c_occup_cde -- 职业代码
+from ods_cthx_web_app_grp_member  partition(pt20190808000000)  a -- 团单成员信息
+
+select c_bnfc_nme  -- 受益人名称
+    ,c_sex   -- 性别
+    ,c_country -- 国家
+    ,c_certf_cls -- 证件类型
+    ,c_certf_cde --  证件号码
+    ,c_mobile  c_mobile -- 移动电话
+from ods_cthx_web_ply_bnfc  partition(pt20190822000000)  a
+
+		
+select  c_bnfc_nme  -- 受益人 
+    ,c_country  -- 国籍
+    ,c_bnfc_cert_typ  c_cert_cls -- 受益人证件类型
+    ,c_bnfc_cert_no c_cert_cde -- 受益人证件号码 
+from ods_cthx_web_app_grp_member  partition(pt20190822000000)  a -- 团单成员信息		

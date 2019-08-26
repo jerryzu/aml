@@ -63,14 +63,14 @@ from (
 	    ,group_concat(c_work_dpt order by biz_type)  c_work_dpt
 	from (
 		select distinct b.c_dpt_cde c_dpt_cde
-		    ,concat(rpad(c_bnfc_cert_typ, 6, '0') , rpad(c_bnfc_cert_no, 18, '0'))  c_cst_no -- 被保人编码  
+		    ,concat(rpad(c_cert_typ, 6, '0') , rpad(c_cert_no, 18, '0'))  c_cst_no -- 被保人编码  
 		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
 		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
-		    ,c_bnfc_nme c_acc_name -- 受益人 
+		    ,c_nme c_acc_name -- 受益人 
 		    ,null c_cst_sex
 		    ,c_country  -- 国籍
-		    ,c_bnfc_cert_typ  c_cert_cls -- 受益人证件类型
-		    ,c_bnfc_cert_no c_cert_cde -- 受益人证件号码 
+		    ,c_cert_typ  c_cert_cls -- 受益人证件类型
+		    ,c_cert_no c_cert_cde -- 受益人证件号码 
 		    ,null c_cert_end_date
 		    ,c_occup_cde -- 职业代码
 		    ,c_occup_sub_cde   -- 职业细分
