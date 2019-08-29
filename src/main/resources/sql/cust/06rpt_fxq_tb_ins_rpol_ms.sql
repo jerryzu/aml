@@ -64,7 +64,7 @@ select
         case a.c_prod_no 
                 when '1' then
                 case a.c_bsns_typ 
-                        when '0' then
+                        when '0' then 1
                 end
         end as sale_type,-- 销售渠道 select c_par_cde, c_cde, c_cnm from ods_cthx_web_bas_comm_code  partition(pt20190825000000) a1 where c_par_cde = '193'
         a.c_bsns_subtyp as sale_name,-- 销售渠道名称

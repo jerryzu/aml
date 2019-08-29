@@ -26,6 +26,7 @@ FROM sys_properties
 where 1 = 2
 
 mysqldump  --no-data --set-gtid-purged=OFF -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -pTpstic123456 tpedw> tpedw.sql
+mysqldump  --no-data --set-gtid-purged=OFF -hrm-bp1k9p25tjq1d86i9.mysql.rds.aliyuncs.com -utpadmin_read -pTpstic123456 reinsure> reinsure.sql
 
 mysqldump  --no-data --set-gtid-purged=OFF -uroot tpedw> tpedw1.sql
 

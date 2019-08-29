@@ -31,3 +31,13 @@ from  ods_cthx_web_app_grp_member  partition(pt20190821000000)
 select p.c_app_no, p.c_ply_no, b.c_ply_no, b.c_app_no
 from ods_cthx_web_app_grp_member  partition(pt20190821000000) p
 left join  ods_cthx_web_ply_applicant  partition(pt20190821000000) b on p.c_ply_no = b.c_ply_no
+
+select 
+        (select c_cnm from ods_cthx_web_bas_comm_code partition(pt20190821000000) v where v.c_par_cde like '120'  and v.c_cde = c.c_certf_cls)  被保险人证件类型
+        ,(select c_cnm from ods_cthx_web_bas_comm_code partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.c_occup_cde)  职业大类
+        ,(select c_cnm from ods_cthx_web_bas_comm_code partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.c_resv_txt_1)  职业明细分类
+        ,(select c_cnm from ods_cthx_web_bas_comm_code partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.c_position)  职业名称
+        ,(select c_cnm from ods_cthx_web_bas_codelist partition(pt20190821000000) v where v.c_par_cde like 'OccupationCategory'  and v.c_cde = c.c_duty)  职业类别
+        ,(select c_cnm from ods_cthx_web_bas_comm_code partition(pt20190821000000) v  where v.c_par_cde = '601'   and v.c_cde = c.c_app_relation)  
+from ods_cthx_web_ply_insured  partition(pt20190821000000) c 
+where c.n_edr_prj_no='0'
