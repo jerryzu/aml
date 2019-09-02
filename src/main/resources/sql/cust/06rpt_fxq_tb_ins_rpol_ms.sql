@@ -57,17 +57,50 @@ select
         '' as company_code3,-- 保单归属机构网点代码
         a.c_ply_no as  pol_no,-- 保单号
         a.c_app_no as app_no,-- 投保单号
-        a.c_ply_sts as ins_state,-- 保单状态
-        -- 0:直销业务;1:战略客户;2:个人代理;3:专业代理;4:兼业代理;5:经纪业务;6:创新渠道;7:重客渠道;9:共同渠道
-        -- 人身保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:第三方平台;19:其他; 
-        -- 财产保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:农村网点;17:营业网点;18:第三方平台;19:其他;
-        case a.c_prod_no 
+        case when a.c_edr_type in ('2','3') or a.t_insrnc_end_tm < now() then 11 else 12 end as ins_state,-- 保单状态 --edr_type in ('2','3') or  T_INSRNC_END_TM<=date then 终止 else 有效
+        case ifnull((select c_kind_no from ods_cthx_web_prd_prod partition(pt{lastday}000000) v where v.c_prod_no = a.c_prod_no), 1)
                 when '1' then
-                case a.c_bsns_typ 
-                        when '0' then 1
-                end
-        end as sale_type,-- 销售渠道 select c_par_cde, c_cde, c_cnm from ods_cthx_web_bas_comm_code  partition(pt20190825000000) a1 where c_par_cde = '193'
-        a.c_bsns_subtyp as sale_name,-- 销售渠道名称
+                case a.c_cha_subtype 
+                        -- 财产保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:农村网点;17:营业网点;18:第三方平台;19:其他;
+                        when '0A0' then 17	--	营业网点
+                        when '0B0' then 17	--	营业网点
+                        when '1A0' then 12	--	保险代理机构或经济机构
+                        when '2A0' then 11	--	个人代理
+                        when '3A1' then 12	--	保险代理机构或经济机构
+                        when '4J1' then 13	--	银邮代理
+                        when '5A1' then 12	--	保险代理机构或经济机构
+                        when '6A1' then 15	--	电销
+                        when '6A2' then 15	--	电销
+                        when '6B1' then 14	--	网销
+                        when '6B2' then 14	--	网销
+                        when '6C0' then 13	--	银邮代理
+                        when '6D0' then 18	--	第三方平台
+                        when '7A0' then 17	--	营业网点
+                else
+                            19 -- 其他
+                end else
+                case a.c_cha_subtype 
+                        -- 人身保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:第三方平台;19:其他; 
+                        -- when '0A0' then 17	--	营业网点
+                        -- when '0B0' then 17	--	营业网点
+                        when '1A0' then 12	--	保险代理机构或经济机构
+                        when '2A0' then 11	--	个人代理
+                        when '3A1' then 12	--	保险代理机构或经济机构
+                        when '4J1' then 13	--	银邮代理
+                        when '5A1' then 12	--	保险代理机构或经济机构
+                        when '6A1' then 15	--	电销
+                        when '6A2' then 15	--	电销
+                        when '6B1' then 14	--	网销
+                        when '6B2' then 14	--	网销
+                        when '6C0' then 13	--	银邮代理
+                        when '6D0' then 16	--	第三方平台
+                        -- when '7A0' then 17	--	营业网点
+                else
+                            19 -- 其他
+                end                 
+        end as sale_type,-- 销售渠道
+        -- 个人代理：为代理人名称；银保通代理点：**银行**分行等
+        (select (select c_cha_nme from ods_cthx_web_cus_cha partition(pt20190828000000) v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
         date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- 投保日期
         date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
         a1.c_acc_name as app_name,-- 投保人名称
