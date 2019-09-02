@@ -69,7 +69,7 @@ select
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
 	left join ods_cthx_web_ply_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
 	left join ods_cthx_web_app_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
-where a.t_next_edr_bgn_tm > now()
+where a.t_next_edr_bgn_tm > now() and b.c_clnt_mrk = 1
 union all
 select
 	a.c_dpt_cde as company_codel,-- 机构网点代码
@@ -95,4 +95,4 @@ select
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
 	left join ods_cthx_web_ply_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
 	left join ods_cthx_web_ply_bnfc partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
-where a.t_next_edr_bgn_tm > now()
+where a.t_next_edr_bgn_tm > now() and b.c_clnt_mrk = 1

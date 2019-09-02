@@ -100,7 +100,7 @@ select
                 end                 
         end as sale_type,-- 销售渠道
         -- 个人代理：为代理人名称；银保通代理点：**银行**分行等
-        (select (select c_cha_nme from ods_cthx_web_cus_cha partition(pt20190828000000) v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
+        (select (select c_cha_nme from ods_cthx_web_cus_cha partition(pt{lastday}000000) v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
         date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- 投保日期
         date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
         a1.c_acc_name as app_name,-- 投保人名称
@@ -120,7 +120,7 @@ select
         i.c_acc_name as ins_name,-- 被保险人名称
         i.c_cst_no as ins_cst_no,-- 被保险人客户号
         i.c_cert_cde as ins_id_no,-- 被保险人证件号码
-        pi.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型
+        pi.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位
         case id.c_app_relation 
         -- select concat('when ''', c_cde, ''' then '' '' -- ',  c_cnm) from ods_cthx_web_bas_comm_code partition(pt{lastday}000000) where c_par_cde = '601' order by c_cde 
         -- 11: 本人； 12：配偶； 13：父母； 14：子女 15：其他近亲属 16 雇佣或劳务 17：其他  --tb_ins_rpay  tb_ins_rpol
@@ -141,9 +141,9 @@ select
         else
         '@N' -- 其它
         end as relation,-- 投保人、被保险人之间的关系
-        '' as legal_type,-- 受益人标识
-        '' as benefit_cus_pro,-- 受益人类型
-        b.c_acc_name as  benefit_name,-- 受益人名称
+        '' as legal_type,-- 受益人标识  11:法定受益人;12:制定受益人;
+        '' as benefit_cus_pro,-- 受益人类型 11:个人;12:单位客户;受益人为法定受益人的一人或若干人时不填写本字段
+        b.c_acc_name as  benefit_name,-- 受益人名称 受益人为法定受益人的一人或若干人时不填写本字段
         b.c_cst_no as  benefit_cst_no,-- 受益人客户号
         b.c_cert_cde as benefit_id_no,-- 受益人身份证号码
         a.c_prod_no as ins_no,-- 险种代码

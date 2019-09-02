@@ -171,33 +171,33 @@ select
 	b.c_app_nme as app_name,-- 投保人名称
 	b.c_app_cde as app_cst_no,-- 投保人客户号
 	b.c_certf_cde as app_id_no,-- 投保人证件号码
-	b.c_clnt_mrk as app_cus_pro,-- 投保人客户类型
+	b.c_clnt_mrk as app_cus_pro,-- 投保人客户类型 11:个人;12:单位;
 	c.c_insured_nme as ins_name,-- 被保险人客户名称
 	c.c_insured_cde as ins_cst_no,-- 被保险人客户号
 	c.c_certf_cde as ins_id_no,-- 被保险人证件号码
-	c.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型
+	c.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位;
 	d.c_bnfc_nme as benefit_name,-- 受益人名称
 	d.C_CERTF_CDE as benefit_id_no,-- 受益人身份证件号码
-	'' as benefit_type,-- 受益人类型
-	c.c_app_relation as relation_1,-- 投保人被保人之间的关系
-	'' as relation_2,-- 受益人被保人之间的关系
-	e.c_rptman_nme as cla_app_name,-- 理赔申请人名称
+	'' as benefit_type,-- 受益人类型 11:个人;12:单位;
+	c.c_app_relation as relation_1,-- 投保人被保人之间的关系 11:本人;12:配偶;13:父母;14:子女;15:其他近亲属;16:雇佣或劳务;17:其他;
+	'' as relation_2,-- 受益人被保人之间的关系 11:本人;12:配偶;13:父母;14:子女;15:其他近亲属;16:雇佣或劳务;18:其他;
+	e.c_rptman_nme as cla_app_name,-- 理赔申请人名称 11:居民身份证或临时身份证;12:军人或武警身份证件;13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;14:港澳台居民居住证;15:外国公民护照;16:户口簿;17:出生证;18:其他类个人身份证件;21:营业执照;22:其他,
 	'' as  cla_id_type,-- 理赔申请人身份证件类型
 	'' as  cla_id_no,-- 理赔申请人身份证件号码
-	e.c_insured_rel as cla_pro,-- 理赔申请人类型
+	e.c_insured_rel as cla_pro,-- 理赔申请人类型 11:被保险人;12:受益人;13其他;
 	-- date_format(u.t_paid_tm,'%Y%m%d') as cla_date,-- 理赔日期 web_clmnv_endcase.t_endcase_tm
 	date_format(u.t_endcase_tm,'%Y%m%d') as cla_date,-- 理赔日期 web_clmnv_endcase.t_endcase_tm
-	'' as cur_code,-- 币种
+	'' as cur_code,-- 币种 CNY,USD
 	-- u.n_due_amt as cla_amt,-- 理赔金额 same as n_paid_amt --web_clm_bank.n_amt
-	g.n_amt as cla_amt,-- 理赔金额 same as n_paid_amt --web_clm_bank.n_amt
+	g.n_amt as cla_amt,-- 理赔金额 same as n_paid_amt --web_clm_bank.n_amt 保留2位小数
 	'' as cla_usd_amt,-- 折合美元金额
 	u.c_clm_no cla_no,-- 赔案号
-	'' as tsf_flag,-- 支付方式
+	'' as tsf_flag,-- 支付方式 10:现金;11:银行转账;12:其他
 	g.c_payee_nme as acc_name,-- 实际领款人名称
 	g.c_bank_num as acc_no,-- 实际领款人账号
 	g.c_bank_cde as acc_bank,-- 实际领款人开户机构
-	g.c_pub_piv as acc_type,-- 实际领款人类型
-	g.c_card_type as acc_id_type,-- 实际领款人身份证件类型
+	g.c_pub_piv as acc_type,-- 实际领款人类型 11:个人;12:单位客户
+	g.c_card_type as acc_id_type,-- 实际领款人身份证件类型 11:居民身份证或临时身份证;12:军人或武警身份证件;13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;14:港澳台居民居住证;15:外国公民护照;16:户口簿;17:出生证;18:其他类个人身份证件;21:营业执照;22:其他,
 	g.c_id_card as acc_id_no,-- 实际领款人身份证件号码
 	'' as receipt_no,-- 作业流水号,唯一标识号	
     '{lastday}' pt

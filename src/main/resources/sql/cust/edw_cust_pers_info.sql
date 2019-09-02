@@ -141,7 +141,7 @@ from (
 		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
 		union 
 		select distinct b.c_dpt_cde c_dpt_cde
-		    ,concat(rpad(c_bnfc_cert_typ, 6, '0') , rpad(c_bnfc_cert_no, 18, '0'))  c_cst_no -- 被保人编码  
+		    ,concat(rpad(c_bnfc_cert_typ, 6, '0') , rpad(c_bnfc_cert_no, 18, '0'))  c_cst_no -- 受益人编码  
 		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
 		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
 		    ,c_bnfc_nme c_acc_name -- 受益人 

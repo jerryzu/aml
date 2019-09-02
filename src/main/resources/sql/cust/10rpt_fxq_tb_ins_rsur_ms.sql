@@ -49,7 +49,7 @@ select
     '' as company_code2,-- 金融机构编码
     '' as company_code3,-- 保单归属机构网点代码
     '' as company_code4,-- 受理业务机构网点代码
-    a.c_edr_rsn_bundle_cde as pay_type,-- 业务类型
+    a.c_edr_rsn_bundle_cde as pay_type,-- 业务类型 11:退保;12:减保;13:保单部分领取;14:保单贷款;15:其他
     a.c_ply_no as pol_no,-- 保单号
     a.c_app_no as app_no,-- 投保单号
     date_format(a.t_app_tm,'%y%m%d') as ins_date,-- 投保日期
@@ -62,7 +62,7 @@ select
     b.c_app_nme as app_name,-- 投保人名称
     b.c_app_cde as app_cst_no,-- 投保人客户号
     b.c_certf_cde as id_no,-- 投保人证件号码
-    b.c_clnt_mrk as cus_pro,-- 投保人客户类型
+    b.c_clnt_mrk as cus_pro,-- 投保人客户类型 11:个人;12:单位;
     '' as sur_name,-- 业务申请人名称
     '' as sur_id_no,-- 业务申请人证件号码
     '' as sur_date,-- 业务日期
@@ -70,7 +70,7 @@ select
     '' as cur_code2,-- 币种
     '' as sur_amt,-- 业务发生金额
     '' as usd_sur_amt,-- 折合美元金额
-    '' as tsf_flag,-- 支付方式
+    '' as tsf_flag,-- 支付方式 10:现金;11:银行转账;12:其他
     '' as acc_name,-- 交费账号名称
     '' as acc_no,-- 交费账号
     '' as acc_bank,-- 交费账户开户机构名称
