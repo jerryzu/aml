@@ -48,5 +48,5 @@ select
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
 	inner join ods_cthx_web_ply_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
 	inner join ods_cthx_web_bas_edr_rsn   partition(pt{lastday}000000) c on a.c_edr_rsn_bundle_cde=c.c_rsn_cde and substr(a.c_prod_no,1,2)=c.c_kind_no
-where c.c_rsn_cde in ('22','-J1','-Z1') and a.t_next_edr_bgn_tm > now() 
+where c.c_rsn_cde in ('22','-J1','-Z1') and a.t_next_edr_bgn_tm > now()  and a.n_prm_var <> 0
 	-- and a.t_edr_bgn_tm between and 

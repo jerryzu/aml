@@ -52,7 +52,7 @@ SELECT
     case when a.c_edr_type in ('2','3') or a.t_insrnc_end_tm < now() then 11 else 12 end as ins_state,-- 保单状态 --edr_type in ('2','3') or  T_INSRNC_END_TM<=date then 终止 else 有效
     a.c_grp_mrk                             as app_type,-- 保单类型
     a.c_bsns_typ                            as sale_type,-- 销售渠道 
-    a.c_bsns_subtyp                         as sale_name,-- 销售渠道名称
+    (select (select c_cha_nme from ods_cthx_web_cus_cha partition(pt20190828000000) v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
     date_format(a.t_app_tm,'%Y%m%d')        as ins_date,-- 投保日期
     date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
     u.c_acc_name                            as app_name,-- 投保人名称
