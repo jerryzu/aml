@@ -59,9 +59,9 @@ select
     '' as usd_amt_all,-- 累计缴纳保费折合美元金额
     '' as pay_amt_all,-- 累计退费金额
     '' as usd_pay_amt_all,-- 累计退费金额折合美元金额
-    b.c_app_nme as app_name,-- 投保人名称
-    b.c_app_cde as app_cst_no,-- 投保人客户号
-    b.c_certf_cde as id_no,-- 投保人证件号码
+    b.c_applicant_name as app_name,-- 投保人名称
+    b.c_cst_no as app_cst_no,-- 投保人客户号
+    b.c_cert_cde as id_no,-- 投保人证件号码
     b.c_clnt_mrk as cus_pro,-- 投保人客户类型 11:个人;12:单位;
     '' as sur_name,-- 业务申请人名称
     '' as sur_id_no,-- 业务申请人证件号码
@@ -78,7 +78,7 @@ select
     a.c_edr_no as endorse_no,-- 批单号
     '{lastday}' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	inner join ods_cthx_web_ply_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
+	inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
 	inner join ods_cthx_web_bas_edr_rsn   partition(pt{lastday}000000) c on a.c_edr_rsn_bundle_cde=c.c_rsn_cde and substr(a.c_prod_no,1,2)=c.c_kind_no
 where c.c_rsn_cde in ('08','s1','s2') and a.t_next_edr_bgn_tm > now() 
 	-- and a.t_edr_bgn_tm between and 

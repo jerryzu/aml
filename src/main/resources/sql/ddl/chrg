@@ -1,0 +1,71 @@
+drop table `edw_cust_ply_party`;
+create table `edw_cust_ply_party` (
+  `c_dpt_cde` varchar(20) default null comment '机构网点代码',
+  `c_cst_no` varchar(32) default null comment '统一客户编号',
+  `c_ply_no` varchar(50) default null comment '保单编号',
+  `c_app_no` varchar(50)  default null comment '申请单号，批改申请单号',
+  `t_bgn_tm` date default null comment '保险起期',
+  `t_end_tm` date default null comment '保险止期',
+  `c_clnt_mrk` varchar(1) default null comment '客户类型',
+  `c_biz_type` varchar(2) default null comment '客户角色',
+  `pt` varchar(15) default null comment '分区字段'
+) engine=innodb default charset=utf8 comment='保单相关方关系表'
+/*!50500 partition by range  columns(pt)
+(partition pt20190802000000 values less than ('20190802999999') engine = innodb,
+ partition pt20190808000000 values less than ('20190808999999') engine = innodb) */
+ ;
+ drop table `edw_cust_ply_party_applicant`;
+CREATE TABLE
+    edw_cust_ply_party_applicant
+    (
+        c_ply_no VARCHAR(50) COMMENT '保单编号',
+  `c_app_no` varchar(50)  default null comment '申请单号，批改申请单号',
+        c_cst_no VARCHAR(32) COMMENT '统一客户编号',
+        c_applicant_name VARCHAR(40) COMMENT '客户名称',
+        c_cert_cls VARCHAR(8) COMMENT '身份证件种类',
+        c_cert_cde VARCHAR(50) COMMENT '身份证件号码',
+        c_clnt_mrk VARCHAR(1) COMMENT '客户类型: 0: 法人,1: 个人',
+        c_biz_type VARCHAR(2) COMMENT '客户角色',
+        pt VARCHAR(15) COMMENT '分区字段'
+    )
+    ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保单相关方关系表'/*!50500 partition by range  columns(pt)
+(partition pt20190802000000 values less than ('20190802999999') engine = innodb,
+ partition pt20190808000000 values less than ('20190808999999') engine = innodb) */
+ ;
+ drop table `edw_cust_ply_party_bnfc`;
+CREATE TABLE
+    edw_cust_ply_party_bnfc
+    (
+        c_ply_no VARCHAR(50) COMMENT '保单编号',
+  `c_app_no` varchar(50)  default null comment '申请单号，批改申请单号',
+        c_cst_no VARCHAR(32) COMMENT '统一客户编号',
+        c_bnfc_name VARCHAR(40) COMMENT '客户名称',
+        c_cert_cls VARCHAR(8) COMMENT '身份证件种类',
+        c_cert_cde VARCHAR(50) COMMENT '身份证件号码',
+        c_clnt_mrk VARCHAR(1) COMMENT '客户类型: 0: 法人,1: 个人',
+        c_biz_type VARCHAR(2) COMMENT '客户角色',
+        pt VARCHAR(15) COMMENT '分区字段'
+    )
+    ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保单相关方关系表'/*!50500 partition by range  columns(pt)
+(partition pt20190802000000 values less than ('20190802999999') engine = innodb,
+ partition pt20190808000000 values less than ('20190808999999') engine = innodb) */
+ ;
+ drop table `edw_cust_ply_party_insured`;
+CREATE TABLE
+    edw_cust_ply_party_insured
+    (
+        c_ply_no VARCHAR(50) COMMENT '保单编号',
+  `c_app_no` varchar(50)  default null comment '申请单号，批改申请单号',
+        c_cst_no VARCHAR(32) COMMENT '统一客户编号',
+        c_insured_name VARCHAR(40) COMMENT '客户名称',
+        c_cert_cls VARCHAR(8) COMMENT '身份证件种类',
+        c_cert_cde VARCHAR(50) COMMENT '身份证件号码',
+        c_clnt_mrk VARCHAR(1) COMMENT '客户类型: 0: 法人,1: 个人',
+        c_biz_type VARCHAR(2) COMMENT '客户角色',
+        c_app_relation VARCHAR(30) COMMENT '与被保人关系',
+        pt VARCHAR(15) COMMENT '分区字段'
+    )
+    ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保单相关方关系表'/*!50500 partition by range  columns(pt)
+(partition pt20190802000000 values less than ('20190802999999') engine = innodb,
+ partition pt20190808000000 values less than ('20190808999999') engine = innodb) */
+ ;

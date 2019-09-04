@@ -93,12 +93,12 @@ SELECT
             end                 
     end as sale_type,-- 销售渠道
     -- 个人代理：为代理人名称；银保通代理点：**银行**分行等
-    (select (select c_cha_nme from ods_cthx_web_cus_cha partition(pt{lastday}000000) v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
+    (select c_cha_nme from ods_cthx_web_cus_cha partition(pt{lastday}000000) v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
     date_format(a.t_app_tm,'%Y%m%d')        as ins_date,-- 投保日期
     date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
-    u.c_acc_name                            as app_name,-- 投保人名称
+    u.c_applicant_name                            as app_name,-- 投保人名称
     u.c_cst_no                              as app_cst_no,-- 投保人客户号
-    case u.c_certf_cls
+    case u.c_cert_cls
     when '100111' then 11 -- 税务登记证
     when '100112' then 13 -- 统一社会信用代码
     when '110001' then 12 -- 组织机构代码
@@ -106,7 +106,7 @@ SELECT
     when '110003' then 14 -- 营业执照
     else 18 -- 其它
     end           as app_id_type,-- 投保人证件种类(单位客户)
-    u.c_certf_cde as app_id_no,-- 投保人证件号码(单位客户)
+    u.c_cert_cde as app_id_no,-- 投保人证件号码(单位客户)
     ''            as state_owned,-- 国有属性(单位客户)
     v.ins_num     as ins_num,-- 被保险人数量
     case c.c_kind_no
@@ -151,10 +151,13 @@ SELECT
     ''          as acc_bank,-- 交费账户开户机构名称
     '{lastday}'    pt
 from  ods_cthx_web_ply_base partition(pt{lastday}000000) a
-    left join edw_cust_ply_party partition(pt{lastday}000000) ua
-        on a.c_ply_no=ua.c_ply_no and ua.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
-    left join edw_cust_units_info partition(pt{lastday}000000) u
-        on ua.c_cst_no =u.c_cst_no
+    left join edw_cust_ply_party_applicant   partition(pt{lastday}000000) u on a.c_ply_no =u.c_ply_no and u.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+    -- left join edw_cust_ply_party partition(pt{lastday}000000) ua
+    --    on a.c_ply_no=ua.c_ply_no and ua.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+    -- left join edw_cust_units_info partition(pt{lastday}000000) u
+    --    on ua.c_cst_no =u.c_cst_no
+
+
     left join ods_cthx_web_ply_ent_tgt partition(pt{lastday}000000) t
         on a.c_ply_no=t.c_ply_no
     left join ods_cthx_web_prd_prod partition(pt{lastday}000000) c 

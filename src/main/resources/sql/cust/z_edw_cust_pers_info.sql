@@ -1,6 +1,6 @@
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=10240;
-alter table edw_cust_pers_info truncate partition pt20190827000000;
+alter table edw_cust_pers_info truncate partition pt20190808000000;
 
 INSERT INTO edw_cust_pers_info(
     c_dpt_cde,
@@ -40,7 +40,7 @@ select
     ,substring_index(c_mobile,',',1) c_mobile
     ,substring_index(c_clnt_addr,',',1) c_clnt_addr
     ,substring_index(c_work_dpt,',',1) c_work_dpt
-    ,'20190827' pt
+    ,'20190808' pt
 from (
 	select     
 	    group_concat(c_dpt_cde order by biz_type)  c_dpt_cde
@@ -66,17 +66,17 @@ from (
 		    ,c_app_nme c_acc_name -- 投保人名称
 		    ,c_sex c_cst_sex -- 性别
 		    ,c_aml_country c_country -- 国籍
-		    ,c_certf_cls  -- 证件类型
-		    ,c_certf_cde  -- 证件号码
-		    ,date_format(t_certf_end_date, '%Y%m%d') t_certf_end_date -- 证件有效期止
+		    ,c_certf_cls c_cert_cls -- 证件类型
+		    ,c_certf_cde  c_cert_cde -- 证件号码
+		    ,date_format(t_certf_end_date, '%Y%m%d') c_cert_end_date -- 证件有效期止
 		    ,c_occup_cde  -- 职业代码
 		    ,null n_income
 		    ,c_mobile  -- 移动电话
 		    ,c_clnt_addr c_clnt_addr -- 地址
 		    ,c_work_dpt  -- 工作单位
 		    ,21 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_ply_applicant  partition(pt20190827000000)  a
-            inner join ods_cthx_web_ply_base partition(pt20190827000000) b on a.c_app_no = b.c_app_no
+		from ods_cthx_web_ply_applicant  partition(pt20190808000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
 		union
 		select b.c_dpt_cde c_dpt_cde
@@ -95,8 +95,8 @@ from (
 		    ,c_clnt_addr -- 地址
 		    ,c_work_dpt -- 工作单位
 		    ,31 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_app_insured  partition(pt20190827000000)  a
-            inner join ods_cthx_web_ply_base partition(pt20190827000000) b on a.c_app_no = b.c_app_no
+		from ods_cthx_web_app_insured  partition(pt20190808000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
 		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
 		union 
 		select distinct b.c_dpt_cde c_dpt_cde
@@ -115,9 +115,9 @@ from (
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
 		    ,33 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_app_grp_member  partition(pt20190827000000)  a -- 团单成员信息
-            inner join ods_cthx_web_ply_base partition(pt20190827000000) b on a.c_app_no = b.c_app_no
-            -- inner join ods_cthx_web_ply_bnfc partition(pt20190827000000) bn  on bn.c_app_no = b.c_app_no
+		from ods_cthx_web_app_grp_member  partition(pt20190808000000)  a -- 团单成员信息
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
+            -- inner join ods_cthx_web_ply_bnfc partition(pt20190808000000) bn  on bn.c_app_no = b.c_app_no
 		-- where bn.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
 		union 
 		select b.c_dpt_cde c_dpt_cde
@@ -136,12 +136,13 @@ from (
 		    ,null  c_clnt_addr -- 地址
 		    ,null c_work_dpt  -- 工作单位
 		    ,41 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_ply_bnfc  partition(pt20190827000000)  a
-            inner join ods_cthx_web_ply_base partition(pt20190827000000) b on a.c_app_no = b.c_app_no
-		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+		from ods_cthx_web_ply_bnfc  partition(pt20190808000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
+		-- where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+		where substr(a.c_certf_cls, 1, 2) in ('10','11')
 		union 
 		select distinct b.c_dpt_cde c_dpt_cde
-		    ,concat(rpad(c_bnfc_cert_typ, 6, '0') , rpad(c_bnfc_cert_no, 18, '0'))  c_cst_no -- 被保人编码  
+		    ,concat(rpad(c_bnfc_cert_typ, 6, '0') , rpad(c_bnfc_cert_no, 18, '0'))  c_cst_no -- 受益人编码  
 		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
 		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
 		    ,c_bnfc_nme c_acc_name -- 受益人 
@@ -156,9 +157,9 @@ from (
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
 		    ,43 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_app_grp_member  partition(pt20190827000000)  a -- 团单成员信息
-            inner join ods_cthx_web_ply_base partition(pt20190827000000) b on a.c_app_no = b.c_app_no
-            -- inner join ods_cthx_web_ply_bnfc partition(pt20190827000000) bn  on bn.c_app_no = b.c_app_no
+		from ods_cthx_web_app_grp_member  partition(pt20190808000000)  a -- 团单成员信息
+            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
+            -- inner join ods_cthx_web_ply_bnfc partition(pt20190808000000) bn  on bn.c_app_no = b.c_app_no
 		-- where bn.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
 		union
 		select b.c_dpt_cde c_dpt_cde
@@ -177,9 +178,9 @@ from (
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
 		    ,10 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_clm_bank  partition(pt20190827000000)  a
-		    inner join ods_cthx_web_clm_main partition(pt20190827000000) c on a.c_clm_no = c.c_clm_no
-            inner join ods_cthx_web_ply_base  partition(pt20190827000000) b on c.c_ply_no = b.c_ply_no
+		from ods_cthx_web_clm_bank  partition(pt20190808000000)  a
+		    inner join ods_cthx_web_clm_main partition(pt20190808000000) c on a.c_clm_no = c.c_clm_no
+            inner join ods_cthx_web_ply_base  partition(pt20190808000000) b on c.c_ply_no = b.c_ply_no
 		) vw
 	where c_cst_no is not null
 	group by c_cst_no

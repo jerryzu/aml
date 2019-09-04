@@ -28,6 +28,7 @@ INSERT INTO rpt_fxq_tb_ins_fav_cst_ms(
         insbene_id_no,
         pt
 )
+
 select
 	a.c_dpt_cde as company_codel,-- 机构网点代码
 	'' as company_code2,-- 金融机构编码
@@ -35,9 +36,9 @@ select
 	a.c_ply_no as pol_no,-- 保单号
 	date_format(a.t_app_tm,'%y%m%d') as ins_date,-- 投保日期
 
-	b.c_app_nme as app_name,-- 投保人名称
-	b.c_app_cde as app_cst_no,-- 投保人客户号
-	b.c_certf_cde as app_id_no,-- 投保人证件号码
+	b.c_applicant_name as app_name,-- 投保人名称
+	b.c_cst_no as app_cst_no,-- 投保人客户号
+	b.c_cert_cde as app_id_no,-- 投保人证件号码
 
 	'11' as insfav_type,-- 被保人或受益人标识 11:被保险人； 12：受益人
 	c.c_clnt_mrk as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
@@ -61,14 +62,13 @@ select
 	end  as relation,-- 投保人、被保人之间的关系 11：本单位；12本单位董事、监事或高级管理人员；13：雇佣或劳务；14：其他
 	'' as fav_type,-- 受益人标识 11：法定受益人；12非法定受益人 insfav_type=12时填写
 
-	c.c_insured_nme as name,-- 被保人或受益人名称
-	concat(rpad(c.c_certf_cls, 6, '0') , rpad(c.c_certf_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号
-	c.c_certf_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
-
+	c.c_insured_name as name,-- 被保人或受益人名称
+	concat(rpad(c.c_cert_cls, 6, '0') , rpad(c.c_cert_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号
+	c.c_cert_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
     '{lastday}' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	left join ods_cthx_web_ply_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
-	left join ods_cthx_web_app_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
+	left join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_app_no=b.c_app_no
+	left join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
 where a.t_next_edr_bgn_tm > now() and b.c_clnt_mrk = 1
 union all
 select
@@ -78,21 +78,21 @@ select
 	a.c_ply_no as pol_no,-- 保单号
 	date_format(a.t_app_tm,'%y%m%d') as ins_date,-- 投保日期
 
-	b.c_app_nme as app_name,-- 投保人名称
-	b.c_app_cde as app_cst_no,-- 投保人客户号
-	b.c_certf_cde as app_id_no,-- 投保人证件号码
+	b.c_applicant_name as app_name,-- 投保人名称
+	b.c_cst_no as app_cst_no,-- 投保人客户号
+	b.c_cert_cde as app_id_no,-- 投保人证件号码
 
 	'12' as insfav_type,-- 被保人或受益人标识 11:被保险人； 12：受益人
 	c.c_clnt_mrk as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
 	'' as relation,-- 投保人、被保人之间的关系 11：本单位；12本单位董事、监事或高级管理人员；13：雇佣或劳务；14：其他
 	'' as fav_type,-- 受益人标识 11：法定受益人；12非法定受益人 insfav_type=12时填写
 
-	c.c_bnfc_nme as name,-- 被保人或受益人名称
-	concat(rpad(c.c_certf_cls, 6, '0') , rpad(c.c_certf_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号
-	c.c_certf_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
+	c.c_bnfc_name as name,-- 被保人或受益人名称
+	concat(rpad(c.c_cert_cls, 6, '0') , rpad(c.c_cert_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号
+	c.c_cert_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
 
-	'{lastday}' pt
+	'{lastday}' pt	
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	left join ods_cthx_web_ply_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
-	left join ods_cthx_web_ply_bnfc partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
+	left join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_app_no=b.c_app_no
+	left join edw_cust_ply_party_bnfc partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
 where a.t_next_edr_bgn_tm > now() and b.c_clnt_mrk = 1

@@ -60,15 +60,15 @@ select
     '' as cur_code1,-- 币种
     '' as pre_amt_all,-- 累计保费金额
     '' as usd_amt_all,-- 累计保费折合美元金额
-    b.c_app_nme as app_name,-- 投保人名称
-    b.c_app_cde as app_cst_no,-- 投保人客户号
-    b.c_certf_cde as app_id_no,-- 投保人证件号码
+    b.c_applicant_name as app_name,-- 投保人名称
+    b.c_cst_no as app_cst_no,-- 投保人客户号
+    b.c_cert_cde as app_id_no,-- 投保人证件号码
     b.c_clnt_mrk as app_cus_pro,-- 投保人客户类型 11:个人;12:单位;
-    c.c_insured_nme as ins_name,-- 被保险人客户名称
-    c.c_insured_cde as ins_cst_no,-- 被保险人客户号
-    c.c_certf_cde as ins_id_no,-- 被保险人证件号码
+    c.c_insured_name as ins_name,-- 被保险人客户名称
+    c.c_cst_no as ins_cst_no,-- 被保险人客户号
+    c.c_cert_cde as ins_id_no,-- 被保险人证件号码
     c.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位;
-    d.c_bnfc_nme as benefit_name,-- 受益人名称
+    d.c_bnfc_name as benefit_name,-- 受益人名称
     -- d.c_bnfc_cert_no   as benefit_id_no,-- 受益人身份证件号码,无此字段
     ''   as benefit_id_no,-- 受益人身份证件号码
     '' as benefit_pro,-- 受益人类型 11:个人;12:单位;
@@ -88,8 +88,7 @@ select
     '' as receipt_no,-- 作业流水号,唯一标识号
     '{lastday}' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	left join ods_cthx_web_ply_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
-	left join ods_cthx_web_app_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
-	left join ods_cthx_web_ply_bnfc partition(pt{lastday}000000) d on  a.c_ply_no=d.c_ply_no
-	left join ods_cthx_web_app_grp_member partition(pt{lastday}000000) g on  a.c_ply_no=g.c_ply_no
+	left join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
+	left join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
+	left join edw_cust_ply_party_bnfc partition(pt{lastday}000000) d on  a.c_ply_no=d.c_ply_no
 where a.t_next_edr_bgn_tm > now() 

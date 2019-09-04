@@ -66,9 +66,9 @@ from (
 		    ,c_app_nme c_acc_name -- 投保人名称
 		    ,c_sex c_cst_sex -- 性别
 		    ,c_aml_country c_country -- 国籍
-		    ,c_certf_cls  -- 证件类型
-		    ,c_certf_cde  -- 证件号码
-		    ,date_format(t_certf_end_date, '%Y%m%d') t_certf_end_date -- 证件有效期止
+		    ,c_certf_cls c_cert_cls -- 证件类型
+		    ,c_certf_cde  c_cert_cde -- 证件号码
+		    ,date_format(t_certf_end_date, '%Y%m%d') c_cert_end_date -- 证件有效期止
 		    ,c_occup_cde  -- 职业代码
 		    ,null n_income
 		    ,c_mobile  -- 移动电话
@@ -138,7 +138,8 @@ from (
 		    ,41 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
 		from ods_cthx_web_ply_bnfc  partition(pt{lastday}000000)  a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
-		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+		-- where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+		where substr(a.c_certf_cls, 1, 2) in ('10','11')
 		union 
 		select distinct b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(c_bnfc_cert_typ, 6, '0') , rpad(c_bnfc_cert_no, 18, '0'))  c_cst_no -- 受益人编码  
