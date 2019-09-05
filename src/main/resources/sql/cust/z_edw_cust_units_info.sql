@@ -1,6 +1,6 @@
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=10240;
-alter table edw_cust_units_info truncate partition pt20190808000000;
+alter table edw_cust_units_info truncate partition pt20190903000000;
 insert into edw_cust_units_info(
     c_dpt_cde,
     c_cst_no,
@@ -61,7 +61,7 @@ select
     ,substring_index(c_trd_cde,',',1) c_trd_cde
     ,substring_index(c_sub_trd_cde,',',1) c_sub_trd_cde
     ,substring_index(n_reg_amt,',',1) n_reg_amt    
-    ,'20190808' pt    
+    ,'20190903' pt    
 from (
 	select     
 	    group_concat(c_dpt_cde order by biz_type)  c_dpt_cde
@@ -126,9 +126,11 @@ from (
             ,a.c_sub_trd_cde  -- 行业
             ,null n_reg_amt
             ,22 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-        from ods_cthx_web_ply_applicant partition(pt20190808000000) a
-            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
+        from ods_cthx_web_ply_applicant partition(pt20190903000000) a
+            inner join ods_cthx_web_ply_base partition(pt20190903000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
         union 
         select b.c_dpt_cde c_dpt_cde
             ,concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0'))  c_cst_no -- 客户号
@@ -159,9 +161,11 @@ from (
             ,null  c_sub_trd_cde  -- 行业
             ,null  reg_amt -- 注册资本金
             ,32 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-        from ods_cthx_web_app_insured  partition(pt20190808000000) a -- 被保人
-            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
+        from ods_cthx_web_app_insured  partition(pt20190903000000) a -- 被保人
+            inner join ods_cthx_web_ply_base partition(pt20190903000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
         union  
         select b.c_dpt_cde c_dpt_cde
             ,concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0')) c_cst_no -- 客户号
@@ -185,17 +189,20 @@ from (
             ,null c_acth_certf_cde
             ,null t_acth_certf_end_tm
             ,a.c_cntr_nme c_ope_name -- 授权办理业务人员名称
-            ,a.c_certf_cls c_ope_certf_cls -- 授权办理业务人员身份证件类型
-            ,a.c_certf_cde c_ope_certf_cde -- 授权办理业务人员身份证件号码
+            ,null c_ope_certf_cls -- 授权办理业务人员身份证件类型
+            ,null c_ope_certf_cde -- 授权办理业务人员身份证件号码
             ,null t_ope_certf_end_tm
             ,null c_trd_cde
             ,null c_sub_trd_cde
             ,null reg_amt
             ,42 biz_type  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-        from ods_cthx_web_ply_bnfc partition(pt20190808000000) a
-            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
+        from ods_cthx_web_ply_bnfc partition(pt20190903000000) a
+            inner join ods_cthx_web_ply_base partition(pt20190903000000) b on a.c_app_no = b.c_app_no
+        -- where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
 		where substr(a.c_certf_cls, 1, 2) in ('10','11')
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
 		) vw
-    where c_cst_no is not null
-	group by c_cst_no
+	where c_cst_no is not null and c_cst_no REGEXP '[^0-9.]' = 0
+	group by vw.c_cst_no
 ) vw

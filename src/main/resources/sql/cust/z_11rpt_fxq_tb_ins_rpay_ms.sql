@@ -2,11 +2,11 @@
 select count(1) from information_schema.partitions 
 where table_schema = schema() 
     and table_name='rpt_fxq_tb_ins_rpay_ms' 
-    and partition_name = 'pt20190827000000';
+    and partition_name = 'pt20190903000000';
 
-alter table rpt_fxq_tb_ins_rpay_ms add partition (partition pt20190827000000 values less than ('{lastday}999999'));
+alter table rpt_fxq_tb_ins_rpay_ms add partition (partition pt20190903000000 values less than ('{lastday}999999'));
 
-alter table rpt_fxq_tb_ins_rpay_ms truncate partition pt20190827000000;
+alter table rpt_fxq_tb_ins_rpay_ms truncate partition pt20190903000000;
 */
 truncate table rpt_fxq_tb_ins_rpay_ms;
 
@@ -58,38 +58,37 @@ select
     date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- 投保日期
     date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
     '' as cur_code1,-- 币种
-    '' as pre_amt_all,-- 累计保费金额
-    '' as usd_amt_all,-- 累计保费折合美元金额
-    b.c_app_nme as app_name,-- 投保人名称
-    b.c_app_cde as app_cst_no,-- 投保人客户号
-    b.c_certf_cde as app_id_no,-- 投保人证件号码
-    b.c_clnt_mrk as app_cus_pro,-- 投保人客户类型
-    c.c_insured_nme as ins_name,-- 被保险人客户名称
-    c.c_insured_cde as ins_cst_no,-- 被保险人客户号
-    c.c_certf_cde as ins_id_no,-- 被保险人证件号码
-    c.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型
-    d.c_bnfc_nme as benefit_name,-- 受益人名称
+    null as pre_amt_all,-- 累计保费金额
+    null as usd_amt_all,-- 累计保费折合美元金额
+    b.c_applicant_name as app_name,-- 投保人名称
+    b.c_cst_no as app_cst_no,-- 投保人客户号
+    b.c_cert_cde as app_id_no,-- 投保人证件号码
+    b.c_clnt_mrk as app_cus_pro,-- 投保人客户类型 11:个人;12:单位;
+    c.c_insured_name as ins_name,-- 被保险人客户名称
+    c.c_cst_no as ins_cst_no,-- 被保险人客户号
+    c.c_cert_cde as ins_id_no,-- 被保险人证件号码
+    c.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位;
+    d.c_bnfc_name as benefit_name,-- 受益人名称
     -- d.c_bnfc_cert_no   as benefit_id_no,-- 受益人身份证件号码,无此字段
     ''   as benefit_id_no,-- 受益人身份证件号码
-    '' as benefit_pro,-- 受益人类型
+    '' as benefit_pro,-- 受益人类型 11:个人;12:单位;
     -- d.c_app_relation as relation_1,-- 投保人被保人之间的关系,无此字段
-    '' as relation_1,-- 投保人被保人之间的关系
-    '' as relation_2,-- 受益人被保人之间的关系
-    '' as pay_type,-- 给付类型
+    '' as relation_1,-- 投保人被保人之间的关系 11:本人;12:配偶;13:父母;14:子女;15:其他近亲属;16:雇佣或劳务;17:其他;
+    '' as relation_2,-- 受益人被保人之间的关系 11:本人;12:配偶;13:父母;14:子女;15:其他近亲属;16:雇佣或劳务;18:其他;
+    '' as pay_type,-- 给付类型  11:生产金给付;12:满期金给付;13:其他
     '' as rpay_date,-- 给付业务办理日期
     '' as pay_date,-- 资金交易日期
     '' as cur_code2,-- 币种
-    '' as pay_amt,-- 给付金额
-    '' as pay_usd_amt,-- 折合美元金额
-    '' as tsf_flag,-- 给付方式
+    null as pay_amt,-- 给付金额
+    null as pay_usd_amt,-- 折合美元金额
+    '' as tsf_flag,-- 给付方式 10:现金;11:银行转账;12:其他
     '' as acc_name,-- 收款账号名称
     '' as acc_no,-- 收款账号
     '' as acc_bank,-- 收款账户开户机构名称
     '' as receipt_no,-- 作业流水号,唯一标识号
-    '20190827' pt
-from ods_cthx_web_ply_base partition(pt20190827000000) a
-	left join ods_cthx_web_ply_applicant partition(pt20190827000000) b on a.c_ply_no=b.c_ply_no
-	left join ods_cthx_web_app_insured partition(pt20190827000000) c on a.c_app_no=c.c_app_no
-	left join ods_cthx_web_ply_bnfc partition(pt20190827000000) d on  a.c_ply_no=d.c_ply_no
-	left join ods_cthx_web_app_grp_member partition(pt20190827000000) g on  a.c_ply_no=g.c_ply_no
+    '20190903' pt
+from ods_cthx_web_ply_base partition(pt20190903000000) a
+	left join edw_cust_ply_party_applicant partition(pt20190903000000) b on a.c_app_no=b.c_app_no
+	left join edw_cust_ply_party_insured partition(pt20190903000000) c on a.c_app_no=c.c_app_no
+	left join edw_cust_ply_party_bnfc partition(pt20190903000000) d on  a.c_app_no=d.c_app_no
 where a.t_next_edr_bgn_tm > now() 

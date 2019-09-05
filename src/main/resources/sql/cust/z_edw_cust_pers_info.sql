@@ -1,6 +1,6 @@
 SELECT @@global.group_concat_max_len;
-SET SESSION group_concat_max_len=10240;
-alter table edw_cust_pers_info truncate partition pt20190808000000;
+SET SESSION group_concat_max_len=1024000;
+alter table edw_cust_pers_info truncate partition pt20190903000000;
 
 INSERT INTO edw_cust_pers_info(
     c_dpt_cde,
@@ -40,7 +40,7 @@ select
     ,substring_index(c_mobile,',',1) c_mobile
     ,substring_index(c_clnt_addr,',',1) c_clnt_addr
     ,substring_index(c_work_dpt,',',1) c_work_dpt
-    ,'20190808' pt
+    ,'20190903' pt
 from (
 	select     
 	    group_concat(c_dpt_cde order by biz_type)  c_dpt_cde
@@ -60,6 +60,28 @@ from (
 	    ,group_concat(c_work_dpt order by biz_type)  c_work_dpt
 	from (
 		select b.c_dpt_cde c_dpt_cde
+		    ,concat(rpad(c_card_type, 6, '0') , rpad(c_card_cde, 18, '0')) c_cst_no -- 收款人编号
+		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
+		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
+		    ,c_payee_nme c_acc_name -- 收款人名称
+		    ,null c_cst_sex
+		    ,null c_country
+		    ,c_card_type c_cert_cls -- 证件类型
+		    ,c_card_cde c_cert_cde -- 证件号码 
+		    ,null c_cert_end_date
+		    ,null c_occup_cde
+		    ,null n_income
+		    ,c_tel_no c_mobile-- 收款人手机号码
+		    ,null c_clnt_addr
+		    ,null c_work_dpt
+		    ,10 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
+		from ods_cthx_web_clm_bank  partition(pt20190903000000)  a
+		    inner join ods_cthx_web_clm_main partition(pt20190903000000) c on a.c_clm_no = c.c_clm_no
+            inner join ods_cthx_web_ply_base  partition(pt20190903000000) b on c.c_ply_no = b.c_ply_no
+		where c_card_type is not null and trim(c_card_type)  <> '' and c_card_type REGEXP '[^0-9.]' = 0
+			and c_card_cde is not null and trim(c_card_cde)  <> '' 
+		union
+		select b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no -- 投保人代码,投保人唯一客户代码
 		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
 		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
@@ -75,9 +97,11 @@ from (
 		    ,c_clnt_addr c_clnt_addr -- 地址
 		    ,c_work_dpt  -- 工作单位
 		    ,21 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_ply_applicant  partition(pt20190808000000)  a
-            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
-		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+		from ods_cthx_web_ply_applicant  partition(pt20190903000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190903000000) b on a.c_app_no = b.c_app_no
+		where b.t_next_edr_bgn_tm > now() and a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
 		union
 		select b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no -- 被保人编码  
@@ -95,9 +119,11 @@ from (
 		    ,c_clnt_addr -- 地址
 		    ,c_work_dpt -- 工作单位
 		    ,31 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_app_insured  partition(pt20190808000000)  a
-            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
-		where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+		from ods_cthx_web_app_insured  partition(pt20190903000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190903000000) b on a.c_app_no = b.c_app_no
+		where b.t_next_edr_bgn_tm > now() and  a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
 		union 
 		select distinct b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(c_cert_typ, 6, '0') , rpad(c_cert_no, 18, '0'))  c_cst_no -- 被保人编码  
@@ -115,10 +141,12 @@ from (
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
 		    ,33 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_app_grp_member  partition(pt20190808000000)  a -- 团单成员信息
-            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
-            -- inner join ods_cthx_web_ply_bnfc partition(pt20190808000000) bn  on bn.c_app_no = b.c_app_no
+		from ods_cthx_web_app_grp_member  partition(pt20190903000000)  a -- 团单成员信息
+            inner join ods_cthx_web_ply_base partition(pt20190903000000) b on a.c_app_no = b.c_app_no
+            -- inner join ods_cthx_web_ply_bnfc partition(pt20190903000000) bn  on bn.c_app_no = b.c_app_no
 		-- where bn.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
+		where c_cert_typ is not null and trim(c_cert_typ)  <> '' and c_cert_typ REGEXP '[^0-9.]' = 0
+			and c_cert_no is not null and trim(c_cert_no)  <> '' 
 		union 
 		select b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no-- 受益人代码,受益人唯一客户代码
@@ -136,10 +164,11 @@ from (
 		    ,null  c_clnt_addr -- 地址
 		    ,null c_work_dpt  -- 工作单位
 		    ,41 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_ply_bnfc  partition(pt20190808000000)  a
-            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
-		-- where a.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
-		where substr(a.c_certf_cls, 1, 2) in ('10','11')
+		from ods_cthx_web_ply_bnfc  partition(pt20190903000000)  a
+            inner join ods_cthx_web_ply_base partition(pt20190903000000) b on a.c_app_no = b.c_app_no
+		where b.t_next_edr_bgn_tm > now() and substr(a.c_certf_cls, 1, 2) in ('12')  --  and a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
 		union 
 		select distinct b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(c_bnfc_cert_typ, 6, '0') , rpad(c_bnfc_cert_no, 18, '0'))  c_cst_no -- 受益人编码  
@@ -157,31 +186,13 @@ from (
 		    ,null c_clnt_addr
 		    ,null c_work_dpt
 		    ,43 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_app_grp_member  partition(pt20190808000000)  a -- 团单成员信息
-            inner join ods_cthx_web_ply_base partition(pt20190808000000) b on a.c_app_no = b.c_app_no
-            -- inner join ods_cthx_web_ply_bnfc partition(pt20190808000000) bn  on bn.c_app_no = b.c_app_no
+		from ods_cthx_web_app_grp_member  partition(pt20190903000000)  a -- 团单成员信息
+            inner join ods_cthx_web_ply_base partition(pt20190903000000) b on a.c_app_no = b.c_app_no
+            -- inner join ods_cthx_web_ply_bnfc partition(pt20190903000000) bn  on bn.c_app_no = b.c_app_no
 		-- where bn.c_clnt_mrk = 1 -- 客户分类,0 法人，1 个人
-		union
-		select b.c_dpt_cde c_dpt_cde
-		    ,concat(rpad(c_card_type, 6, '0') , rpad(c_card_cde, 18, '0')) c_cst_no -- 收款人编号
-		    ,date_format(b.t_insrnc_bgn_tm, '%Y%m%d') t_open_time
-		    ,date_format(greatest(b.t_insrnc_bgn_tm,b.t_udr_tm,coalesce(b.t_edr_bgn_tm,b.t_insrnc_bgn_tm)), '%Y%m%d') t_close_time
-		    ,c_payee_nme c_acc_name -- 收款人名称
-		    ,null c_cst_sex
-		    ,null c_country
-		    ,c_card_type c_cert_cls -- 证件类型
-		    ,c_card_cde c_cert_cde -- 证件号码 
-		    ,null c_cert_end_date
-		    ,null c_occup_cde
-		    ,null n_income
-		    ,c_tel_no c_mobile-- 收款人手机号码
-		    ,null c_clnt_addr
-		    ,null c_work_dpt
-		    ,10 biz_type -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-		from ods_cthx_web_clm_bank  partition(pt20190808000000)  a
-		    inner join ods_cthx_web_clm_main partition(pt20190808000000) c on a.c_clm_no = c.c_clm_no
-            inner join ods_cthx_web_ply_base  partition(pt20190808000000) b on c.c_ply_no = b.c_ply_no
+		where c_bnfc_cert_typ is not null and trim(c_bnfc_cert_typ)  <> '' and c_bnfc_cert_typ REGEXP '[^0-9.]' = 0
+			and c_bnfc_cert_no is not null and trim(c_bnfc_cert_no)  <> ''
 		) vw
-	where c_cst_no is not null
+	where c_cst_no is not null and c_cst_no REGEXP '[^0-9.]' = 0
 	group by c_cst_no
 ) vw

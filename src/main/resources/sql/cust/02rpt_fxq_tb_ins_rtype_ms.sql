@@ -8,7 +8,7 @@ alter table rpt_fxq_tb_company_ms add partition (partition pt{lastday}000000 val
 
 alter table rpt_fxq_tb_company_ms truncate partition pt{lastday}000000;
 */
-truncate table rpt_fxq_tb_company_ms;
+truncate table rpt_fxq_tb_ins_rtype_ms;
 
 INSERT INTO rpt_fxq_tb_ins_rtype_ms (
 	head_no, 

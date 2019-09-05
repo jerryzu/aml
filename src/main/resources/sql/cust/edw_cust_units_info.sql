@@ -129,6 +129,8 @@ from (
         from ods_cthx_web_ply_applicant partition(pt{lastday}000000) a
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
         union 
         select b.c_dpt_cde c_dpt_cde
             ,concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0'))  c_cst_no -- 客户号
@@ -162,6 +164,8 @@ from (
         from ods_cthx_web_app_insured  partition(pt{lastday}000000) a -- 被保人
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
         union  
         select b.c_dpt_cde c_dpt_cde
             ,concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0')) c_cst_no -- 客户号
@@ -185,8 +189,8 @@ from (
             ,null c_acth_certf_cde
             ,null t_acth_certf_end_tm
             ,a.c_cntr_nme c_ope_name -- 授权办理业务人员名称
-            ,a.c_certf_cls c_ope_certf_cls -- 授权办理业务人员身份证件类型
-            ,a.c_certf_cde c_ope_certf_cde -- 授权办理业务人员身份证件号码
+            ,null c_ope_certf_cls -- 授权办理业务人员身份证件类型
+            ,null c_ope_certf_cde -- 授权办理业务人员身份证件号码
             ,null t_ope_certf_end_tm
             ,null c_trd_cde
             ,null c_sub_trd_cde
@@ -196,7 +200,9 @@ from (
             inner join ods_cthx_web_ply_base partition(pt{lastday}000000) b on a.c_app_no = b.c_app_no
         -- where a.c_clnt_mrk = 0 -- 客户分类,0 法人，1 个人
 		where substr(a.c_certf_cls, 1, 2) in ('10','11')
+			and c_certf_cls is not null and trim(c_certf_cls)  <> '' and c_certf_cls REGEXP '[^0-9.]' = 0
+			and c_certf_cde is not null and trim(c_certf_cde)  <> '' 
 		) vw
-    where vw.c_cst_no is not null
+	where c_cst_no is not null and c_cst_no REGEXP '[^0-9.]' = 0
 	group by vw.c_cst_no
 ) vw

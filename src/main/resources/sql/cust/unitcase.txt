@@ -162,3 +162,58 @@ select  c_bnfc_nme  -- 受益人
     ,c_bnfc_cert_typ  c_cert_cls -- 受益人证件类型
     ,c_bnfc_cert_no c_cert_cde -- 受益人证件号码 
 from ods_cthx_web_app_grp_member  partition(pt20190822000000)  a -- 团单成员信息		
+
+----------20190903
+select * from edw_cust_units_info m where not exists(select * from edw_cust_ply_party v where v.c_cst_no = m.c_cst_no);
+
+select * from edw_cust_pers_info m where not exists(select * from edw_cust_ply_party v where v.c_cst_no = m.c_cst_no);
+
+select * from edw_cust_ply_party m
+where not exists(select c_cst_no from 
+    (select c_cst_no from edw_cust_pers_info 
+    union all
+    select c_cst_no from edw_cust_units_info 
+    )
+    v where v.c_cst_no = m.c_cst_no);
+
+
+select * from edw_cust_units_info m where  exists(select * from edw_cust_pers_info v where v.c_cst_no = m.c_cst_no);
+
+select * from edw_cust_pers_info m where  exists(select * from edw_cust_units_info v where v.c_cst_no = m.c_cst_no);
+
+select c_biz_type, count(1)
+from edw_cust_ply_party
+group by c_biz_type
+union all
+select c_biz_type, count(1)
+from edw_cust_ply_party_applicant
+group by c_biz_type
+union all
+select c_biz_type, count(1)
+from edw_cust_ply_party_bnfc
+group by c_biz_type
+union all
+select c_biz_type, count(1)
+from edw_cust_ply_party_insured
+group by c_biz_type
+
+
+除去没有身份证的,只要身份证类型或身份证号码其一为空,即被过滤掉
+
+source z_05rpt_fxq_tb_ins_bo_ms.sql;
+修改关联unit,per为left连接,内连接无相应,暂末全面掌握原因
+
+unit表中的法人,联系人等身份证类型字段不正确
+
+ods_cthx_web_cus_cha不存在
+
+select *
+from edw_cust_ply_party_applicant partition(pt20190903000000) 
+-- from edw_cust_ply_party_insured partition(pt20190903000000) 
+-- from edw_cust_ply_party_bnfc partition(pt20190903000000) 
+where c_ply_no = 'P997307801201900000001'
+
+select distinct c_cst_no
+from edw_cust_ply_party_insured partition(pt20190903000000) 
+-- from edw_cust_ply_party_bnfc partition(pt20190903000000) 
+where c_ply_no = 'P997307801201900000001'

@@ -58,8 +58,8 @@ select
     date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- 投保日期
     date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
     '' as cur_code1,-- 币种
-    '' as pre_amt_all,-- 累计保费金额
-    '' as usd_amt_all,-- 累计保费折合美元金额
+    null as pre_amt_all,-- 累计保费金额
+    null as usd_amt_all,-- 累计保费折合美元金额
     b.c_applicant_name as app_name,-- 投保人名称
     b.c_cst_no as app_cst_no,-- 投保人客户号
     b.c_cert_cde as app_id_no,-- 投保人证件号码
@@ -79,8 +79,8 @@ select
     '' as rpay_date,-- 给付业务办理日期
     '' as pay_date,-- 资金交易日期
     '' as cur_code2,-- 币种
-    '' as pay_amt,-- 给付金额
-    '' as pay_usd_amt,-- 折合美元金额
+    null as pay_amt,-- 给付金额
+    null as pay_usd_amt,-- 折合美元金额
     '' as tsf_flag,-- 给付方式 10:现金;11:银行转账;12:其他
     '' as acc_name,-- 收款账号名称
     '' as acc_no,-- 收款账号
@@ -88,7 +88,7 @@ select
     '' as receipt_no,-- 作业流水号,唯一标识号
     '{lastday}' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	left join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
+	left join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_app_no=b.c_app_no
 	left join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
-	left join edw_cust_ply_party_bnfc partition(pt{lastday}000000) d on  a.c_ply_no=d.c_ply_no
+	left join edw_cust_ply_party_bnfc partition(pt{lastday}000000) d on  a.c_app_no=d.c_app_no
 where a.t_next_edr_bgn_tm > now() 

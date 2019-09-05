@@ -2,11 +2,11 @@
 select count(1) from information_schema.partitions 
 where table_schema = schema() 
     and table_name='rpt_fxq_tb_ins_gpol_ms' 
-    and partition_name = 'pt20190827000000';
+    and partition_name = 'pt20190903000000';
 
-alter table rpt_fxq_tb_ins_gpol_ms add partition (partition pt20190827000000 values less than ('{lastday}999999'));
+alter table rpt_fxq_tb_ins_gpol_ms add partition (partition pt20190903000000 values less than ('{lastday}999999'));
 
-alter table rpt_fxq_tb_ins_gpol_ms truncate partition pt20190827000000;
+alter table rpt_fxq_tb_ins_gpol_ms truncate partition pt20190903000000;
 */
 truncate table rpt_fxq_tb_ins_gpol_ms;
 
@@ -49,15 +49,56 @@ SELECT
     ''                                      as company_code3,-- 保单归属机构网点代码
     a.c_ply_no                              as pol_no,-- 保单号
     a.c_app_no                              as app_no,-- 投保单号
-    a.c_ply_sts                             as ins_state,-- 保单状态
-    a.c_grp_mrk                             as app_type,-- 保单类型
-    a.c_bsns_typ                            as sale_type,-- 销售渠道
-    a.c_bsns_subtyp                         as sale_name,-- 销售渠道名称
+    case when a.c_edr_type in ('2','3') or a.t_insrnc_end_tm < now() then 11 else 12 end as ins_state,-- 保单状态 --edr_type in ('2','3') or  T_INSRNC_END_TM<=date then 终止 else 有效
+    case a.c_grp_mrk when 0 then 11 when 1 then 12 end as app_type,-- 保单类型  (biz: 0 个单; 1 团单)11:非团险;12:团险
+    case ifnull((select c_kind_no from ods_cthx_web_prd_prod partition(pt20190903000000) v where v.c_prod_no = a.c_prod_no), 1)
+            when '1' then
+            case a.c_cha_subtype 
+                    -- 财产保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:农村网点;17:营业网点;18:第三方平台;19:其他;
+                    when '0A0' then 17	--	营业网点
+                    when '0B0' then 17	--	营业网点
+                    when '1A0' then 12	--	保险代理机构或经济机构
+                    when '2A0' then 11	--	个人代理
+                    when '3A1' then 12	--	保险代理机构或经济机构
+                    when '4J1' then 13	--	银邮代理
+                    when '5A1' then 12	--	保险代理机构或经济机构
+                    when '6A1' then 15	--	电销
+                    when '6A2' then 15	--	电销
+                    when '6B1' then 14	--	网销
+                    when '6B2' then 14	--	网销
+                    when '6C0' then 13	--	银邮代理
+                    when '6D0' then 18	--	第三方平台
+                    when '7A0' then 17	--	营业网点
+            else
+                        19 -- 其他
+            end else
+            case a.c_cha_subtype 
+                    -- 人身保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:第三方平台;19:其他; 
+                    -- when '0A0' then 17	--	营业网点
+                    -- when '0B0' then 17	--	营业网点
+                    when '1A0' then 12	--	保险代理机构或经济机构
+                    when '2A0' then 11	--	个人代理
+                    when '3A1' then 12	--	保险代理机构或经济机构
+                    when '4J1' then 13	--	银邮代理
+                    when '5A1' then 12	--	保险代理机构或经济机构
+                    when '6A1' then 15	--	电销
+                    when '6A2' then 15	--	电销
+                    when '6B1' then 14	--	网销
+                    when '6B2' then 14	--	网销
+                    when '6C0' then 13	--	银邮代理
+                    when '6D0' then 16	--	第三方平台
+                    -- when '7A0' then 17	--	营业网点
+            else
+                        19 -- 其他
+            end                 
+    end as sale_type,-- 销售渠道
+    -- 个人代理：为代理人名称；银保通代理点：**银行**分行等
+    (select c_cha_nme from ods_cthx_web_cus_cha partition(pt20190903000000) v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
     date_format(a.t_app_tm,'%Y%m%d')        as ins_date,-- 投保日期
     date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
-    u.c_acc_name                            as app_name,-- 投保人名称
+    u.c_applicant_name                            as app_name,-- 投保人名称
     u.c_cst_no                              as app_cst_no,-- 投保人客户号
-    case u.c_certf_cls
+    case u.c_cert_cls
     when '100111' then 11 -- 税务登记证
     when '100112' then 13 -- 统一社会信用代码
     when '110001' then 12 -- 组织机构代码
@@ -65,7 +106,7 @@ SELECT
     when '110003' then 14 -- 营业执照
     else 18 -- 其它
     end           as app_id_type,-- 投保人证件种类(单位客户)
-    u.c_certf_cde as app_id_no,-- 投保人证件号码(单位客户)
+    u.c_cert_cde as app_id_no,-- 投保人证件号码(单位客户)
     ''            as state_owned,-- 国有属性(单位客户)
     v.ins_num     as ins_num,-- 被保险人数量
     case c.c_kind_no
@@ -108,19 +149,22 @@ SELECT
     ''          as acc_name,-- 交费账号名称
     ''          as acc_no,-- 交费账号
     ''          as acc_bank,-- 交费账户开户机构名称
-    '20190827'    pt
-from  ods_cthx_web_ply_base partition(pt20190827000000) a
-    left join edw_cust_ply_party partition(pt20190827000000) ua
-        on a.c_ply_no=ua.c_ply_no and ua.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
-    left join edw_cust_units_info partition(pt20190827000000) u
-        on ua.c_cst_no =u.c_cst_no
-    left join ods_cthx_web_ply_ent_tgt partition(pt20190827000000) t
+    '20190903'    pt
+from  ods_cthx_web_ply_base partition(pt20190903000000) a
+    left join edw_cust_ply_party_applicant   partition(pt20190903000000) u on a.c_ply_no =u.c_ply_no and u.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+    -- left join edw_cust_ply_party partition(pt20190903000000) ua
+    --    on a.c_ply_no=ua.c_ply_no and ua.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
+    -- left join edw_cust_units_info partition(pt20190903000000) u
+    --    on ua.c_cst_no =u.c_cst_no
+
+
+    left join ods_cthx_web_ply_ent_tgt partition(pt20190903000000) t
         on a.c_ply_no=t.c_ply_no
-    left join ods_cthx_web_prd_prod partition(pt20190827000000) c 
+    left join ods_cthx_web_prd_prod partition(pt20190903000000) c 
         on a.c_prod_no=c.c_prod_no
     left join (select a.c_ply_no, count(1) ins_num
-        from  ods_cthx_web_ply_base partition(pt20190827000000) a 
-            left join edw_cust_ply_party partition(pt20190827000000) pi 
+        from  ods_cthx_web_ply_base partition(pt20190903000000) a 
+            left join edw_cust_ply_party partition(pt20190903000000) pi 
             on a.c_ply_no=pi.c_ply_no and pi.c_biz_type =  32 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人        
         ) v on a.c_ply_no = v.c_ply_no
 where a.t_next_edr_bgn_tm > now() 

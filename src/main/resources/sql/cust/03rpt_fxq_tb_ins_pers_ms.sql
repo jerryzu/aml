@@ -46,12 +46,12 @@ SELECT
         when '1' then '11' -- 11:男
         when '2' then '12' -- 12:女
         else 
-        '-1' -- 其它
+        null-- 其它
         end	cst_sex,
         case 
         when c_country = '1' then 'CHN' -- 居民身份证
         else 
-            'CHN' -- 其它
+            null-- 其它
         end  		nation,
         case c_cert_cls
         when  '120001' then 11 -- 居民身份证

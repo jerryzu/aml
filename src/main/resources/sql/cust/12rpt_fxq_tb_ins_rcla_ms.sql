@@ -101,4 +101,4 @@ from ods_cthx_web_ply_base partition(pt{lastday}000000) a
 	 inner join ods_cthx_web_clmnv_endcase partition(pt{lastday}000000) u on a.c_ply_no = u.c_clm_no -- and u.c_feetyp_cde ='CPPK'
 	 inner join ods_cthx_web_clm_bank partition(pt{lastday}000000) g on u.c_clm_no=g.c_clm_no
 	 inner join ods_cthx_web_clm_rpt partition(pt{lastday}000000) e on g.c_clm_no=e.c_clm_no
-where a.c_ply_no = 'P997304805201700000002' and a.t_next_edr_bgn_tm > now() 
+where a.t_next_edr_bgn_tm > now() 

@@ -163,7 +163,7 @@ select
         '@N' -- 其它
         end as cur_code,-- 币种
         a.n_prm as pre_amt,-- 本期交保费金额
-        -9999 as usd_amt,-- 折合美元金额
+        null as usd_amt,-- 折合美元金额
         /* case c.c_kind_no
 	when '01' then '11'
 	when '02' then '11'
@@ -191,9 +191,9 @@ select
         '' as acc_no,-- 交费账号
         '' as acc_bank,-- 交费账户开户机构名称
         a.c_app_no  as receipt_n,-- 作业流水号,唯一标识号
-        ' '		pt
+        ' {lastday}'		pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000)  a
-        left join ods_cthx_web_ply_insured partition(pt{lastday}000000)  id on a.c_app_no=id.c_app_no
+        left join ods_cthx_web_app_insured partition(pt{lastday}000000)  id on a.c_app_no=id.c_app_no
         left join edw_cust_ply_party_applicant   partition(pt{lastday}000000) a1 on a.c_ply_no =a1.c_ply_no and a1.c_biz_type = 21  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
         left join edw_cust_ply_party_insured   partition(pt{lastday}000000) i on a.c_ply_no =i.c_ply_no and i.c_biz_type = 31  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人        
         left join edw_cust_ply_party_bnfc   partition(pt{lastday}000000) b on a.c_ply_no =b.c_ply_no and b.c_biz_type in (41, 43)  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人

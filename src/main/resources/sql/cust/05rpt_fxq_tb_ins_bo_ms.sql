@@ -38,7 +38,7 @@ select
     u.c_buslicence_no as license,-- 营业执照号码
     p.c_acc_name as bnf_name,-- 收益所有人姓名
     '14' as bnf_type,-- 判定受益所有人方式,14其他
-    '@N' as shareholding_ratio,-- 持股数量或表决权比例 ???????????????????????????????不能保存，因为是字符提供默认值
+    null as shareholding_ratio,-- 持股数量或表决权比例 ???????????????????????????????不能保存，因为是字符提供默认值
     p.c_clnt_addr as bnf_address,-- 受益所有人住址    
     case  p.c_cert_cls
         when '120001' then 11 -- 居民身份证
@@ -57,8 +57,8 @@ select
     '{lastday}' pt
 from edw_cust_ply_party partition(pt{lastday}000000) a1
     inner join edw_cust_ply_party partition(pt{lastday}000000) a2 on a1.c_ply_no = a2.c_ply_no
-    inner join  edw_cust_units_info partition(pt{lastday}000000)  u on a1.c_cst_no = u.c_cst_no
-    inner join edw_cust_pers_info partition(pt{lastday}000000) p on a2.c_cst_no = p.c_cst_no
+    left join  edw_cust_units_info partition(pt{lastday}000000)  u on a1.c_cst_no = u.c_cst_no
+    left join edw_cust_pers_info partition(pt{lastday}000000) p on a2.c_cst_no = p.c_cst_no
 where a1.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
    and a1.c_clnt_mrk='0' -- 受益人没有客户类别区分,申请人有客户类别区分
    and a2.c_biz_type = 43 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人

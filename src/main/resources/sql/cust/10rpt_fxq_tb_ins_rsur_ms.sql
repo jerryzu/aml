@@ -55,10 +55,10 @@ select
     date_format(a.t_app_tm,'%y%m%d') as ins_date,-- 投保日期
     date_format(a.t_insrnc_bgn_tm,'%y%m%d') as eff_date,-- 合同生效日期
     '' as cur_code,-- 保费货币代码
-    '' as pre_amt_all,-- 按合同币种累计缴纳保费金额
-    '' as usd_amt_all,-- 累计缴纳保费折合美元金额
-    '' as pay_amt_all,-- 累计退费金额
-    '' as usd_pay_amt_all,-- 累计退费金额折合美元金额
+    null as pre_amt_all,-- 按合同币种累计缴纳保费金额
+    null as usd_amt_all,-- 累计缴纳保费折合美元金额
+    null as pay_amt_all,-- 累计退费金额
+    null as usd_pay_amt_all,-- 累计退费金额折合美元金额
     b.c_applicant_name as app_name,-- 投保人名称
     b.c_cst_no as app_cst_no,-- 投保人客户号
     b.c_cert_cde as id_no,-- 投保人证件号码
@@ -68,8 +68,8 @@ select
     '' as sur_date,-- 业务日期
     '' as pay_date,-- 资金交易日期
     '' as cur_code2,-- 币种
-    '' as sur_amt,-- 业务发生金额
-    '' as usd_sur_amt,-- 折合美元金额
+    null as sur_amt,-- 业务发生金额
+    null as usd_sur_amt,-- 折合美元金额
     '' as tsf_flag,-- 支付方式 10:现金;11:银行转账;12:其他
     '' as acc_name,-- 交费账号名称
     '' as acc_no,-- 交费账号

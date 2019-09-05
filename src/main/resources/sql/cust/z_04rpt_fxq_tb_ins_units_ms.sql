@@ -2,11 +2,11 @@
 select count(1) from information_schema.partitions 
 where table_schema = schema() 
     and table_name='rpt_fxq_tb_ins_unit_ms' 
-    and partition_name = 'pt20190827000000';
+    and partition_name = 'pt20190903000000';
 
-alter table rpt_fxq_tb_ins_unit_ms add partition (partition pt20190827000000 values less than ('{lastday}999999'));
+alter table rpt_fxq_tb_ins_unit_ms add partition (partition pt20190903000000 values less than ('{lastday}999999'));
 
-alter table rpt_fxq_tb_ins_unit_ms truncate partition pt20190827000000;
+alter table rpt_fxq_tb_ins_unit_ms truncate partition pt20190903000000;
 */
 truncate table rpt_fxq_tb_ins_unit_ms;
 
@@ -104,6 +104,6 @@ SELECT
         n_reg_amt	        reg_amt	,
         null	        code	,
         null	        sys_name	,
-        '20190827' pt
+        '20190903' pt
 FROM
-    edw_cust_units_info partition(pt20190827000000);
+    edw_cust_units_info partition(pt20190903000000);

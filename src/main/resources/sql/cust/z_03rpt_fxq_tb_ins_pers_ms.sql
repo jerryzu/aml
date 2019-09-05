@@ -2,11 +2,11 @@
 select count(1) from information_schema.partitions 
 where table_schema = schema() 
     and table_name='rpt_fxq_tb_ins_pers_ms' 
-    and partition_name = 'pt20190827000000';
+    and partition_name = 'pt20190903000000';
 
-alter table rpt_fxq_tb_ins_pers_ms add partition (partition pt20190827000000 values less than ('{lastday}999999'));
+alter table rpt_fxq_tb_ins_pers_ms add partition (partition pt20190903000000 values less than ('{lastday}999999'));
 
-alter table rpt_fxq_tb_ins_pers_ms truncate partition pt20190827000000;
+alter table rpt_fxq_tb_ins_pers_ms truncate partition pt20190903000000;
 */
 truncate table rpt_fxq_tb_ins_pers_ms;
 
@@ -77,6 +77,6 @@ SELECT
         null		address3,
         c_work_dpt		company,
         null		sys_name,
-        '20190827' pt
+        '20190903' pt
 FROM
-    edw_cust_pers_info partition(pt20190827000000);
+    edw_cust_pers_info partition(pt20190903000000);
