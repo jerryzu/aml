@@ -35,8 +35,9 @@ ods_cthx_web_prd_kind
 ods_cthx_web_prd_prod
 ods_cthx_web_cus_cha
 
-
 mysqldump -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -p'Tpstic123456' -w"pt=20190903000000" tpedw ods_cthx_web_prd_kind ods_cthx_web_prd_prod > ods_cthx_web_prd_kind.sql
+
+mysqldump -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -p'Tpstic123456' -w"pt=20190903000000" tpedw ods_cthx_web_cus_cha > ods_cthx_web_cus_cha.sql
 
 mysqldump -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -p'Tpstic123456' -w"pt=20190903000000" tpedw ods_cthx_web_app_grp_member ods_cthx_web_app_insured ods_cthx_web_bas_edr_rsn ods_cthx_web_clm_bank ods_cthx_web_clm_main ods_cthx_web_clm_rpt ods_cthx_web_clmnv_endcase ods_cthx_web_org_dpt ods_cthx_web_org_dpt_map ods_cthx_web_ply_applicant ods_cthx_web_ply_base ods_cthx_web_ply_bnfc ods_cthx_web_ply_ent_tgt ods_cthx_web_prd_kind ods_cthx_web_prd_prod  > tpedw.sql
 
@@ -70,3 +71,27 @@ collation-server=utf8_general_ci
 systemctl start mariadb
 mysql_upgrade -uroot -p 
 systemctl enable mariadb
+
+sqlplus64 amltp/amltp@10.19.1.2:1521/uatora02
+
+ select 
+        ts.app_or_ins as app_or_ins_num,
+        d3.c_dict_nme app_or_ins,
+        ts.user_id,
+        c.c_clnt_nme as user_name,
+        d1.c_dict_nme as papers_type,
+        c.C_CERTF_CDE as papers_no,
+        to_char(ts.score_time, 'yyyy-mm-dd') score_time,
+        d2.c_dict_nme as status,
+        ts.previous_score,
+        ts.bat,
+        case when ts.previous_score > 90 then '高风险' when ts.previous_score > 80 then '较高风险' when ts.previous_score > 70 then '中风险' when ts.previous_score > 50 then '较低风险' else '低风险' end as for_level,
+        c.c_app_no prono
+from (select *       from (select t.*,      row_number() over(partition by t.user_id, t.app_or_ins order by t.bat desc) as rn from T_sco t)      where rn = 1) ts
+      join (select *       from (select tt.*,      row_number() over(partition by tt.c_clnt_cde, tt.app_or_ins order by tt.t_crt_tm desc) as rn from t_score tt) where rn = 1) c 
+      on c.c_clnt_cde = ts.user_id       and c.app_or_ins = ts.app_or_ins
+      join t_dict d1 on c.c_certf_type = d1.c_dict_cde      and d1.c_dict_type_cde = 'PAPERS_TYPE'
+      join t_dict d2 on ts.status = d2.c_dict_cde      and d2.c_dict_type_cde = 'SCORE_STATUS'
+      join t_dict d3 on ts.app_or_ins = d3.c_dict_cde      and d3.c_dict_type_cde = 'APP_OR_INS'
+
+mysqldump -hrm-bp1k9p25tjq1d86i9.mysql.rds.aliyuncs.com -utpadmin_read -p'Tpstic123456' tpedw t_lat_customer t_ih_tsdt t_lat_data t_sus_customer t_sus_contract t_is_iabi t_is_bnif t_sus_data t_sus_trans > core.sql
