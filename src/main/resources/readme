@@ -95,3 +95,11 @@ from (select *       from (select t.*,      row_number() over(partition by t.use
       join t_dict d3 on ts.app_or_ins = d3.c_dict_cde      and d3.c_dict_type_cde = 'APP_OR_INS'
 
 mysqldump -hrm-bp1k9p25tjq1d86i9.mysql.rds.aliyuncs.com -utpadmin_read -p'Tpstic123456' tpedw t_lat_customer t_ih_tsdt t_lat_data t_sus_customer t_sus_contract t_is_iabi t_is_bnif t_sus_data t_sus_trans > core.sql
+
+mysqldumpslow
+ vi /etc/my.cnf
+[mysqld]
+…
+slow_query_log = 1
+slow_query_log_file = /data/log/mysql/slow_query.log
+long_query_time = 5
