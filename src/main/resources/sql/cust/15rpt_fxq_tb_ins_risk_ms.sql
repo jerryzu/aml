@@ -1,33 +1,33 @@
-/* mysql5.7以前的变量排序模拟窗口函数可能同我们认为的不一样，以下并不会得到一条记录 */
-select 
-	'F1008933000019' company_code2, -- 金融机构编码
-	'F1008933000019' company_code3, -- 保单归属机构网点代码
-	c.c_clnt_nme as app_name, -- 投保人名称
-	c.c_certf_type as app_cst_no, -- 投保人客户号 	
-	c.c_certf_cde as app_id_no, -- 投保人证件号码
-	case when ts.previous_score > 90 then '高风险' when ts.previous_score > 80 then '较高风险' when ts.previous_score > 70 then '中风险' when ts.previous_score > 50 then '较低风险' else '低风险' end  as risk_code, -- 风险等级	如采取三类分级,10:高;11:中;12:低.如采取五类分级;10:高;11:中高;12:中;13:中低;14:低;,
-	date_format(ts.score_time, '%Y%m%d') div_date, -- 划分日期
-	11 as first_type, -- 首次标识	11:是;12:否;
-	ts.previous_score as score, -- 评分分值
-	'' as norm, -- 划分依据
-	 c.c_clnt_cde,
-	 c.app_or_ins
-from (select * 
-	from (select t.user_id, t.app_or_ins,  t.bat, t.previous_score, t.score_time, t.status, if(@u=user_id and @i=app_or_ins,@r:=@r+1,@r:=1) as rank, @u:=user_id,@i:=app_or_ins
-		from ods_amltp_t_sco t ,(select @u:=null,@i:=null, @r:=0) r 
-		where user_id = '10000017'
-		order by t.user_id, t.app_or_ins,  t.bat
-		) ts -- 得分表
-	where rank = 1 -- and ts.user_id = '10000017'
-	) ts join 
-	(select *
-	from (select t.c_clnt_cde, t.app_or_ins,  t.t_crt_tm, t.c_clnt_nme, t.c_certf_cde, t.c_app_no, t.c_certf_type, if(@u=c_clnt_cde and @i=app_or_ins,@r1:=@r+1,@r1:=1) as rank, @u1:=c_clnt_cde,@i1:=app_or_ins
-		from ods_amltp_t_score t ,(select @u1:=null,@i1:=null, @r1:=0) r 
-		where c_clnt_cde = '10000017'
-		order by t.c_clnt_cde, t.app_or_ins,  t.t_crt_tm
-		) c -- 临时得分表
-	where rank = 1 
-	) c on c.c_clnt_cde = ts.USER_ID and c.app_or_ins = ts.app_or_ins 
-	join ods_amltp_t_dict d1 on c.c_certf_type = d1.c_dict_cde and d1.c_dict_type_cde = 'PAPERS_TYPE'
-	join ods_amltp_t_dict d2 on ts.status = d2.c_dict_cde and d2.c_dict_type_cde = 'SCORE_STATUS'
-	join ods_amltp_t_dict d3 on ts.app_or_ins = d3.c_dict_cde and d3.c_dict_type_cde = 'APP_OR_INS'
+alter table rpt_fxq_tb_ins_risk truncate partition future;
+
+insert into rpt_fxq_tb_ins_risk(
+	company_code1,	--	机构网点代码
+	company_code2,	--	金融机构编码
+	company_code3,	--	保单归属机构网点代码
+	app_name,	--	投保人名称
+	app_cst_no,	--	投保人客户号
+	app_id_no,	--	投保人证件号码
+	risk_code,	--	风险等级
+	div_date,	--	划分日期
+	first_type,	--	首次标识
+	score,	--	评分分值
+	norm,	--	划分依据
+	pt	--	分区字段
+)
+select
+	co.company_code1,	--	机构网点代码
+	co.company_code2 as company_code2,	--	金融机构编码
+	null company_code3,	--	保单归属机构网点代码
+	null app_name,	--	投保人名称
+	r.c_clnt_cde app_cst_no,	--	投保人客户号
+	pi.c_cert_cde app_id_no,	--	投保人证件号码
+	r.previous_score risk_code,	--	风险等级
+	r.score_time div_date,	--	划分日期	
+    r.first_type  first_type,	--	首次标识
+	r.previous_score score,	--	评分分值
+	null norm,	--	划分依据
+	'{lastday}000000' pt	--	分区字段
+from rpt_fxq_amltp_entity e
+    inner join rpt_fxq_amltp_entity_risk r on e.c_clnt_cde = r.c_clnt_cde
+    left join edw_cust_pers_info pi on e.c_cst_no = pi.c_cst_no
+    left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = pi.c_dpt_cde

@@ -1,14 +1,4 @@
-/*
-select count(1) from information_schema.partitions 
-where table_schema = schema() 
-    and table_name='rpt_fxq_tb_ins_unit_ms' 
-    and partition_name = 'pt{lastday}000000';
-
-alter table rpt_fxq_tb_ins_unit_ms add partition (partition pt{lastday}000000 values less than ('{lastday}999999'));
-
-alter table rpt_fxq_tb_ins_unit_ms truncate partition pt{lastday}000000;
-*/
-truncate table rpt_fxq_tb_ins_unit_ms;
+alter table rpt_fxq_tb_ins_unit_ms truncate partition future;
 
 INSERT INTO rpt_fxq_tb_ins_unit_ms(
         company_code1,
@@ -44,8 +34,8 @@ INSERT INTO rpt_fxq_tb_ins_unit_ms(
         pt
 )
 SELECT
-        null	        company_code1	,
-        c_dpt_cde	        company_code2	,
+        a.c_dpt_cde as company_code1, -- 机构网点代码，内部的机构编码
+        co.company_code2 as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
         c_cst_no	        cst_no	,
         date_format(t_open_time,'%Y%m%d')	        open_time	,
         date_format(t_close_time,'%Y%m%d')	        close_time	,
@@ -104,6 +94,7 @@ SELECT
         n_reg_amt	        reg_amt	,
         null	        code	,
         null	        sys_name	,
-        '{lastday}' pt
+        '{lastday}000000' pt
 FROM
-    edw_cust_units_info partition(pt{lastday}000000);
+    edw_cust_units_info partition(pt{lastday}000000) a
+    left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde

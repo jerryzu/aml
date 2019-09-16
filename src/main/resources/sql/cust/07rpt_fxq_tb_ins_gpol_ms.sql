@@ -8,8 +8,7 @@ alter table rpt_fxq_tb_ins_gpol_ms add partition (partition pt{lastday}000000 va
 
 alter table rpt_fxq_tb_ins_gpol_ms truncate partition pt{lastday}000000;
 */
-truncate table rpt_fxq_tb_ins_gpol_ms;
-
+alter table rpt_fxq_tb_ins_gpol_ms truncate partition future;
 
 INSERT INTO rpt_fxq_tb_ins_gpol_ms(
         company_code1,
@@ -45,7 +44,7 @@ INSERT INTO rpt_fxq_tb_ins_gpol_ms(
 )
 SELECT
     a.c_dpt_cde                             as company_codel,-- 机构网点代码
-    ''                                      as company_code2,-- 金融机构编码
+    co.company_code2 as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
     ''                                      as company_code3,-- 保单归属机构网点代码
     a.c_ply_no                              as pol_no,-- 保单号
     a.c_app_no                              as app_no,-- 投保单号
@@ -149,7 +148,7 @@ SELECT
     ''          as acc_name,-- 交费账号名称
     ''          as acc_no,-- 交费账号
     ''          as acc_bank,-- 交费账户开户机构名称
-    '{lastday}'    pt
+    '{lastday}000000'    pt
 from  ods_cthx_web_ply_base partition(pt{lastday}000000) a
     left join edw_cust_ply_party_applicant   partition(pt{lastday}000000) u on a.c_ply_no =u.c_ply_no and u.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
     -- left join edw_cust_ply_party partition(pt{lastday}000000) ua
@@ -167,4 +166,5 @@ from  ods_cthx_web_ply_base partition(pt{lastday}000000) a
             left join edw_cust_ply_party partition(pt{lastday}000000) pi 
             on a.c_ply_no=pi.c_ply_no and pi.c_biz_type =  32 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人        
         ) v on a.c_ply_no = v.c_ply_no
+    left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now() 

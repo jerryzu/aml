@@ -1,18 +1,7 @@
-/*
-select count(1) from information_schema.partitions 
-where table_schema = schema() 
-    and table_name='rpt_fxq_tb_ins_bo_ms' 
-    and partition_name = 'pt{lastday}000000';
-
-alter table rpt_fxq_tb_ins_bo_ms add partition (partition pt{lastday}000000 values less than ('{lastday}999999'));
-
-alter table rpt_fxq_tb_ins_bo_ms truncate partition pt{lastday}000000;
-*/
 /**
-本段取法人投保，团单受益人是个人的单子
+本段取法人投保，团单受益人是个人的单子???????????????
 **/
-
-truncate table rpt_fxq_tb_ins_bo_ms;
+alter table rpt_fxq_tb_ins_bo_ms truncate partition future;
 
 INSERT INTO rpt_fxq_tb_ins_bo_ms(
         company_code1,
@@ -32,7 +21,7 @@ INSERT INTO rpt_fxq_tb_ins_bo_ms(
 )
 select 
     u.c_dpt_cde as company_code1, -- 机构网点代码，内部的机构编码
-    '@N' as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
+    co.company_code2 as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
     u.c_acc_name  as acc_name, -- 客户名称
     u.c_cst_no as cst_no, -- 客户号
     u.c_buslicence_no as license,-- 营业执照号码
@@ -54,11 +43,12 @@ select
      p.c_cert_cde as id_no5,-- 受益所有人证件号码
     date_format(t_cert_end_date,'%Y%m%d') id_deadline5,-- 受益所有人证件有效期
     '@N'as sys_name,-- 系统名称,
-    '{lastday}' pt
+    '{lastday}000000' pt
 from edw_cust_ply_party partition(pt{lastday}000000) a1
     inner join edw_cust_ply_party partition(pt{lastday}000000) a2 on a1.c_ply_no = a2.c_ply_no
     left join  edw_cust_units_info partition(pt{lastday}000000)  u on a1.c_cst_no = u.c_cst_no
     left join edw_cust_pers_info partition(pt{lastday}000000) p on a2.c_cst_no = p.c_cst_no
+    left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = u.c_dpt_cde
 where a1.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
    and a1.c_clnt_mrk='0' -- 受益人没有客户类别区分,申请人有客户类别区分
    and a2.c_biz_type = 43 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人

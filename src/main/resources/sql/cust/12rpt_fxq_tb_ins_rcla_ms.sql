@@ -8,8 +8,8 @@ alter table rpt_fxq_tb_ins_rcla_ms add partition (partition pt{lastday}000000 va
 
 alter table rpt_fxq_tb_ins_rcla_ms truncate partition pt{lastday}000000;
 */
-truncate table rpt_fxq_tb_ins_rcla_ms;
--------------------------------------------------------------------------------------------------------------
+alter table rpt_fxq_tb_ins_rcla_ms truncate partition future;
+
 INSERT INTO rpt_fxq_tb_ins_rcla_ms(
         company_code1,
         company_code2,
@@ -54,7 +54,7 @@ INSERT INTO rpt_fxq_tb_ins_rcla_ms(
 )
 select 
 	a.c_dpt_cde as company_codel,-- 机构网点代码
-	'' as company_code2,-- 金融机构编码
+	co.company_code2 as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
 	'' as company_code3,-- 保单归属机构网点代码
 	'' as company_code4,-- 受理业务机构网点代码
 	a.c_ply_no as pol_no,-- 保单号
@@ -93,7 +93,7 @@ select
 	g.c_card_type as acc_id_type,-- 实际领款人身份证件类型 11:居民身份证或临时身份证;12:军人或武警身份证件;13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;14:港澳台居民居住证;15:外国公民护照;16:户口簿;17:出生证;18:其他类个人身份证件;21:营业执照;22:其他,
 	g.c_id_card as acc_id_no,-- 实际领款人身份证件号码
 	'' as receipt_no,-- 作业流水号,唯一标识号	
-    '{lastday}' pt
+    '{lastday}000000' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
 	 inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
 	 inner join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
@@ -101,4 +101,5 @@ from ods_cthx_web_ply_base partition(pt{lastday}000000) a
 	 inner join ods_cthx_web_clmnv_endcase partition(pt{lastday}000000) u on a.c_ply_no = u.c_clm_no -- and u.c_feetyp_cde ='CPPK'
 	 inner join ods_cthx_web_clm_bank partition(pt{lastday}000000) g on u.c_clm_no=g.c_clm_no
 	 inner join ods_cthx_web_clm_rpt partition(pt{lastday}000000) e on g.c_clm_no=e.c_clm_no
+    left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now() 

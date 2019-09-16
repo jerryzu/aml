@@ -1,14 +1,4 @@
-/*
-select count(1) from information_schema.partitions 
-where table_schema = schema() 
-    and table_name='rpt_fxq_tb_ins_renewal_ms' 
-    and partition_name = 'pt{lastday}000000';
-
-alter table rpt_fxq_tb_ins_renewal_ms add partition (partition pt{lastday}000000 values less than ('{lastday}999999'));
-
-alter table rpt_fxq_tb_ins_renewal_ms truncate partition pt{lastday}000000;
-*/
-truncate table rpt_fxq_tb_ins_renewal_ms;
+alter table rpt_fxq_tb_ins_renewal_ms truncate partition future;
 
 INSERT INTO rpt_fxq_tb_ins_renewal_ms(
         company_code1,
@@ -38,7 +28,7 @@ INSERT INTO rpt_fxq_tb_ins_renewal_ms(
 )
 select
     a.c_dpt_cde as company_codel,-- 机构网点代码
-    '' as company_code2,-- 金融机构编码
+    co.company_code2 as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
     '' as company_code3,-- 保单归属机构网点代码
     '' as company_code4,-- 受理业务机构网点代码
     a.c_ply_no as pol_no,-- 保单号
@@ -102,10 +92,11 @@ select
     '' as acc_bank,-- 交费账户开户机构名称
     '' as receipt_no,-- 作业流水号,唯一标识号
     a.c_edr_no as endorse_no,-- 批单号
-    '{lastday}' pt
+    '{lastday}000000' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
 	inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
 	inner join ods_cthx_web_bas_edr_rsn   partition(pt{lastday}000000) c on a.c_edr_rsn_bundle_cde=c.c_rsn_cde and substr(a.c_prod_no,1,2)=c.c_kind_no
 	inner join ods_cthx_web_prd_prod partition(pt{lastday}000000) p on a.c_prod_no=p.c_prod_no
+	left join rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
 where c.c_rsn_cde in ('07') and a.t_next_edr_bgn_tm > now() 
 	-- and a.t_edr_bgn_tm between and
