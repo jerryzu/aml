@@ -1,6 +1,6 @@
-alter table rpt_fxq_tb_ins_risk truncate partition future;
+alter table rpt_fxq_tb_ins_risk_ms truncate partition future;
 
-insert into rpt_fxq_tb_ins_risk(
+insert into rpt_fxq_tb_ins_risk_ms(
 	company_code1,	--	机构网点代码
 	company_code2,	--	金融机构编码
 	company_code3,	--	保单归属机构网点代码
@@ -15,19 +15,35 @@ insert into rpt_fxq_tb_ins_risk(
 	pt	--	分区字段
 )
 select
-	co.company_code1,	--	机构网点代码
-	co.company_code2 as company_code2,	--	金融机构编码
-	null company_code3,	--	保单归属机构网点代码
-	null app_name,	--	投保人名称
-	r.c_clnt_cde app_cst_no,	--	投保人客户号
-	pi.c_cert_cde app_id_no,	--	投保人证件号码
-	r.previous_score risk_code,	--	风险等级
-	r.score_time div_date,	--	划分日期	
-    r.first_type  first_type,	--	首次标识
-	r.previous_score score,	--	评分分值
-	null norm,	--	划分依据
-	'{lastday}000000' pt	--	分区字段
-from rpt_fxq_amltp_entity e
-    inner join rpt_fxq_amltp_entity_risk r on e.c_clnt_cde = r.c_clnt_cde
-    left join edw_cust_pers_info pi on e.c_cst_no = pi.c_cst_no
-    left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = pi.c_dpt_cde
+    company_code1,
+    company_code2,
+    company_code3,
+    app_name,
+    app_cst_no,
+    app_id_no,
+    risk_code,
+    div_date,
+    first_type,
+    score,
+    norm,
+    pt
+from (
+    select
+        company_code1,	--	机构网点代码
+        company_code2,	--	金融机构编码
+        company_code3,	--	保单归属机构网点代码
+        c_acc_name app_name,	--	投保人名称
+        c_cst_no app_cst_no,	--	投保人客户号
+        c_cert_cde app_id_no,	--	投保人证件号码
+        risk_code,	--	风险等级
+        date_format(score_time,'%Y%m%d')  div_date,	--	划分日期	
+        if(@u=c_cst_no,@n:=0,@n:=1) as first_type,	--	首次标识
+        if(@u=c_cst_no and @s=score_time,@r:=@r+1,@r:=1) as rank,
+        @u:=                             c_cst_no,
+        @s:=                             score_time,
+        score,	--	评分分值
+        norm,	--	划分依据
+        '{lastday}000000' pt	--	分区字段
+    from rpt_fxq_amltp_risk r,  (select @u:=null, @s:=null, @r:=0, @n:=0) r1
+    ) v
+where v.rank = 1
