@@ -20,10 +20,17 @@ select
 	pi.c_acc_name c_acc_name,	--	投保人名称
 	e.c_cst_no c_cst_no,	--	投保人客户号
 	pi.c_cert_cde c_cert_cde,	--	投保人证件号码
-	r.score risk_code,	--	风险等级
+	case 
+		when r.score > 90 then 10 -- '高'
+		when r.score > 80 then 11 -- '中高'
+		when r.score > 70 then 12 -- '中'
+		when r.score > 50 then 13 -- '中低'
+	else 
+		14 -- '低'
+	end as risk_code,	--	风险等级
 	r.score_time score_time,	--	划分日期	
 	r.score score,	--	评分分值
-	null norm,	--	划分依据
+	'依据评分分值划分' norm,	--	划分依据
 	'{lastday}000000' pt	--	分区字段
 from rpt_fxq_amltp_entity  partition (future) e
     inner join rpt_fxq_amltp_score  partition (future) r on e.c_clnt_cde = r.c_clnt_cde

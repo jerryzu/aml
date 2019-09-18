@@ -1,6 +1,6 @@
-alter table rpt_fxq_tb_ins_risk_new truncate partition future;
+alter table rpt_fxq_tb_ins_risk_new_ms truncate partition future;
 
-insert into rpt_fxq_tb_ins_risk_new(
+insert into rpt_fxq_tb_ins_risk_new_ms(
 	company_code1,	--	机构网点代码
 	company_code2,	--	金融机构编码
 	company_code3,	--	保单归属机构网点代码
