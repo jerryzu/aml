@@ -103,3 +103,6 @@ mysqldumpslow
 slow_query_log = 1
 slow_query_log_file = /data/log/mysql/slow_query.log
 long_query_time = 5
+
+
+mysqldump -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -p'Tpstic123456' -w"pt=20190918000000" tpedw ods_cthx_web_app_grp_member ods_cthx_web_app_insured ods_cthx_web_bas_edr_rsn ods_cthx_web_clm_bank ods_cthx_web_clm_main ods_cthx_web_clm_rpt ods_cthx_web_clmnv_endcase ods_cthx_web_org_dpt ods_cthx_web_org_dpt_map ods_cthx_web_ply_applicant ods_cthx_web_ply_base ods_cthx_web_ply_bnfc ods_cthx_web_ply_ent_tgt ods_cthx_web_prd_kind ods_cthx_web_prd_prod ods_cthx_web_cus_cha ods_amltp_t_sus_customer ods_amltp_t_lat_data ods_amltp_t_sus_trans ods_amltp_t_ih_tsdt ods_amltp_t_is_bnif ods_amltp_t_score ods_amltp_t_sus_data ods_amltp_t_is_iabi ods_amltp_t_lat_customer ods_amltp_t_sus_contract ods_amltp_t_sco ods_amltp_t_dict > tpedw.sql
