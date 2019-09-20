@@ -72,8 +72,8 @@ insert into rpt_fxq_tb_sus_report_ms(
     pt
 )
 select distinct
-    'F1008933000019'  as ricd  --  	报告机构编码	人民银行发放的<金融机构代码证>上载明的金融机构代码 如果尚未取得金融机构代码,则经申请后由中国反洗钱监测分析中心分配报告机构编码
-    ,'F1008933000019'  as finc  --  	金融机构代码	有金融机构代码的网点应使用金融机构代码,暂时没有该代码的网点可自行编制内部唯一代码,报告机构向反洗钱监测中心报送交易报告前,应先系统中报备其内部网点代码对照表,并在发生变化时及时更新
+    'f1008933000019'	as ricd  --  	报告机构编码	人民银行发放的<金融机构代码证>上载明的金融机构代码 如果尚未取得金融机构代码,则经申请后由中国反洗钱监测分析中心分配报告机构编码
+    ,'F1008933000019'	as finc  --  	金融机构代码	有金融机构代码的网点应使用金融机构代码,暂时没有该代码的网点可自行编制内部唯一代码,报告机构向反洗钱监测中心报送交易报告前,应先系统中报备其内部网点代码对照表,并在发生变化时及时更新
     ,sc2.real_name  as senm  --  	可疑主体姓名或名称	
     ,sc2.certi_type  as setp  --  	可疑主体身份证件或证明文件类型	需代码转换
     ,sc2.certi_code  as seid  --  	可疑主体证件号	
@@ -141,10 +141,10 @@ select distinct
     ,null  as seei  --  	可疑主体其他联系方式	无此字段
     ,(select count(*) from ods_amltp_t_sus_customer t  where t.su_data_id = sc2.su_data_id)  as setn  --  	可疑主体总数
     ,'{lastday}000000' pt	--	分区字段	
-from ods_amltp_t_is_bnif bf
-    left join 	ods_amltp_t_is_iabi	ii on bf.ibid = ii.ibid    
-    left join 	ods_amltp_t_sus_contract sc on 	ii.icid = sc.policy_id
-    left join 	ods_amltp_t_sus_customer sc2 on 	sc.su_data_id = sc2.su_data_id
-    left join 	ods_amltp_t_sus_data sd on 	sc.su_data_id = sd.su_data_id
-    left join 	ods_amltp_t_sus_trans st on 	sc.su_data_id = st.su_data_id
-    left join ods_cthx_web_prd_prod pd on sc.product_id = pd.c_prod_no
+from ods_amltp_t_is_bnif  partition(pt{lastday}000000)  bf
+    left join 	ods_amltp_t_is_iabi	 partition(pt{lastday}000000)  ii on bf.ibid = ii.ibid    
+    left join 	ods_amltp_t_sus_contract  partition(pt{lastday}000000)  sc on 	ii.icid = sc.policy_id
+    left join 	ods_amltp_t_sus_customer  partition(pt{lastday}000000)  sc2 on 	sc.su_data_id = sc2.su_data_id
+    left join 	ods_amltp_t_sus_data  partition(pt{lastday}000000)  sd on 	sc.su_data_id = sd.su_data_id
+    left join 	ods_amltp_t_sus_trans  partition(pt{lastday}000000)  st on 	sc.su_data_id = st.su_data_id
+    left join ods_cthx_web_prd_prod  partition(pt{lastday}000000)  pd on sc.product_id = pd.c_prod_no

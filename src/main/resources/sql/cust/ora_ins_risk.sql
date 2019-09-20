@@ -1,4 +1,3 @@
-
 set colsep ,  
 set feedback off  
 set heading off  
@@ -14,17 +13,3 @@ from (select * from (select t.*, row_number() over(partition by t.user_id, t.app
          join t_dict d3 on ts.app_or_ins = d3.c_dict_cde and d3.c_dict_type_cde = 'APP_OR_INS';
 spool off  
 exit
-
-T_sco
-t_score
-t_dict
-
-t_lat_customer
-t_ih_tsdt
-t_lat_data
-t_sus_customer
-t_sus_contract
-t_is_iabi
-t_is_bnif
-t_sus_data
-t_sus_trans

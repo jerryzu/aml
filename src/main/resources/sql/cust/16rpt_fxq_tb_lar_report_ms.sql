@@ -98,7 +98,7 @@ select
     ,t.crat		crat	  --  	交易金额与币种一致
     ,t.crat		crmb	  --  	交易金额折合人民币
     ,0		cusd	  --  	交易金额折合美元
-    -- ,d.	ttnm		ttnm	  --  	交易总数
+    ,-9 ttnm-- ,d.	ttnm		ttnm	  --  	交易总数
     ,t.cfin		cfin	  --  	对方金融机构网点名称
     ,t.cfct		cfct	  --  	对方金融机构网点类型  --  11:现代化支付系统行号;12:人民币结算系统行号;13银行内部机构号;14:金融机构代码;99:其他
     ,t.cfic		cfic	  --  	对方金融机构网点代码
@@ -112,7 +112,7 @@ select
     ,null		ooct	  --  	其他非柜台交易方式
     ,null		ocec	  --  	非柜台交易方式的设备代码
     ,null		rotf	  --  	交易信息备注
-    '{lastday}000000' pt	--	分区字段
-from ods_amltp_t_lat_data d 
-    inner join ods_amltp_t_lat_customer c on d.r_cust_id = c.r_cust_id
-    inner join ods_amltp_t_ih_tsdt t on d.app_no = t.app_no
+    ,'{lastday}000000' pt	--	分区字段
+from ods_amltp_t_lat_data  partition(pt{lastday}000000)  d 
+    inner join ods_amltp_t_lat_customer  partition(pt{lastday}000000)  c on d.r_cust_id = c.r_cust_id
+    inner join ods_amltp_t_ih_tsdt  partition(pt{lastday}000000)  t on d.app_no = t.app_no
