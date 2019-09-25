@@ -56,8 +56,8 @@ select
 	c.c_insured_name as name,-- 被保人或受益人名称
 	concat(rpad(c.c_cert_cls, 6, '0') , rpad(c.c_cert_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号
 	c.c_cert_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
-    '{lastday}000000' pt
-from ods_cthx_web_ply_base partition(pt{lastday}000000) a
+    '20190922000000' pt
+from ods_cthx_web_ply_base partition(pt20190922000000) a
 	inner join edw_cust_ply_party_applicant partition(future) b on a.c_app_no=b.c_app_no
 	inner join edw_cust_ply_party_insured partition(future) c on a.c_app_no=c.c_app_no
 	inner join rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
@@ -79,8 +79,8 @@ select
 	c.c_bnfc_name as name,-- 被保人或受益人名称
 	concat(rpad(c.c_cert_cls, 6, '0') , rpad(c.c_cert_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号
 	c.c_cert_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
-	'{lastday}000000' pt	
-from ods_cthx_web_ply_base partition(pt{lastday}000000) a
+	'20190922000000' pt	
+from ods_cthx_web_ply_base partition(pt20190922000000) a
 	inner join edw_cust_ply_party_applicant partition(future) b on a.c_app_no=b.c_app_no
 	inner join edw_cust_ply_party_bnfc partition(future) c on a.c_app_no=c.c_app_no
 	inner join rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde

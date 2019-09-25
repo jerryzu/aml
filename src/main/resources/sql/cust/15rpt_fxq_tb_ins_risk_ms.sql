@@ -44,7 +44,7 @@ from (
         score,	--	评分分值
         norm,	--	划分依据
         '{lastday}000000' pt	--	分区字段
-    from rpt_fxq_amltp_risk r,  (select @u:=null, @s:=null, @r:=0, @n:=0) r1
+    from rpt_fxq_amltp_risk  partition (future) r,  (select @u:=null, @s:=null, @r:=0, @n:=0) r1
     order by app_cst_no, div_date
     ) v
 where v.rank = 1

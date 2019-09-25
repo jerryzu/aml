@@ -1,0 +1,1 @@
+alter table rpt_fxq_tb_amltp_entity reorganize partition future into (partition pt{lastday}000000 values less than('{lastday}999999'),  partition future values less than(maxvalue)); 

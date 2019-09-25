@@ -1,6 +1,6 @@
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=10240;
-alter table edw_cust_units_info truncate partition pt{lastday}000000;
+alter table edw_cust_units_info truncate partition future;
 insert into edw_cust_units_info(
     c_dpt_cde,
     c_cst_no,
@@ -61,7 +61,7 @@ select
     ,substring_index(c_trd_cde,',',1) c_trd_cde
     ,substring_index(c_sub_trd_cde,',',1) c_sub_trd_cde
     ,substring_index(n_reg_amt,',',1) n_reg_amt    
-    ,'{lastday}' pt    
+    ,'{lastday}000000' pt    
 from (
 	select     
 	    group_concat(c_dpt_cde order by biz_type)  c_dpt_cde

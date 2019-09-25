@@ -1,4 +1,4 @@
-alter table rpt_fxq_tb_sus_report_ms truncate partition future;
+--  alter table rpt_fxq_tb_sus_report_ms truncate partition future;
 
 insert into rpt_fxq_tb_sus_report_ms(
     ricd,
@@ -147,4 +147,5 @@ from ods_amltp_t_is_bnif  partition(pt{lastday}000000)  bf
     left join 	ods_amltp_t_sus_customer  partition(pt{lastday}000000)  sc2 on 	sc.su_data_id = sc2.su_data_id
     left join 	ods_amltp_t_sus_data  partition(pt{lastday}000000)  sd on 	sc.su_data_id = sd.su_data_id
     left join 	ods_amltp_t_sus_trans  partition(pt{lastday}000000)  st on 	sc.su_data_id = st.su_data_id
-    left join ods_cthx_web_prd_prod  partition(pt{lastday}000000)  pd on sc.product_id = pd.c_prod_no
+    left join ods_cthx_web_prd_prod  partition(pt{lastday}000000)  pd on sc.product_id = pd.c_prod_no;
+

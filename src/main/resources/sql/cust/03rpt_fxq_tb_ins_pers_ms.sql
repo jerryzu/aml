@@ -68,6 +68,5 @@ SELECT
         c_work_dpt		company,
         null		sys_name,
         '{lastday}000000' pt
-FROM
-    edw_cust_pers_info partition(pt{lastday}000000) a
+FROM edw_cust_pers_info partition(future) a
     left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde

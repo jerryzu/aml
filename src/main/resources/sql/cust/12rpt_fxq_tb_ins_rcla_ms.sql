@@ -95,9 +95,9 @@ select
 	'' as receipt_no,-- 作业流水号,唯一标识号	
     '{lastday}000000' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	 inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
-	 inner join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
-	 inner join edw_cust_ply_party_bnfc partition(pt{lastday}000000) d on  a.c_ply_no=d.c_ply_no -- 多个受益人相应生成多条记录
+	 inner join edw_cust_ply_party_applicant partition(future) b on a.c_ply_no=b.c_ply_no
+	 inner join edw_cust_ply_party_insured partition(future) c on a.c_app_no=c.c_app_no
+	 inner join edw_cust_ply_party_bnfc partition(future) d on  a.c_ply_no=d.c_ply_no -- 多个受益人相应生成多条记录
 	 inner join ods_cthx_web_clmnv_endcase partition(pt{lastday}000000) u on a.c_ply_no = u.c_clm_no -- and u.c_feetyp_cde ='CPPK'
 	 inner join ods_cthx_web_clm_bank partition(pt{lastday}000000) g on u.c_clm_no=g.c_clm_no
 	 inner join ods_cthx_web_clm_rpt partition(pt{lastday}000000) e on g.c_clm_no=e.c_clm_no

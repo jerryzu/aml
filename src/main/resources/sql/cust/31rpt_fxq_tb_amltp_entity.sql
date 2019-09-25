@@ -6,9 +6,9 @@ concat('2', c_cst_no, mod(substr(c_cst_no, -7, 6), 9)) c_cst_no
 concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no
 concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no -- 客户号
 */
-alter table rpt_fxq_amltp_entity truncate partition future;
+alter table rpt_fxq_tb_amltp_entity truncate partition future;
 
-insert into rpt_fxq_amltp_entity(
+insert into rpt_fxq_tb_amltp_entity(
     c_cst_no	
     ,c_clnt_nme	
     ,c_cert_type	
@@ -40,4 +40,4 @@ from (select
     order by
         c_clnt_cde, t_crt_tm
 ) v
-where rank = 1
+where rank = 1;

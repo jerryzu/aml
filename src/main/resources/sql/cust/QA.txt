@@ -1,0 +1,8 @@
+反洗钱客户类型:自然人,法人
+反洗中有数据,核心无数据的不选择
+没有客户类型41 ,42受益人bnfc
+
+dear:
+        保单保费关联 select  a.C_SAVECASH_BANK as '资金支付账户'  from web_fin_cav_mny a  , web_fin_prm_due b where a.C_CAV_PK_ID = b.C_CAV_NO  and b.c_ply_no = ?(保单号)
+        保单跟单费关联 select  a.C_SAVECASH_BANK as '资金支付账户'  from web_fin_cav_mny a  , web_fin_pay_due b where a.C_CAV_PK_ID = （select doc.C_CAV_PK_ID from web_fin_cav_doc doc where doc.C_Rcpt_No = b.C_Rcpt_No order by doc.t_crt_tm desc limit 1）  and b.c_ply_no = ?(保单号)    
+        保单赔款关联 select  a.C_SAVECASH_BANK as '资金支付账户'  from web_fin_cav_mny a  , web_fin_clm_due b where a.C_CAV_PK_ID = （select doc.C_CAV_PK_ID from web_fin_cav_doc doc where doc.C_Rcpt_No = b.C_Rcpt_No order by doc.t_crt_tm desc limit 1）  and b.c_ply_no = ?(保单号) 

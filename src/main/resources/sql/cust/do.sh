@@ -26,59 +26,65 @@ mysql -utaipingbi_etl -pTpstic123456 -Dtpedw -hrm-bp19v63q682asdrja.mysql.rds.al
 mysql -utaipingbi_etl -pTpstic123456 -Dtpedw -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -A < edw_cust_ply_partycd .n.sql
 
 echo "first step"
-sed "s/{lastday}/$lastday/g" edw_cust_pers_info.sql>z_edw_cust_pers_info.sql
-sed "s/{lastday}/$lastday/g" edw_cust_units_info.sql>z_edw_cust_units_info.sql
-sed "s/{lastday}/$lastday/g" edw_cust_ply_party.sql>z_edw_cust_ply_party.sql
-sed "s/{lastday}/$lastday/g" edw_cust_ply_party_applicant.sql>z_edw_cust_ply_party_applicant.sql
-sed "s/{lastday}/$lastday/g" edw_cust_ply_party_bnfc.sql>z_edw_cust_ply_party_bnfc.sql
-sed "s/{lastday}/$lastday/g" edw_cust_ply_party_insured.sql>z_edw_cust_ply_party_insured.sql
+sed "s/{lastday}/$lastday/g" 21edw_cust_ply_party.sql>work/21edw_cust_ply_party.sql
+sed "s/{lastday}/$lastday/g" 22edw_cust_pers_info.sql>work/22edw_cust_pers_info.sql
+sed "s/{lastday}/$lastday/g" 23edw_cust_units_info.sql>work/23edw_cust_units_info.sql
+sed "s/{lastday}/$lastday/g" 24edw_cust_ply_party_applicant.sql>work/24edw_cust_ply_party_applicant.sql
+sed "s/{lastday}/$lastday/g" 25edw_cust_ply_party_insured.sql>work/25edw_cust_ply_party_insured.sql
+sed "s/{lastday}/$lastday/g" 26edw_cust_ply_party_bnfc.sql>work/26edw_cust_ply_party_bnfc.sql
 
-source z_edw_cust_pers_info.sql;
-source z_edw_cust_units_info.sql;
-source z_edw_cust_ply_party.sql;
-source z_edw_cust_ply_party_applicant.sql;
-source z_edw_cust_ply_party_bnfc.sql;
-source z_edw_cust_ply_party_insured.sql;
-
+source work/edw_cust_pers_info.sql;
+source work/edw_cust_units_info.sql;
+source work/edw_cust_ply_party.sql;
+source work/edw_cust_ply_party_applicant.sql;
+source work/edw_cust_ply_party_bnfc.sql;
+source work/edw_cust_ply_party_insured.sql;
 
 echo "second step"
-sed "s/{lastday}/$lastday/g" 01rpt_fxq_tb_company_ms.sql>z_01rpt_fxq_tb_company_ms.sql
-sed "s/{lastday}/$lastday/g" 02rpt_fxq_tb_ins_rtype_ms.sql>z_02rpt_fxq_tb_ins_rtype_ms.sql
+sed "s/{lastday}/$lastday/g" 31rpt_fxq_tb_amltp_entity.sql>work/31rpt_fxq_tb_amltp_entity.sql
+sed "s/{lastday}/$lastday/g" 32rpt_fxq_tb_amltp_score.sql>work/32rpt_fxq_tb_amltp_score.sql
+sed "s/{lastday}/$lastday/g" 33rpt_fxq_tb_amltp_risk.sql>work/33rpt_fxq_tb_amltp_risk.sql
 
-source z_01rpt_fxq_tb_company_ms.sql
-source z_02rpt_fxq_tb_ins_rtype_ms.sql
+source work/31rpt_fxq_tb_amltp_entity.sql;
+source work/32rpt_fxq_tb_amltp_score.sql;
+source work/33rpt_fxq_tb_amltp_risk.sql;
 
 echo "third step"
 
-sed "s/{lastday}/$lastday/g" 03rpt_fxq_tb_ins_pers_ms.sql>z_03rpt_fxq_tb_ins_pers_ms.sql
-sed "s/{lastday}/$lastday/g" 04rpt_fxq_tb_ins_units_ms.sql>z_04rpt_fxq_tb_ins_units_ms.sql
-sed "s/{lastday}/$lastday/g" 05rpt_fxq_tb_ins_bo_ms.sql>z_05rpt_fxq_tb_ins_bo_ms.sql
+sed "s/{lastday}/$lastday/g" 01rpt_fxq_tb_company_ms.sql>work/01rpt_fxq_tb_company_ms.sql
+sed "s/{lastday}/$lastday/g" 02rpt_fxq_tb_ins_rtype_ms.sql>work/02rpt_fxq_tb_ins_rtype_ms.sql
+sed "s/{lastday}/$lastday/g" 03rpt_fxq_tb_ins_pers_ms.sql>work/03rpt_fxq_tb_ins_pers_ms.sql
+sed "s/{lastday}/$lastday/g" 04rpt_fxq_tb_ins_units_ms.sql>work/04rpt_fxq_tb_ins_units_ms.sql
+sed "s/{lastday}/$lastday/g" 05rpt_fxq_tb_ins_bo_ms.sql>work/05rpt_fxq_tb_ins_bo_ms.sql
 
-source z_03rpt_fxq_tb_ins_pers_ms.sql;
-source z_04rpt_fxq_tb_ins_units_ms.sql;
-source z_05rpt_fxq_tb_ins_bo_ms.sql;
+source work/01rpt_fxq_tb_company_ms.sql
+source work/02rpt_fxq_tb_ins_rtype_ms.sql
+
+source work/03rpt_fxq_tb_ins_pers_ms.sql;
+source work/04rpt_fxq_tb_ins_units_ms.sql;
+source work/05rpt_fxq_tb_ins_bo_ms.sql;
 
 echo "fourth"
-sed "s/{lastday}/$lastday/g" 06rpt_fxq_tb_ins_rpol_ms.sql>z_06rpt_fxq_tb_ins_rpol_ms.sql
+sed "s/{lastday}/$lastday/g" 06rpt_fxq_tb_ins_rpol_ms.sql>work/06rpt_fxq_tb_ins_rpol_ms.sql
 
 echo "inner join slowly"
-source z_06rpt_fxq_tb_ins_rpol_ms.sql
+source work/06rpt_fxq_tb_ins_rpol_ms.sql
 
-sed "s/{lastday}/$lastday/g" 06rpt_fxq_tb_ins_rpol_ms.sql>z_06rpt_fxq_tb_ins_rpol_ms.sql
+sed "s/{lastday}/$lastday/g" 06rpt_fxq_tb_ins_rpol_ms.sql>work/06rpt_fxq_tb_ins_rpol_ms.sql
 
 
-sed "s/{lastday}/$lastday/g" 07rpt_fxq_tb_ins_gpol_ms.sql>z_07rpt_fxq_tb_ins_gpol_ms.sql
-sed "s/{lastday}/$lastday/g" 08rpt_fxq_tb_ins_fav_cst_ms.sql>z_08rpt_fxq_tb_ins_fav_cst_ms.sql
-sed "s/{lastday}/$lastday/g" 09rpt_fxq_tb_ins_renewal_ms.sql>z_09rpt_fxq_tb_ins_renewal_ms.sql
-sed "s/{lastday}/$lastday/g" 10rpt_fxq_tb_ins_rsur_ms.sql>z_10rpt_fxq_tb_ins_rsur_ms.sql
-sed "s/{lastday}/$lastday/g" 11rpt_fxq_tb_ins_rpay_ms.sql>z_11rpt_fxq_tb_ins_rpay_ms.sql
-sed "s/{lastday}/$lastday/g" 12rpt_fxq_tb_ins_rcla_ms.sql>z_12rpt_fxq_tb_ins_rcla_ms.sql
-sed "s/{lastday}/$lastday/g" 13rpt_fxq_tb_ins_rchg_ms.sql>z_13rpt_fxq_tb_ins_rchg_ms.sql
+sed "s/{lastday}/$lastday/g" 07rpt_fxq_tb_ins_gpol_ms.sql>work/07rpt_fxq_tb_ins_gpol_ms.sql
+sed "s/{lastday}/$lastday/g" 08rpt_fxq_tb_ins_fav_cst_ms.sql>work/08rpt_fxq_tb_ins_fav_cst_ms.sql
+sed "s/{lastday}/$lastday/g" 09rpt_fxq_tb_ins_renewal_ms.sql>work/09rpt_fxq_tb_ins_renewal_ms.sql
+sed "s/{lastday}/$lastday/g" 10rpt_fxq_tb_ins_rsur_ms.sql>work/10rpt_fxq_tb_ins_rsur_ms.sql
+sed "s/{lastday}/$lastday/g" 11rpt_fxq_tb_ins_rpay_ms.sql>work/11rpt_fxq_tb_ins_rpay_ms.sql
+sed "s/{lastday}/$lastday/g" 12rpt_fxq_tb_ins_rcla_ms.sql>work/12rpt_fxq_tb_ins_rcla_ms.sql
+sed "s/{lastday}/$lastday/g" 13rpt_fxq_tb_ins_rchg_ms.sql>work/13rpt_fxq_tb_ins_rchg_ms.sql
 
-source z_07rpt_fxq_tb_ins_gpol_ms.sql;
-source z_08rpt_fxq_tb_ins_fav_cst_ms.sql;
-source z_09rpt_fxq_tb_ins_renewal_ms.sql;
-source z_10rpt_fxq_tb_ins_rsur_ms.sql;
-source z_11rpt_fxq_tb_ins_rpay_ms.sql;
-source z_12rpt_fxq_tb_ins_rcla_ms.sql;
-source z_13rpt_fxq_tb_ins_rchg_ms.sql;
+source work/07rpt_fxq_tb_ins_gpol_ms.sql;
+source work/08rpt_fxq_tb_ins_fav_cst_ms.sql;
+source work/09rpt_fxq_tb_ins_renewal_ms.sql;
+source work/10rpt_fxq_tb_ins_rsur_ms.sql;
+source work/11rpt_fxq_tb_ins_rpay_ms.sql;
+source work/12rpt_fxq_tb_ins_rcla_ms.sql;
+source work/13rpt_fxq_tb_ins_rchg_ms.sql;

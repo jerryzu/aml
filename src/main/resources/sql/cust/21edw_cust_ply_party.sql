@@ -1,6 +1,9 @@
+/*
+ods_cthx_web_ply_bnfc,受益人客户类型为空
+*/
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=10240;
-alter table edw_cust_ply_party truncate partition pt{lastday}000000;
+alter table edw_cust_ply_party truncate partition future;
 
 INSERT INTO edw_cust_ply_party(
     c_dpt_cde,
@@ -22,7 +25,7 @@ select
     ,t_end_tm  
     ,c_clnt_mrk
     ,c_biz_type
-    ,'{lastday}' pt
+    ,'{lastday}000000' pt
 from (
 		select b.c_dpt_cde c_dpt_cde
 		    ,concat(rpad(a.c_card_type, 6, '0') , rpad(a.c_card_cde, 18, '0')) c_cst_no -- 收款人编号
@@ -133,7 +136,7 @@ select
     ,t_end_tm  
     ,c_clnt_mrk
     ,c_biz_type
-    ,'{lastday}' pt
+    ,'{lastday}000000' pt
 from (
         select b.c_dpt_cde c_dpt_cde
             ,concat(rpad(a.c_certf_cls, 6, '0') , rpad(a.c_certf_cde, 18, '0')) c_cst_no -- 客户号

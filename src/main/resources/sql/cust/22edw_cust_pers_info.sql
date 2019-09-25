@@ -1,6 +1,6 @@
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=1024000;
-alter table edw_cust_pers_info truncate partition pt{lastday}000000;
+alter table edw_cust_pers_info truncate partition future;
 
 INSERT INTO edw_cust_pers_info(
     c_dpt_cde,
@@ -40,7 +40,7 @@ select
     ,substring_index(c_mobile,',',1) c_mobile
     ,substring_index(c_clnt_addr,',',1) c_clnt_addr
     ,substring_index(c_work_dpt,',',1) c_work_dpt
-    ,'{lastday}' pt
+    ,'{lastday}000000' pt
 from (
 	select     
 	    group_concat(c_dpt_cde order by biz_type)  c_dpt_cde

@@ -1,6 +1,6 @@
-alter table rpt_fxq_amltp_score truncate partition future;
+alter table rpt_fxq_tb_amltp_score truncate partition future;
 
-insert into rpt_fxq_amltp_score(
+insert into rpt_fxq_tb_amltp_score(
 	c_clnt_cde,
 	bat,
 	score,
@@ -33,4 +33,4 @@ from (select
         t.previous_score
 ) v
 where rank = 1
-order by user_id
+order by user_id;

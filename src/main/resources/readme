@@ -104,11 +104,7 @@ slow_query_log = 1
 slow_query_log_file = /data/log/mysql/slow_query.log
 long_query_time = 5
 
-
-mysqldump -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -p'Tpstic123456' -w"pt=20190918000000" tpedw ods_cthx_web_app_grp_member ods_cthx_web_app_insured ods_cthx_web_bas_edr_rsn ods_cthx_web_clm_bank ods_cthx_web_clm_main ods_cthx_web_clm_rpt ods_cthx_web_clmnv_endcase ods_cthx_web_org_dpt ods_cthx_web_org_dpt_map ods_cthx_web_ply_applicant ods_cthx_web_ply_base ods_cthx_web_ply_bnfc ods_cthx_web_ply_ent_tgt ods_cthx_web_prd_kind ods_cthx_web_prd_prod ods_cthx_web_cus_cha ods_amltp_t_sus_customer ods_amltp_t_lat_data ods_amltp_t_sus_trans ods_amltp_t_ih_tsdt ods_amltp_t_is_bnif ods_amltp_t_score ods_amltp_t_sus_data ods_amltp_t_is_iabi ods_amltp_t_lat_customer ods_amltp_t_sus_contract ods_amltp_t_sco ods_amltp_t_dict > tpedw.sql
-
-mysqldump -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -p'Tpstic123456' -t -w"pt=20190919000000" tpedw ods_amltp_t_dict ods_amltp_t_ih_tsdt ods_amltp_t_is_bnif ods_amltp_t_is_iabi ods_amltp_t_lat_customer ods_amltp_t_lat_data ods_amltp_t_sco ods_amltp_t_score ods_amltp_t_sus_contract ods_amltp_t_sus_customer ods_amltp_t_sus_data ods_amltp_t_sus_trans >tpedw.sql
-
+mysqldump -hrm-bp19v63q682asdrja.mysql.rds.aliyuncs.com -utaipingbi_etl -p'Tpstic123456' -t -w"pt=20190918000000" tpedw ods_cthx_web_app_grp_member ods_cthx_web_app_insured ods_cthx_web_bas_edr_rsn ods_cthx_web_clm_bank ods_cthx_web_clm_main ods_cthx_web_clm_rpt ods_cthx_web_clmnv_endcase ods_cthx_web_org_dpt ods_cthx_web_org_dpt_map ods_cthx_web_ply_applicant ods_cthx_web_ply_base ods_cthx_web_ply_bnfc ods_cthx_web_ply_ent_tgt ods_cthx_web_prd_kind ods_cthx_web_prd_prod ods_cthx_web_cus_cha ods_amltp_t_sus_customer ods_amltp_t_lat_data ods_amltp_t_sus_trans ods_amltp_t_ih_tsdt ods_amltp_t_is_bnif ods_amltp_t_score ods_amltp_t_sus_data ods_amltp_t_is_iabi ods_amltp_t_lat_customer ods_amltp_t_sus_contract ods_amltp_t_sco ods_amltp_t_dict > tpedw.sql
 
 、常规操作
 ①备份并且压缩
@@ -128,3 +124,15 @@ mysql < xxx.sql;
 tips:
 
 备份占用带宽很大,需要调度算法确保同一个集群中同时只有一个机器做备份,或者不每天做备份从而错开备份时间
+
+alter table tpedw.rpt_fxq_tb_ins_rtype_ms modify column ins_type varchar(2) comment '险种分类';
+alter table tpedw.rpt_fxq_tb_ins_pers_ms modify column cst_no varchar(50) comment '客户号';
+alter table tpedw.rpt_fxq_tb_ins_rpay_ms change benefit_pro benefit_cus_pro varchar(2) comment '受益人类型';
+alter table tpedw.rpt_fxq_tb_ins_gpol_ms add (receipt_no varchar(40))comment    '作业流水号,唯一标识号';
+alter table tpedw.rpt_fxq_tb_lar_report_ms modify column cttn numeric(8) comment '大额交易总数';
+alter table tpedw.rpt_fxq_tb_lar_report_ms modify column tsct numeric(16) comment '涉外收支交易分类与代码';
+alter table tpedw.rpt_fxq_tb_lar_report_ms modify column ttnm numeric(8) comment '交易总数';
+alter table tpedw.rpt_fxq_tb_sus_report_ms modify column itnm numeric(4) comment '被保险人总人数';
+alter table tpedw.rpt_fxq_tb_sus_report_ms modify column bntn numeric(4) comment '受益人总人数';
+alter table tpedw.rpt_fxq_tb_sus_report_ms modify column stnm numeric(8) comment '可疑交易总数';
+alter table tpedw.rpt_fxq_tb_sus_report_ms modify column setn numeric(8) comment '可疑主体总数';

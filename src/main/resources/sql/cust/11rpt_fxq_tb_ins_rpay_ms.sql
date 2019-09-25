@@ -88,8 +88,8 @@ select
     '' as receipt_no,-- 作业流水号,唯一标识号
     '{lastday}000000' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	left join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_app_no=b.c_app_no
-	left join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
-	left join edw_cust_ply_party_bnfc partition(pt{lastday}000000) d on  a.c_app_no=d.c_app_no
+	left join edw_cust_ply_party_applicant partition(future) b on a.c_app_no=b.c_app_no
+	left join edw_cust_ply_party_insured partition(future) c on a.c_app_no=c.c_app_no
+	left join edw_cust_ply_party_bnfc partition(future) d on  a.c_app_no=d.c_app_no
     left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now() 
