@@ -146,21 +146,23 @@ SELECT
     left(t.c_tgt_addr, 100) as subject,-- 保险标的物
     -- 修改成从资金系统取以下数据
     ''          as tsf_flag,-- 现转标识
-    ''          as acc_name,-- 交费账号名称
-    ''          as acc_no,-- 交费账号
-    ''          as acc_bank,-- 交费账户开户机构名称
-    a.c_app_no  as receipt_n,-- 作业流水号,唯一标识号
+    mny.c_payer_nme         as acc_name,-- 交费账号名称
+    mny.c_savecash_bank          as acc_no,-- 交费账号
+    mny.c_bank_nme	          as acc_bank,-- 交费账户开户机构名称
+    a.c_app_no  as receipt_no,-- 作业流水号,唯一标识号
     '{lastday}000000'    pt
 from  ods_cthx_web_ply_base partition(pt{lastday}000000) a
+    inner join ods_cthx_web_fin_prm_due partition(pt{lastday}000000) due on a.c_ply_no = due.c_ply_no
+    inner join ods_cthx_web_fin_cav_mny partition(pt{lastday}000000) mny on due.c_cav_no = mny.c_cav_pk_id
     inner join edw_cust_ply_party_applicant   partition(future) u on a.c_ply_no =u.c_ply_no and u.c_biz_type = 22 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人
     inner join ods_cthx_web_ply_ent_tgt partition(pt{lastday}000000) t
         on a.c_ply_no=t.c_ply_no
     inner join ods_cthx_web_prd_prod partition(pt{lastday}000000) c 
         on a.c_prod_no=c.c_prod_no
-    inner join (select a.c_ply_no, count(1) ins_num
-        from  ods_cthx_web_ply_base partition(pt{lastday}000000) a 
-            inner join edw_cust_ply_party partition(future) pi 
-            on a.c_ply_no=pi.c_ply_no and pi.c_biz_type =  32 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人        
-        ) v on a.c_ply_no = v.c_ply_no
+    inner join (select pi.c_ply_no, count(1) ins_num
+        from  edw_cust_ply_party partition(future) pi 
+        where pi.c_biz_type =  32 -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 41: 受益人, 42: 法人受益人, 43: 间接受益人, 44: 法人间接受益人        
+		group by pi.c_ply_no
+		) v on a.c_ply_no = v.c_ply_no
     inner join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now() 

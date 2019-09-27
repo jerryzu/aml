@@ -187,10 +187,10 @@ select
         '' as subject,-- 保险标的物
         -- 修改成从资金系统取以下数据
         '' as tsf_flag,-- d.c_pay_mde_cde  as tsf_flag,-- 现转标识 --  SELECT C_CDE, C_CNM, 'codeKind' FROM  ods_cthx_WEB_BAS_CODELIST PARTITION(pt20190818000000)   WHERE C_PAR_CDE = 'shoufeifangshi' ORDER BY C_CDE ;
-        '' as acc_name,-- 交费账号名称
-        '' as acc_no,-- 交费账号
-        '' as acc_bank,-- 交费账户开户机构名称
-        a.c_app_no  as receipt_n,-- 作业流水号,唯一标识号
+    	mny.c_payer_nme         as acc_name,-- 交费账号名称
+    	mny.c_savecash_bank          as acc_no,-- 交费账号
+    	mny.c_bank_nme	          as acc_bank,-- 交费账户开户机构名称
+    	a.c_app_no  as receipt_no,-- 作业流水号,唯一标识号
         ' {lastday}000000'		pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000)  a
         inner join ods_cthx_web_app_insured partition(pt{lastday}000000)  id on a.c_app_no=id.c_app_no
@@ -198,4 +198,6 @@ from ods_cthx_web_ply_base partition(pt{lastday}000000)  a
         inner join edw_cust_ply_party_insured   partition(future) i on a.c_ply_no =i.c_ply_no and i.c_biz_type = 31  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人        
         inner join edw_cust_ply_party_bnfc   partition(future) b on a.c_ply_no =b.c_ply_no and b.c_biz_type in (41, 43)  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
         inner join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
+    	inner join ods_cthx_web_fin_prm_due partition(pt{lastday}000000) due on a.c_ply_no = due.c_ply_no
+    	inner join ods_cthx_web_fin_cav_mny partition(pt{lastday}000000) mny on due.c_cav_no = mny.c_cav_pk_id
 where a.t_next_edr_bgn_tm > now() 

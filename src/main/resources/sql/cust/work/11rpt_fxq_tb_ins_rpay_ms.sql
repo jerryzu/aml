@@ -2,11 +2,11 @@
 select count(1) from information_schema.partitions 
 where table_schema = schema() 
     and table_name='rpt_fxq_tb_ins_rpay_ms' 
-    and partition_name = 'pt{lastday}000000';
+    and partition_name = 'pt20190922000000';
 
-alter table rpt_fxq_tb_ins_rpay_ms add partition (partition pt{lastday}000000 values less than ('{lastday}999999'));
+alter table rpt_fxq_tb_ins_rpay_ms add partition (partition pt20190922000000 values less than ('20190922999999'));
 
-alter table rpt_fxq_tb_ins_rpay_ms truncate partition pt{lastday}000000;
+alter table rpt_fxq_tb_ins_rpay_ms truncate partition pt20190922000000;
 */
 alter table rpt_fxq_tb_ins_rpay_ms truncate partition future;
 
@@ -87,10 +87,10 @@ select
     mny.c_savecash_bank          as acc_no,-- 交费账号
     mny.c_bank_nme	          as acc_bank,-- 交费账户开户机构名称
     a.c_app_no  as receipt_no,-- 作业流水号,唯一标识号
-    '{lastday}000000' pt
-from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-    inner join ods_cthx_web_fin_prm_due partition(pt{lastday}000000) due on a.c_ply_no = due.c_ply_no
-    inner join ods_cthx_web_fin_cav_mny partition(pt{lastday}000000) mny on due.c_cav_no = mny.c_cav_pk_id
+    '20190922000000' pt
+from ods_cthx_web_ply_base partition(pt20190922000000) a
+    inner join ods_cthx_web_fin_prm_due partition(pt20190922000000) due on a.c_ply_no = due.c_ply_no
+    inner join ods_cthx_web_fin_cav_mny partition(pt20190922000000) mny on due.c_cav_no = mny.c_cav_pk_id
 	left join edw_cust_ply_party_applicant partition(future) b on a.c_app_no=b.c_app_no
 	left join edw_cust_ply_party_insured partition(future) c on a.c_app_no=c.c_app_no
 	left join edw_cust_ply_party_bnfc partition(future) d on  a.c_app_no=d.c_app_no

@@ -1,8 +1,99 @@
 反洗钱客户类型:自然人,法人
 反洗中有数据,核心无数据的不选择
 没有客户类型41 ,42受益人bnfc
+web_fin_cav_doc
+web_fin_cav_mny
+web_fin_prm_due
+web_fin_pay_due
+web_fin_clm_due
 
-dear:
-        保单保费关联 select  a.C_SAVECASH_BANK as '资金支付账户'  from web_fin_cav_mny a  , web_fin_prm_due b where a.C_CAV_PK_ID = b.C_CAV_NO  and b.c_ply_no = ?(保单号)
-        保单跟单费关联 select  a.C_SAVECASH_BANK as '资金支付账户'  from web_fin_cav_mny a  , web_fin_pay_due b where a.C_CAV_PK_ID = （select doc.C_CAV_PK_ID from web_fin_cav_doc doc where doc.C_Rcpt_No = b.C_Rcpt_No order by doc.t_crt_tm desc limit 1）  and b.c_ply_no = ?(保单号)    
-        保单赔款关联 select  a.C_SAVECASH_BANK as '资金支付账户'  from web_fin_cav_mny a  , web_fin_clm_due b where a.C_CAV_PK_ID = （select doc.C_CAV_PK_ID from web_fin_cav_doc doc where doc.C_Rcpt_No = b.C_Rcpt_No order by doc.t_crt_tm desc limit 1）  and b.c_ply_no = ?(保单号) 
+保单保费关联 
+select  a.C_SAVECASH_BANK as '资金支付账户'  
+from web_fin_cav_mny a  , web_fin_prm_due b 
+where a.C_CAV_PK_ID = b.C_CAV_NO  and b.c_ply_no = ?(保单号)
+保单跟单费关联 
+select  a.C_SAVECASH_BANK as '资金支付账户'  
+from web_fin_cav_mny a  , web_fin_pay_due b 
+where a.C_CAV_PK_ID = (select doc.C_CAV_PK_ID 
+    from web_fin_cav_doc doc 
+    where doc.C_Rcpt_No = b.C_Rcpt_No 
+    order by doc.t_crt_tm desc limit 1
+)  and b.c_ply_no = ?(保单号)    
+保单赔款关联 
+select  a.C_SAVECASH_BANK as '资金支付账户'  
+from web_fin_cav_mny a  , web_fin_clm_due b 
+where a.C_CAV_PK_ID = (select doc.C_CAV_PK_ID 
+    from web_fin_cav_doc doc 
+    where doc.C_Rcpt_No = b.C_Rcpt_No 
+    order by doc.t_crt_tm desc limit 1
+)  and b.c_ply_no = ?(保单号) 
+
+SELECT C_CLM_NO,sum(n_due_amt) 支付金额,t_paid_tm 支付时间  from  ods_cthx_web_fin_clm_due  partition(pt20190714000000)
+where  c_feetyp_cde ='CPPK'
+web_app_grp_member.CResevFld6 与投保人关系，这个是团单被保险的与投保人关系
+select C_PAY_MDE_CDE from web_fin_prm_due  付款方式  5 转账
+ SELECT C_CDE, C_CNM, 'codeKind' FROM WEB_BAS_CODELIST WHERE C_PAR_CDE = 'shoufeifangshi' ORDER BY C_CDE ;
+ 现在只有退保才有对方帐户信息,web_fin_rpprmcustomer退保账户信息C_CUSTOMER_ACCOUNTS收款方帐号C_ACCOUNTS_NAME收款人名称C_BANK_ACCOUNTS收款人开户行(select *  from web_bankname)
+
+ N_EDR_PRJ_NO  批改次数 Times of Endorsement
+C_OP_MRK  记录新增A、删除D、修改U标识
+C_NME  被保人姓名
+C_CERT_TYP  证件类型
+C_CERT_NO  证件号码
+C_OCCUP_CDE  职业代码
+C_BNFC_NME  受益人
+C_BNFC_CERT_TYP  受益人证件类型
+C_BNFC_CERT_NO  受益人证件号码
+C_UDR_MRK  核保标志
+
+
+select 
+        a.c_ply_no,
+        b.c_certf_cde as app_id_no,-- 投保人证件号码
+        (select c_cnm from  ods_cthx_web_bas_codelist  partition(pt20190821000000) v where v.c_par_cde='policyCertificateTyp'  and v.c_cde = c.c_certf_cls) as ins_id_type, -- 被保险人证件类型
+        c.c_clnt_addr as ins_clnt_addr, -- 被保险人通讯地址
+        c.c_certf_cde as ins_id_no,-- 被保险人证件号码
+       (select c_cnm from  ods_cthx_web_bas_codelist  partition(pt20190821000000) v where v.c_par_cde='nvnewzhiyedaima'  and v.c_cde = c.c_occup_cde)  as ins_occupation_code,
+       (select  c_cnm from ods_cthx_web_bas_comm_code  partition(pt20190821000000) v  where v.c_par_cde = '601'   and v.c_cde = c.c_app_relation)  as relation-- 投保人、被保险人之间的关系  中
+from ods_cthx_web_ply_base partition(pt20190821000000) a
+  inner join ods_cthx_web_ply_applicant partition(pt20190821000000) b on a.c_ply_no=b.c_ply_no
+  inner join ods_cthx_web_ply_insured partition(pt20190821000000) c on a.c_ply_no=c.c_ply_no
+where a.t_next_edr_bgn_tm > now()   
+union all
+select 
+        a.c_ply_no,
+        b.c_certf_cde as app_id_no,-- 投保人证件号码
+        (select c_cnm from  ods_cthx_web_bas_codelist  partition(pt20190821000000) v where v.c_par_cde='policyCertificateTyp'  and v.c_cde = c.c_cert_typ) as ins_id_type, -- 被保险人证件类型
+       null as ins_clnt_addr, -- c.c_clnt_addr as ins_clnt_addr, -- 被保险人通讯地址
+        c.c_cert_no as ins_id_no,-- 被保险人证件号码 C_CERT_NO
+         (select c_cnm from  ods_cthx_web_bas_codelist  partition(pt20190821000000) v where v.c_par_cde='nvnewzhiyedaima'  and v.c_cde = c.c_occup_cde) as ins_occupation_code, -- 被保险人职业大类
+       null as relation-- c.c_app_relation as relation -- 投保人、被保险人之间的关系
+from ods_cthx_web_ply_base partition(pt20190821000000) a
+  inner join ods_cthx_web_ply_applicant partition(pt20190821000000) b on a.c_ply_no=b.c_ply_no
+  inner join ods_cthx_web_app_grp_member partition(pt20190821000000) c on a.c_ply_no=c.c_ply_no
+where a.t_next_edr_bgn_tm > now()   
+
+ , (select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.c_occup_cde)  职业大类
+  , (select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.C_Resv_Txt_1)  职业明细分类
+  , (select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.C_Position)  职业名称
+  , (select c_cnm from  ods_cthx_WEB_BAS_CODELIST    partition(pt20190821000000) v where v.c_par_cde like 'OccupationCategory'  and v.c_cde = c.C_Duty)  职业类别
+
+  select 
+a.c2,b.c_certf_cde 投保人证件号码 
+-- ,case when c.c_certf_cls='120001' then '身份证' else c.c_certf_cls end  被保险人证件类型
+, (select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like '120'  and v.c_cde = c.c_certf_cls)  被保险人证件类型
+
+, c.c_clnt_addr   被保险人通讯地址
+,c.c_certf_cde  被保险人证件号码
+,c.c_occup_cde   被保险人职业大类
+ , (select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.c_occup_cde)  职业大类
+  , (select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.C_Resv_Txt_1)  职业明细分类
+  , (select c_cnm from  ods_cthx_web_bas_comm_code    partition(pt20190821000000) v where v.c_par_cde like 'SS%'  and v.c_cde = c.C_Position)  职业名称
+  , (select c_cnm from  ods_cthx_WEB_BAS_CODELIST    partition(pt20190821000000) v where v.c_par_cde like 'OccupationCategory'  and v.c_cde = c.C_Duty)  职业类别
+
+-- ,c.c_app_relation -- 投保人、被保险人之间的关系
+, (select  c_cnm from ods_cthx_web_bas_comm_code  partition(pt20190821000000) v  where v.c_par_cde = '601'   and v.c_cde = c.c_app_relation)  
+from s_djnie_tishu a
+LEFT JOIN  ods_cthx_web_ply_applicant partition(pt20190821000000) b on a.c2=b.c_ply_no and b.N_EDR_PRJ_NO='0'
+LEFT JOIN  ods_cthx_web_ply_insured  partition(pt20190821000000) c on a.c2=c.c_ply_no and c.N_EDR_PRJ_NO='0'
+-- where a.c2='P997306001201910003427'

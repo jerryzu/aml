@@ -49,3 +49,7 @@ alter table ods_cthx_web_app_insured add index ods_cthx_web_app_insured_pk(c_app
 alter table ods_cthx_web_ply_base add index ods_cthx_web_ply_base_pk1(c_app_no, pt);
 alter table edw_cust_ply_party_applicant add index edw_cust_ply_party_applicant_pk1(c_app_no, pt);
 alter table edw_cust_ply_party_insured add index edw_cust_ply_party_insured_pk1(c_app_no, pt);
+
+alter table ods_cthx_web_fin_prm_due add index ods_cthx_web_fin_prm_due_pk(c_ply_no, pt);
+alter table ods_cthx_web_fin_prm_due add index ods_cthx_web_fin_prm_due_pk1(c_cav_no, pt);
+alter table ods_cthx_web_fin_cav_mny add index ods_cthx_web_fin_cav_mny_pk(c_cav_pk_id, pt);
