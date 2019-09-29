@@ -22,8 +22,15 @@ from information_schema.tables where table_schema = 'wine' and table_name like '
 select 'alter table', table_name, ' drop partition ', partition_name , ';'
 from information_schema.partitions where table_schema = 'tpedw' and table_name like 'rpt_fxq_tb%' 
 
-select 'alter table', table_name, ' add partition (partition pt20190922000000 values less than (''20190922999999''));' 
-from information_schema.tables where table_schema = 'tpedw' and table_name like 'rpt_fxq_tb%' 
+select 'alter table', table_name, ' add partition (partition pt20190928000000 values less than (''20190928999999''));' 
+from information_schema.tables where table_schema = 'tpedw' 
+and (table_name like 'ods_amltp%' or table_name like 'ods_cthx%')
+	
+select  
+    group_concat(distinct table_name)
+from information_schema.tables 
+where table_schema='tpedw'
+and (table_name like 'ods_amltp%' or table_name like 'ods_cthx%')    
 
 select 'alter table', table_name, ' add partition (partition future values less than (maxvalue));' 
 from information_schema.tables where table_schema = 'tpedw' and table_name like 'edw_cust_%' 

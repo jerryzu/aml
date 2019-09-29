@@ -1,3 +1,0 @@
-       n_coin_ci_pre,
-       '{lastday}000000' AS pt
-FROM   ods_cthx_web_clm_main PARTITION(pt{lastday}000000);
