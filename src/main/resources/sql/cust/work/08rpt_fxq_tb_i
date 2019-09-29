@@ -38,7 +38,7 @@ select
         when '0' then '12' -- 12:单位
         else 
         null-- 其它
-    end	as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
+        end	as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
 	case c.c_app_relation
 	when '601001' then '12' -- 配偶
 	when '601002' then '13' -- 父母
@@ -61,8 +61,8 @@ select
 	c.c_insured_name as name,-- 被保人或受益人名称
 	concat(rpad(c.c_cert_cls, 6, '0') , rpad(c.c_cert_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号
 	c.c_cert_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
-    '{lastday}000000' pt
-from ods_cthx_web_ply_base partition(pt{lastday}000000) a
+    '20190922000000' pt
+from ods_cthx_web_ply_base partition(pt20190922000000) a
 	inner join edw_cust_ply_party_applicant partition(future) b on a.c_app_no=b.c_app_no
 	inner join edw_cust_ply_party_insured partition(future) c on a.c_app_no=c.c_app_no
 	inner join rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
@@ -78,19 +78,14 @@ select
 	b.c_cst_no as app_cst_no,-- 投保人客户号
 	b.c_cert_cde as app_id_no,-- 投保人证件号码
 	'12' as insfav_type,-- 被保人或受益人标识 11:被保险人； 12：受益人
-	case c.c_clnt_mrk
-        when '1' then '11' -- 11:个人
-        when '0' then '12' -- 12:单位
-        else 
-        null-- 其它
-    end	as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
+	c.c_clnt_mrk as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
 	'' as relation,-- 投保人、被保人之间的关系 11：本单位；12本单位董事、监事或高级管理人员；13：雇佣或劳务；14：其他
 	'' as fav_type,-- 受益人标识 11：法定受益人；12非法定受益人 insfav_type=12时填写
 	c.c_bnfc_name as name,-- 被保人或受益人名称
 	concat(rpad(c.c_cert_cls, 6, '0') , rpad(c.c_cert_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号
 	c.c_cert_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
-	'{lastday}000000' pt	
-from ods_cthx_web_ply_base partition(pt{lastday}000000) a
+	'20190922000000' pt	
+from ods_cthx_web_ply_base partition(pt20190922000000) a
 	inner join edw_cust_ply_party_applicant partition(future) b on a.c_app_no=b.c_app_no
 	inner join edw_cust_ply_party_bnfc partition(future) c on a.c_app_no=c.c_app_no
 	inner join rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde

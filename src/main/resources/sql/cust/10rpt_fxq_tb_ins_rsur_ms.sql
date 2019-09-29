@@ -62,7 +62,12 @@ select
     b.c_applicant_name as app_name,-- 投保人名称
     b.c_cst_no as app_cst_no,-- 投保人客户号
     b.c_cert_cde as id_no,-- 投保人证件号码
-    b.c_clnt_mrk as cus_pro,-- 投保人客户类型 11:个人;12:单位;
+    case b.c_clnt_mrk
+        when '1' then '11' -- 11:个人
+        when '0' then '12' -- 12:单位
+        else 
+        null-- 其它
+    end	as cus_pro,-- 投保人客户类型 11:个人;12:单位;
     '' as sur_name,-- 业务申请人名称
     '' as sur_id_no,-- 业务申请人证件号码
     '' as sur_date,-- 业务日期

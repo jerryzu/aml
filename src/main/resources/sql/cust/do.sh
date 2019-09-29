@@ -73,7 +73,7 @@ source work/06rpt_fxq_tb_ins_rpol_ms.sql
 sed "s/{lastday}/$lastday/g" 06rpt_fxq_tb_ins_rpol_ms.sql>work/06rpt_fxq_tb_ins_rpol_ms.sql
 
 
-sed "s/{lastday}/$lastday/g" 07rpt_fxq_tb_ins_gpol_ms.sql>work/07rpt_fxq_tb_ins_gpol_ms.sql
+
 sed "s/{lastday}/$lastday/g" 08rpt_fxq_tb_ins_fav_cst_ms.sql>work/08rpt_fxq_tb_ins_fav_cst_ms.sql
 sed "s/{lastday}/$lastday/g" 09rpt_fxq_tb_ins_renewal_ms.sql>work/09rpt_fxq_tb_ins_renewal_ms.sql
 sed "s/{lastday}/$lastday/g" 10rpt_fxq_tb_ins_rsur_ms.sql>work/10rpt_fxq_tb_ins_rsur_ms.sql
@@ -88,3 +88,11 @@ source work/10rpt_fxq_tb_ins_rsur_ms.sql;
 source work/11rpt_fxq_tb_ins_rpay_ms.sql;
 source work/12rpt_fxq_tb_ins_rcla_ms.sql;
 source work/13rpt_fxq_tb_ins_rchg_ms.sql;
+
+sed "s/{lastday}/$lastday/g" 14rpt_fxq_tb_ins_risk_new_ms.sql>work/14rpt_fxq_tb_ins_risk_new_ms.sql
+sed "s/{lastday}/$lastday/g" 15rpt_fxq_tb_ins_risk_ms.sql>work/15rpt_fxq_tb_ins_risk_ms.sql
+sed "s/{lastday}/$lastday/g" 16rpt_fxq_tb_lar_report_ms.sql>work/16rpt_fxq_tb_lar_report_ms.sql
+
+source work/14rpt_fxq_tb_ins_risk_new_ms.sql;
+source work/15rpt_fxq_tb_ins_risk_ms.sql;
+source work/16rpt_fxq_tb_lar_report_ms.sql;

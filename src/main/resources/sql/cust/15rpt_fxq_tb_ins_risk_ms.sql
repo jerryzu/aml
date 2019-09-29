@@ -37,14 +37,14 @@ from (
         c_cert_cde app_id_no,	--	投保人证件号码
         risk_code,	--	风险等级
         date_format(score_time,'%Y%m%d')  div_date,	--	划分日期	
-        if(@u=c_cst_no,@n:=0,@n:=1) as first_type,	--	首次标识
+        if(@u=c_cst_no,@n:=12,@n:=11) as first_type,	--	首次标识 11是, 12否。
         if(@u=c_cst_no and @s=score_time,@r:=@r+1,@r:=1) as rank,
         @u:=                             c_cst_no,
         @s:=                             score_time,
         score,	--	评分分值
         norm,	--	划分依据
         '{lastday}000000' pt	--	分区字段
-    from rpt_fxq_amltp_risk  partition (future) r,  (select @u:=null, @s:=null, @r:=0, @n:=0) r1
+    from rpt_fxq_tb_amltp_risk  partition (future) r,  (select @u:=null, @s:=null, @r:=0, @n:=0) r1
     order by app_cst_no, div_date
     ) v
 where v.rank = 1

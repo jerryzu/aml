@@ -33,7 +33,12 @@ select
 	b.c_cert_cde as app_id_no,-- 投保人证件号码
 
 	'11' as insfav_type,-- 被保人或受益人标识 11:被保险人； 12：受益人
-	c.c_clnt_mrk as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
+	case c.c_clnt_mrk
+        when '1' then '11' -- 11:个人
+        when '0' then '12' -- 12:单位
+        else 
+        null-- 其它
+    end	as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
 	case c.c_app_relation
 	when '601001' then '12' -- 配偶
 	when '601002' then '13' -- 父母
@@ -73,7 +78,12 @@ select
 	b.c_cst_no as app_cst_no,-- 投保人客户号
 	b.c_cert_cde as app_id_no,-- 投保人证件号码
 	'12' as insfav_type,-- 被保人或受益人标识 11:被保险人； 12：受益人
-	c.c_clnt_mrk as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
+	case c.c_clnt_mrk
+        when '1' then '11' -- 11:个人
+        when '0' then '12' -- 12:单位
+        else 
+        null-- 其它
+    end	as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
 	'' as relation,-- 投保人、被保人之间的关系 11：本单位；12本单位董事、监事或高级管理人员；13：雇佣或劳务；14：其他
 	'' as fav_type,-- 受益人标识 11：法定受益人；12非法定受益人 insfav_type=12时填写
 	c.c_bnfc_name as name,-- 被保人或受益人名称

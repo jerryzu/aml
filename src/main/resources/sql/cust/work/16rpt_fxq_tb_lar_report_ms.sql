@@ -112,7 +112,7 @@ select
     ,null		ooct	  --  	其他非柜台交易方式
     ,null		ocec	  --  	非柜台交易方式的设备代码
     ,null		rotf	  --  	交易信息备注
-    ,'{lastday}000000' pt	--	分区字段
-from ods_amltp_t_lat_data  partition(pt{lastday}000000)  d 
-    inner join ods_amltp_t_lat_customer  partition(pt{lastday}000000)  c on d.r_cust_id = c.r_cust_id
-    inner join ods_amltp_t_ih_tsdt  partition(pt{lastday}000000)  t on d.app_no = t.app_no
+    ,'20190922000000' pt	--	分区字段
+from ods_amltp_t_lat_data  partition(pt20190922000000)  d 
+    inner join ods_amltp_t_lat_customer  partition(pt20190922000000)  c on d.r_cust_id = c.r_cust_id
+    inner join ods_amltp_t_ih_tsdt  partition(pt20190922000000)  t on d.app_no = t.app_no

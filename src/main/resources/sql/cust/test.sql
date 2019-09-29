@@ -23,7 +23,7 @@ from rpt_fxq_tb_ins_pers_ms
 select distinct cst_sex  -- 11: 男; 12: 女。填写数字。
 from rpt_fxq_tb_ins_pers_ms
 
-/* 国籍（地区） */
+/* 国籍（地区） unpass*/
 select distinct nation -- 按照GB/T2659-2000世界各国和地区名称代码标准填写。三字符拉丁字母缩写, 如CHN、HKG。
 from rpt_fxq_tb_ins_pers_ms
 
@@ -107,7 +107,7 @@ from rpt_fxq_tb_ins_rpol_ms
 select distinct app_id_type -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件填写数字。
 from rpt_fxq_tb_ins_rpol_ms
 
-/* 被保险人客户号 unpass*/
+/* 被保险人客户号*/
 select distinct ins_cst_no -- 客户唯一的标识号, 不能为空。
 from rpt_fxq_tb_ins_rpol_ms
 
@@ -119,7 +119,7 @@ from rpt_fxq_tb_ins_rpol_ms
 select distinct ins_cus_pro -- 11: 个人; 12: 单位客户。填写数字。
 from rpt_fxq_tb_ins_rpol_ms
 
-/* 投保人、被保险人之间的关系 unpass*/
+/* 投保人、被保险人之间的关系*/
 select distinct relation -- 11: 本人; 12: 配偶; 13父母; 14子女; 15: 其他近亲属; 16; 雇佣或劳务; 17: 其他填写数字。
 from rpt_fxq_tb_ins_rpol_ms
 
@@ -131,15 +131,15 @@ from rpt_fxq_tb_ins_rpol_ms
 select distinct benefit_cus_pro -- 11: 个人; 12: 单位客户受益人标识为法定受益人的一人或若干人时, 不填写本字段, 下同。填写数字。
 from rpt_fxq_tb_ins_rpol_ms
 
-/* 受益人名称 unpass*/
+/* 受益人名称*/
 select distinct benefit_name -- 受益人标识为法定受益人的一人或若干人时, 不填写本字段, 下同。
 from rpt_fxq_tb_ins_rpol_ms
 
-/* 受益人客户号 unpass*/
+/* 受益人客户号*/
 select distinct benefit_cst_no -- 如未为受益人设立客户号, 填写"@N"
 from rpt_fxq_tb_ins_rpol_ms
 
-/* 受益人身份证件号码 unpass*/
+/* 受益人身份证件号码*/
 select distinct benefit_id_no -- 个人填写身份证件号码, 单位按表4License字段要求填写。
 from rpt_fxq_tb_ins_rpol_ms
 
@@ -167,7 +167,7 @@ from rpt_fxq_tb_ins_rpol_ms
 select distinct `limit` -- 趸交为1; 终身交费填为9999。填写实际应交费的期数。
 from rpt_fxq_tb_ins_rpol_ms
 
-/* 保险标的物 */
+/* 保险标的物 *unpass/
 select distinct subject -- 本字段适用财产保险, 填写具体的保险标的物名称, 如车牌号码; 无法明确指向保险标的统一填写替代符"@N"
 from rpt_fxq_tb_ins_rpol_ms
 
@@ -175,7 +175,7 @@ from rpt_fxq_tb_ins_rpol_ms
 select distinct tsf_flag -- 10: 现金交保险公司; 11: 转账; 12: 现金缴款单(指客户向银行缴纳现金, 凭借银行开具的单据向保险机构办理交费业务); 13: 保险公司业务员代付。网银转账、银行柜面转账、POS刷卡、直接转账给总公司账户等情形, 应标识为转账。填写数字。
 from rpt_fxq_tb_ins_rpol_ms
 
-/* 交费账户名称 unpass*/
+/* 交费账户名称*/
 select distinct acc_name -- Tsf_flag=11时填写, 下同。通过银行机构交费的填写银行账户名称, 通过支付机构交费的填写支付账户名称。
 from rpt_fxq_tb_ins_rpol_ms
 
@@ -215,6 +215,7 @@ from rpt_fxq_tb_ins_gpol_ms
 select distinct ins_no -- 一份团险保单涉及多个险种的, 本字段填写"多个险种"如: tb_ins_rtype定义
 from rpt_fxq_tb_ins_gpol_ms
 
+---------------------------------------------------------------
 /* 币种 */
 select distinct cur_code -- 按照GB/T12406-2008表示货币和资金的代码标准填写, 如CNY, USD等。
 from rpt_fxq_tb_ins_gpol_ms
@@ -231,7 +232,7 @@ from rpt_fxq_tb_ins_gpol_ms
 select distinct `limit` -- 趸交为1; 终身交费填为9999。
 from rpt_fxq_tb_ins_gpol_ms
 
-/* 保险标的物 */
+/* 保险标的物 ???为啥是地址*/
 select distinct subject -- 本字段适用财产保险, 填写具体的保险标的物名称, 如车牌号码; 无法明确指向保险标的统一填写替代符"@N"
 from rpt_fxq_tb_ins_gpol_ms
 
@@ -239,7 +240,7 @@ from rpt_fxq_tb_ins_gpol_ms
 select distinct tsf_flag -- 10: 现金交保险公司; 11: 转账; 12: 现金缴款单(指客户向银行缴纳现金, 凭借银行开具的单据向保险机构办理交费业务); 13: 保险公司业务员代付。网银转账、银行柜面转账、POS刷卡、直接转账给总公司账户等情形, 应标识为转账。填写数字。
 from rpt_fxq_tb_ins_gpol_ms
 
-/* 交费账户名称 unpass*/
+/* 交费账户名称 */
 select distinct acc_name -- Tsf_flag=11时填写, 下同。通过银行机构交费的填写银行账户名称, 通过支付机构交费的填写支付账户名称。
 from rpt_fxq_tb_ins_gpol_ms
 
@@ -287,7 +288,7 @@ from rpt_fxq_tb_ins_renewal_ms
 select distinct app_id_no -- 个人填写身份证件号码, 单位按表4License字段要求填写。
 from rpt_fxq_tb_ins_renewal_ms
 
-/* 险种代码 unpass*/
+/* 险种代码 unpass关于险种代码与产品代码*/
 select distinct ins_no -- 如: tb_ins_rtype定义; 
 from rpt_fxq_tb_ins_renewal_ms
 
@@ -295,11 +296,11 @@ from rpt_fxq_tb_ins_renewal_ms
 select distinct cur_code -- 按照GB/T12406-2008表示货币和资金的代码标准填写, 如CNY, USD等。
 from rpt_fxq_tb_ins_renewal_ms
 
-/* 现转标识 */
+/* 现转标识 unpass*/
 select distinct tsf_flag -- 10: 现金交保险公司; 11: 转账; 12: 现金缴款单(指客户向银行缴纳现金, 凭借银行开具的单据向保险机构办理交费业务); 13: 保险公司业务员代付。网银转账、银行柜面转账、POS刷卡、直接转账给总公司账户等情形, 应标识为转账。填写数字。
 from rpt_fxq_tb_ins_renewal_ms
 
-/* 交费账户名称 unpass*/
+/* 交费账户名称*/
 select distinct acc_name -- Tsf_flag=11时填写, 下同。通过银行机构交费的填写银行账户名称, 通过支付机构交费的填写支付账户名称。
 from rpt_fxq_tb_ins_renewal_ms
 
@@ -335,12 +336,13 @@ from rpt_fxq_tb_ins_rsur_ms
 select distinct tsf_flag -- 10: 现金; 11: 银行转账; 12: 其他。填写数字。
 from rpt_fxq_tb_ins_rsur_ms
 
-
---------- uncheck
 /* 收款账户名称 */
 select distinct acc_name -- Tsf_flag=11时填写, 下同。通过银行机构退费的填写银行账户名称, 通过支付机构退费的填写支付账户名称。
 from rpt_fxq_tb_ins_rsur_ms
 
+------------------- first check, and second check
+
+---------- question uncheck
 /* 投保人客户号 */
 select distinct app_cst_no -- 客户唯一的标识号, 不能为空。
 from rpt_fxq_tb_ins_rpay_ms
@@ -449,6 +451,7 @@ from rpt_fxq_tb_ins_rcla_ms
 select distinct item -- 11: 变更投保人; 12: 团险替换被保险人; 13: 变更受益人; 14: 变更客户(投保人、被保险人)信息如姓名、证件号、注册资本、经营范围、联系方式、地址、法定代表人等; 15: 保单转移(变更管理机构)。其他类型的保全/批改业务可不提供。填写数字。
 from rpt_fxq_tb_ins_rchg_ms
 
+/***********************down list check in second time***********************************/
 /* 风险等级 */
 select distinct risk_code -- 如采取三级分类, 10: 高; 11: 中; 12: 低。如采取五级分类, 10: 高; 11: 中高; 12: 中; 13: 中低; 14: 低。以此类推, 按等级从高到低依次升序填写。填写数字等级。
 from rpt_fxq_tb_ins_risk_new_ms
@@ -465,7 +468,7 @@ from rpt_fxq_tb_ins_risk_ms
 select distinct first_type -- 11是, 12否。
 from rpt_fxq_tb_ins_risk_ms
 
-/* 划分依据 */
+/* 划分依据 unpass*/
 select distinct norm -- 填写具体划分标准及相应得分分值, 多个标准间用"; "隔开。如, 保单险种2分; 保险期间3分等, 如采用直接评级的, 填写评级理由, 如"涉及保险欺诈"等。
 from rpt_fxq_tb_ins_risk_ms
 
@@ -477,11 +480,11 @@ from rpt_fxq_tb_lar_report_ms
 select distinct finc -- 有金融机构代码的网点应使用金融机构代码, 暂时没有该代码的网点可自行编制内部唯一代码。报告机构向反洗钱中心报送交易报告前, 应在系统中报备其内部网点代码对照表, 并在发生变化后及时更新。
 from rpt_fxq_tb_lar_report_ms
 
-/* 大额交易客户总数 */
+/* 大额交易客户总数 unpass*/
 select distinct cttn -- 大额交易客户总数>=大额交易客户序号
 from rpt_fxq_tb_lar_report_ms
 
-/* 金融机构与客户的关系 */
+/* 金融机构与客户的关系 unpass*/
 select distinct rlfc -- 00: 客户通过在境内金融机构开立的账户或者银行卡所发生的交易, "金融机构"为开立账户的机构或发卡银行; 01: 客户通过境外银行卡所发生的交易, "金融机构"为收单行; 02: 客户不通过账户或者银行卡发生的交易, "金融机构"为办理业务的机构
 from rpt_fxq_tb_lar_report_ms
 
@@ -497,23 +500,23 @@ from rpt_fxq_tb_lar_report_ms
 select distinct ctid -- 1.居民身份证号长度应为15位或者18位; 2.组织机构代码长度应为9位(如为10位则去掉最后一位校验码前的连接符"-")。
 from rpt_fxq_tb_lar_report_ms
 
-/* 客户账户类型 */
+/* 客户账户类型 unpass*/
 select distinct catp -- 按照10.2节账户类型代码表填写
 from rpt_fxq_tb_lar_report_ms
 
-/* 客户银行卡类型 */
+/* 客户银行卡类型 unpass*/
 select distinct cbct -- 10: 借记卡; 20: 贷记卡; 30: 准贷记卡; 90: 其他
 from rpt_fxq_tb_lar_report_ms
 
-/* 客户银行卡其他类型 */
+/* 客户银行卡其他类型 unpass*/
 select distinct ocbt -- 如果字段"客户银行卡类型(CBCT)"选择为"90", 此项须填写具体的银行卡类型, 否则填写"@N"
 from rpt_fxq_tb_lar_report_ms
 
-/* 客户职业(对私) 或客户行业(对公) */
+/* 客户职业(对私) 或客户行业(对公) unpass*/
 select distinct ctvc -- 1.客户职业按照GB/T6565-2015职业分类与代码填写, 可根据实际情况填写可疑主体职业的"大类"、"中类"或"小类"; 2.客户行业按照GB/T4754-2011国民经济行业分类与代码标准填写, 可根据实际情况填写可疑主体行业的"门类"、"大类"、"中类"或"小类"; 3.对于客户处于失业、无业或离退休等情况, 填写"99999"
 from rpt_fxq_tb_lar_report_ms
 
-/* 客户联系电话 */
+/* 客户联系电话 unpass*/
 select distinct cctl -- 1.电话号码应按照如下两种方式之一填写: 手机: 手机号码; 固定电话: 区号+"-"+固定电话; 2.如果报告机构掌握客户的多个联系电话, 则应设置多个"客户联系电话"字段, 每个字段填写一个联系电话
 from rpt_fxq_tb_lar_report_ms
 
@@ -525,15 +528,15 @@ from rpt_fxq_tb_lar_report_ms
 select distinct crcd -- 0501: 当日单笔或者累计交易人民币5万元以上(含5万元)、外币等值1万美元以上(含1万美元)的现金缴存、现金支取、现金结售汇、现钞兑换、现金汇款、现金票据解付及其他形式的现金收支; 0502: 非自然人客户银行账户与其他的银行账户之间当日单笔或者累计交易人民币200万元以上(含200万元)、外币等值20万美元以上(含20万美元)的款项划转; 0503: 自然人客户银行账户与其他的银行账户之间当日单笔或者累计人民币50万元以上(含50万元)、外币等值10万美元以上(含10万美元)的境内款项划转; 0504: 自然人客户银行账户与其他的银行账户之间当日单笔或者累计人民币20万元以上(含20万元)、外币等值1万美元以上(含1万美元)的跨境款项划转
 from rpt_fxq_tb_lar_report_ms
 
-/* 交易代办人身份证件/证明文件类型 */
+/* 交易代办人身份证件/证明文件类型 unpass*/
 select distinct tbit -- 按照10.1节身份证件/证明文件代码表填写。
 from rpt_fxq_tb_lar_report_ms
 
-/* 交易代办人身份证件/证明文件号码 */
+/* 交易代办人身份证件/证明文件号码 unpass*/
 select distinct tbid -- 居民身份证号长度应为15位或者18位。
 from rpt_fxq_tb_lar_report_ms
 
-/* 交易代办人国籍 */
+/* 交易代办人国籍 unpass*/
 select distinct tbnt -- 按照GB/T2659-2000世界各国和地区名称代码标准填写。
 from rpt_fxq_tb_lar_report_ms
 
@@ -541,11 +544,11 @@ from rpt_fxq_tb_lar_report_ms
 select distinct trcd -- 1.当交易发生地为中国大陆地区时, 前3位填写CHN或特殊经济区类型代码, 后6位按照大陆地区行政区划代码填写区、县级粒度的代码; 2.当交易发生地为中国大陆地区以外的国家或地区时, 前3位填写国别代码, 后6位填写000000; 3.行政区划代码以国家统计局公布的最新县及县以上行政区划代码为准; 4.国别代码使用GB/T2659-2000世界各国和地区名称代码中的3位字符代码; 5.特殊经济区类型代码按照10.4节特殊经济区类型代码表填写
 from rpt_fxq_tb_lar_report_ms
 
-/* 收付款方匹配号类型 */
+/* 收付款方匹配号类型 unpass*/
 select distinct rpmt -- 按照10.5节收付款方匹配号类型代码表填写
 from rpt_fxq_tb_lar_report_ms
 
-/* 收付款方匹配号 */
+/* 收付款方匹配号 unpass*/
 select distinct rpmn -- 按照10.5节收付款方匹配号类型代码表的规定填写
 from rpt_fxq_tb_lar_report_ms
 
@@ -553,35 +556,35 @@ from rpt_fxq_tb_lar_report_ms
 select distinct tstp -- 按照10.3节交易方式代码表填写
 from rpt_fxq_tb_lar_report_ms
 
-/* 涉外收支交易分类与代码 */
+/* 涉外收支交易分类与代码 unpass*/
 select distinct tsct -- 按照GB/T19583-2014涉外收支交易分类与代码标准填写。
 from rpt_fxq_tb_lar_report_ms
 
-/* 资金收付标志 */
+/* 资金收付标志 unpass*/
 select distinct tsdr -- 01: 收; 02: 付
 from rpt_fxq_tb_lar_report_ms
 
-/* 交易币种 */
+/* 交易币种 unpass*/
 select distinct crtp -- 按照GB/T12406-2008表示货币和资金的代码标准填写。
 from rpt_fxq_tb_lar_report_ms
 
-/* 对方金融机构网点代码类型 */
+/* 对方金融机构网点代码类型 unpass*/
 select distinct cfct -- 11: 现代化支付系统行号; 12: 人民币结算账户管理系统行号; 13: 银行内部机构号; 14: 金融机构代码; 99: 其他
 from rpt_fxq_tb_lar_report_ms
 
-/* 对方金融机构网点行政区划代码 */
+/* 对方金融机构网点行政区划代码 unpass*/
 select distinct cfrc -- 1.当网点在中国大陆地区时, 前3位填写CHN或特殊经济区类型代码, 后6位按照大陆地区行政区划代码填写区、县级的代码; 2.当网点中国大陆地区以外的国家或地区时, 前3位填写国别代码, 后6位填写000000; 3.行政区划代码以国家统计局公布的最新县及县以上行政区划代码为准; 4.国别代码使用GB/T2659-2000世界各国和地区名称代码中的3位字符代码; 5.特殊经济区类型代码按照10.4节特殊经济区类型代码表填写
 from rpt_fxq_tb_lar_report_ms
 
-/* 交易对手身份证件/证明文件类型 */
+/* 交易对手身份证件/证明文件类型 unpass*/
 select distinct tcit -- 按照10.1节身份证件/证明文件代码表填写。
 from rpt_fxq_tb_lar_report_ms
 
-/* 交易对手身份证件/证明文件号码 */
+/* 交易对手身份证件/证明文件号码 unpass*/
 select distinct tcid -- 1.居民身份证号长度应为15位或者18位; 2.组织机构代码长度应为9位(如为10位则去掉最后一位校验码前的连接符"-")。
 from rpt_fxq_tb_lar_report_ms
 
-/* 交易对手账户类型 */
+/* 交易对手账户类型 unpass*/
 select distinct tcat -- 按照10.2节账户类型代码表填写
 from rpt_fxq_tb_lar_report_ms
 
@@ -589,11 +592,11 @@ from rpt_fxq_tb_lar_report_ms
 select distinct octt -- 11: 网上交易; 12: 通过POS机交易; 13: 通过电话交易; 14: 通过热键机交易; 15: 通过ATM; 16: 通过传真交易; 17: 营业场所交易(仅针对证券期货业); 99: 其他(若选择此项, 报告机构应在字段"其他非柜台交易方式(OOCT)"对其类型做进一步说明)
 from rpt_fxq_tb_lar_report_ms
 
-/* 其他非柜台交易方式 */
+/* 其他非柜台交易方式 unpass*/
 select distinct ooct -- 如字段"非柜台交易方式(OCTT)"选择为"99", 本字段须填写非柜台交易方式的具体类型, 否则填写替代符"@N"
 from rpt_fxq_tb_lar_report_ms
 
-/* 非柜台交易方式的设备代码 */
+/* 非柜台交易方式的设备代码 unpass*/
 select distinct ocec -- 1.对于网上交易, 填写IP地址和MAC地址, 之间使用"@"分隔, 如果客户使用手机登录网络进行交易, 可填写手机号码和设备信息(IMEI、UDID等), 中间使用分割; 2.对于POS交易, 填写POS机编号; 3.对于电话交易, 填写电话号码; 4.对于热键机交易, 填写MAC地址; 5.对于ATM交易, 填写ATM编号; 6.对于传真交易, 填写传真号码; 7.对于营业场所交易, 填写营业场所网点代码地址(仅针对证券期货业); 8.对于其他未列出的非柜台交易方式, 填写其对应的设备代码
 from rpt_fxq_tb_lar_report_ms
 
@@ -617,23 +620,23 @@ from rpt_fxq_tb_sus_report_ms
 select distinct seid  -- 1.居民身份证号长度应为15位或者18位; 2.组织机构代码长度应为9位(如为10位则去掉最后一位校验码前的连接符"-")。
 from rpt_fxq_tb_sus_report_ms
 
-/* 可疑主体职业(对私)或行业(对公) */
+/* 可疑主体职业(对私)或行业(对公) unpass*/
 select distinct sevc -- 1.可疑主体职业按照GB/T6565-2015职业分类与代码填写, 可根据实际情况填写可疑主体职业的"大类"、"中类"或"小类"; 2.可疑主体行业按照GB/T4754-2011国民经济行业分类与代码标准填写, 可根据实际情况填写可疑主体行业的"门类"、"大类"、"中类"或"小类"; 3.对于可疑主体处于失业、无业或离退休等情况, 填写"99999"
 from rpt_fxq_tb_sus_report_ms
 
-/* 可疑主体法定代表人身份证件类型 */
+/* 可疑主体法定代表人身份证件类型 unpass*/
 select distinct srit  -- 按照10.1节身份证件/证明文件代码表填写。
 from rpt_fxq_tb_sus_report_ms
 
-/* 可疑主体法定代表人身份证件号码 */
+/* 可疑主体法定代表人身份证件号码 unpass*/
 select distinct srid -- 居民身份证号长度应为15位或者18位。
 from rpt_fxq_tb_sus_report_ms
 
-/* 可疑主体控股股东或实际控制人身份证件或证明文件类型 */
+/* 可疑主体控股股东或实际控制人身份证件或证明文件类型 unpass*/
 select distinct scit -- 按照10.1节身份证件/证明文件代码表填写。
 from rpt_fxq_tb_sus_report_ms
 
-/* 可疑主体控股股东或实际控制人身份证件或证明文件号码 */
+/* 可疑主体控股股东或实际控制人身份证件或证明文件号码 unpass*/
 select distinct scid -- 1.居民身份证号长度应为15位或者18位; 2.组织机构代码长度应为9位(如为10位则去掉最后一位校验码前的连接符"-")。
 from rpt_fxq_tb_sus_report_ms
 
@@ -665,7 +668,7 @@ from rpt_fxq_tb_sus_report_ms
 select distinct istp -- 01: 人寿险; 02: 财产险; 03: 再保险; 99: 其他。
 from rpt_fxq_tb_sus_report_ms
 
-/* 保险期间 */
+/* 保险期间 unpass*/
 select distinct isps -- 以起始日期+终止日期的形式报送, 格式为"年年年年月月曰日年年年年月月日日"
 from rpt_fxq_tb_sus_report_ms
 
@@ -689,11 +692,11 @@ from rpt_fxq_tb_sus_report_ms
 select distinct isid -- 1.居民身份证号长度应为15位或者18位; 2.组织机构代码长度应为9位(如为10位则去掉最后一位校验码前的连接符"-")。
 from rpt_fxq_tb_sus_report_ms
 
-/* 受益人身份证件或证明文件类型 */
+/* 受益人身份证件或证明文件类型 unpass*/
 select distinct bitp -- 按照10.1节身份证件/证明文件代码表填写。
 from rpt_fxq_tb_sus_report_ms
 
-/* 受益人身份证件或证明文件号码 */
+/* 受益人身份证件或证明文件号码 unpass*/
 select distinct bnid -- 1.居民身份证号长度应为15位或者18位; 2.组织机构代码长度应为9位(如为10位则去掉最后一位校验码前的连接符"-")。
 from rpt_fxq_tb_sus_report_ms
 
@@ -725,31 +728,31 @@ from rpt_fxq_tb_sus_report_ms
 select distinct bntn -- 同一被保险人的受益人总数。
 from rpt_fxq_tb_sus_report_ms
 
-/* 人工补正标识 */
+/* 人工补正标识 unpass?*/
 select distinct mirs -- 1.对于应答人工补正通知的报文, 填写中国反洗钱监测分析中心下发的人工补正通知文件名; 2.对于其他用途的报文, 填写替代符"@N"
 from rpt_fxq_tb_sus_report_ms
 
-/* 其他可疑交易报告触发点 */
+/* 其他可疑交易报告触发点 unpass?*/
 select distinct otpr -- 如字段"可疑交易报告触发点(TPTR)"选择为"99", 本字段须填写可疑交易报告的具体触发点, 否则填写替代符"@N"
 from rpt_fxq_tb_sus_report_ms
 
-/* 可疑主体控股股东其他身份证件/证明文件类型 */
+/* 可疑主体控股股东其他身份证件/证明文件类型 unpass*/
 select distinct ocit -- 如字段"可疑主体控股股东或实际控制人身份证件/证明文件类型(SCIT)"填写了119999、129999、619999或629999, 本字段须填写具体的身份证件/证明文件类型, 否则填写替代符"@N"
 from rpt_fxq_tb_sus_report_ms
 
-/* 其他报送方向 */
+/* 其他报送方向 unpass*/
 select distinct odrp -- 如字段"报送方向(DORP)"选择为"99", 本字段须填写可疑交易报告的具体报送方向, 否则填写替代符"@N"
 from rpt_fxq_tb_sus_report_ms
 
-/* 其他身份证件/证明文件类型 */
+/* 其他身份证件/证明文件类型 unpass*/
 select distinct oitp -- 如下列字段填写了119999、129999、619999或629999, 本字段须填写具体的身份证件/证明文件类型, 否则填写替代符"@N": 1.客户身份证件/证明文件类型(CITP); 2.交易代办人身份证件/证明文件类型(TBIT); 3.交易对手身份证件/证明文件类型(TCIT); 4.可疑主体身份证件/证明文件类型(SETP); 5.投保人身份证件/证明文件类型(AITP); 6.被保险人身份证件/证明文件类型(IITP); 7.受益人身份证件/证明文件类型(BITP)。
 from rpt_fxq_tb_sus_report_ms
 
-/* 可疑主体法定代表人其他身份证件/证明文件类型 */
+/* 可疑主体法定代表人其他身份证件/证明文件类型 unpass*/
 select distinct orit -- 如字段"可疑主体法定代表人身份证件类型(SRIT)"填写了119999、129999、619999或629999, 本字段须填写具体的身份证件/证明文件类型, 否则填写替代符"@N"。
 from rpt_fxq_tb_sus_report_ms
 
-/* 初次报送的可疑交易报告报文名称 */
+/* 初次报送的可疑交易报告报文名称 unpass*/
 select distinct orxn -- 即银发[2017]99号文中所指的"首次提交可疑交易报告号"。当字段"报送次数标志(TORP)"填写内容不为1时, 需要同时提供与该份报告相关联, 且"报送次数标志"为1的已正确入库的可疑交易报告报文名称(不加扩展名), 否则填写替代符"@N"。
 from rpt_fxq_tb_sus_report_ms
 

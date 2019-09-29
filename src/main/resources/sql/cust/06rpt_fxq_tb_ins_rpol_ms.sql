@@ -120,7 +120,12 @@ select
         i.c_insured_name as ins_name,-- 被保险人名称
         i.c_cst_no as ins_cst_no,-- 被保险人客户号
         i.c_cert_cde as ins_id_no,-- 被保险人证件号码
-        i.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位
+		case i.c_clnt_mrk
+        when '1' then '11' -- 11:个人
+        when '0' then '12' -- 12:单位
+        else 
+        null-- 其它
+        end	as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位
         case id.c_app_relation 
         -- select concat('when ''', c_cde, ''' then '' '' -- ',  c_cnm) from ods_cthx_web_bas_comm_code partition(pt{lastday}000000) where c_par_cde = '601' order by c_cde 
         -- 11: 本人； 12：配偶； 13：父母； 14：子女 15：其他近亲属 16 雇佣或劳务 17：其他  --tb_ins_rpay  tb_ins_rpol
@@ -191,7 +196,7 @@ select
     	mny.c_savecash_bank          as acc_no,-- 交费账号
     	mny.c_bank_nme	          as acc_bank,-- 交费账户开户机构名称
     	a.c_app_no  as receipt_no,-- 作业流水号,唯一标识号
-        ' {lastday}000000'		pt
+        '{lastday}000000'		pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000)  a
         inner join ods_cthx_web_app_insured partition(pt{lastday}000000)  id on a.c_app_no=id.c_app_no
         inner join edw_cust_ply_party_applicant   partition(future) a1 on a.c_ply_no =a1.c_ply_no and a1.c_biz_type = 21  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
