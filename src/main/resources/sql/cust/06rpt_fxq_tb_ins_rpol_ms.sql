@@ -100,11 +100,13 @@ select
                 end                 
         end as sale_type,-- 销售渠道
         -- 个人代理：为代理人名称；银保通代理点：**银行**分行等
+		/* 销售渠道名称 unpass*/   -- 对应Sale_type销售渠道填写。如销售渠道为"个人代理", 则本字段填写为个人代理人名称(如"张**"); 销售渠道为"银保通代理点", 则本字段填写为"**银行**分行, 等。
         (select c_cha_nme from ods_cthx_web_cus_cha partition(pt{lastday}000000)  v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
         date_format(a.t_app_tm,'%Y%m%d') as ins_date,-- 投保日期
         date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
         a1.c_applicant_name as app_name,-- 投保人名称
         a1.c_cst_no as app_cst_no,-- 投保人客户号
+		/* 投保人证件种类 unpass*/  -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件填写数字。
         case a1.c_cert_cls
         when  '120001' then 11 -- 居民身份证
         when  '120002' then 13 -- 护照
@@ -119,7 +121,9 @@ select
         a1.c_cert_cde as app_id_no,-- 投保人证件号码
         i.c_insured_name as ins_name,-- 被保险人名称
         i.c_cst_no as ins_cst_no,-- 被保险人客户号
+		/* 被保险人证件号码 unpass*/  -- 个人填写身份证件号码, 单位按表4License字段要求填写。
         i.c_cert_cde as ins_id_no,-- 被保险人证件号码
+		/* 被保险人客户类型 unpass*/   -- 11: 个人; 12: 单位客户。填写数字。
 		case i.c_clnt_mrk
         when '1' then '11' -- 11:个人
         when '0' then '12' -- 12:单位
@@ -146,7 +150,9 @@ select
         else
         '@N' -- 其它
         end as relation,-- 投保人、被保险人之间的关系
+		/* 受益人标识 unpass*/  -- 11: 法定受益人; 12: 指定受益人填写数字。
         '' as legal_type,-- 受益人标识  11:法定受益人;12:制定受益人;
+		/* 受益人类型 unpass*/  -- 11: 个人; 12: 单位客户受益人标识为法定受益人的一人或若干人时, 不填写本字段, 下同。填写数字。
         '' as benefit_cus_pro,-- 受益人类型 11:个人;12:单位客户;受益人为法定受益人的一人或若干人时不填写本字段
         b.c_bnfc_name as  benefit_name,-- 受益人名称 受益人为法定受益人的一人或若干人时不填写本字段
         b.c_cst_no as  benefit_cst_no,-- 受益人客户号
@@ -170,27 +176,29 @@ select
         a.n_prm as pre_amt,-- 本期交保费金额
         null as usd_amt,-- 折合美元金额
         /* case c.c_kind_no
-	when '01' then '11'
-	when '02' then '11'
-	when '03' then '10'
-	when '04' then '13'
-	when '05' then '15'
-	when '06' then '14'
-	when '07' then '14'
-	when '08' then '11'
-	when '09' then '11'
-	when '10' then '16'
-	when '11' then '12'
-	when '12' then '15'
-	when '16' then '16'
-	else '其他'
-	end */ 
+		when '01' then '11'
+		when '02' then '11'
+		when '03' then '10'
+		when '04' then '13'
+		when '05' then '15'
+		when '06' then '14'
+		when '07' then '14'
+		when '08' then '11'
+		when '09' then '11'
+		when '10' then '16'
+		when '11' then '12'
+		when '12' then '15'
+		when '16' then '16'
+		else '其他'
+		end */ 
         12 as  prof_type,-- 业务种类 11:人身保险;12:财产保险;
         11 as del_way,-- 交费方式 -- 11:趸交;12:期缴;13:不定期缴
         14 as del_period,-- 缴费间隔 -- 11:年缴;12:季缴;13:月缴;14:其他;
         1 as `limit`,-- 交费期数  趸交为1;终身缴费填写9999.填写实际期数.
+		/* 保险标的物 unpass */  -- 本字段适用财产保险, 填写具体的保险标的物名称, 如车牌号码; 无法明确指向保险标的统一填写替代符"@N"
         '' as subject,-- 保险标的物
         -- 修改成从资金系统取以下数据
+		/* 现转标识 unpass*/  -- 10: 现金交保险公司; 11: 转账; 12: 现金缴款单(指客户向银行缴纳现金, 凭借银行开具的单据向保险机构办理交费业务); 13: 保险公司业务员代付。网银转账、银行柜面转账、POS刷卡、直接转账给总公司账户等情形, 应标识为转账。填写数字。
         '' as tsf_flag,-- d.c_pay_mde_cde  as tsf_flag,-- 现转标识 --  SELECT C_CDE, C_CNM, 'codeKind' FROM  ods_cthx_WEB_BAS_CODELIST PARTITION(pt20190818000000)   WHERE C_PAR_CDE = 'shoufeifangshi' ORDER BY C_CDE ;
     	mny.c_payer_nme         as acc_name,-- 交费账号名称
     	mny.c_savecash_bank          as acc_no,-- 交费账号

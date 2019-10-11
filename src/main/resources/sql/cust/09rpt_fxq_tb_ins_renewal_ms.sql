@@ -52,6 +52,7 @@ select
     else 22 -- 其它
     end as app_id_type,-- 投保人身份证件类型
     b.c_cert_cde as app_id_no,-- 投保人证件号码
+	/* 险种代码 unpass关于险种代码与产品代码*/ -- 如: tb_ins_rtype定义; 
     case p.c_kind_no
 	when '01' then '11'
 	when '02' then '11'
@@ -86,6 +87,7 @@ select
     end as  cur_code,-- 币种
     a.n_prm as pre_amt,-- 本期交保费金额
     -9999 as usd_amt,-- 折合美元金额
+	/* 现转标识 unpass*/   -- 10: 现金交保险公司; 11: 转账; 12: 现金缴款单(指客户向银行缴纳现金, 凭借银行开具的单据向保险机构办理交费业务); 13: 保险公司业务员代付。网银转账、银行柜面转账、POS刷卡、直接转账给总公司账户等情形, 应标识为转账。填写数字。
     '' as tsf_flag,-- 现转标识
 	mny.c_payer_nme         as acc_name,-- 交费账号名称
     mny.c_savecash_bank          as acc_no,-- 交费账号

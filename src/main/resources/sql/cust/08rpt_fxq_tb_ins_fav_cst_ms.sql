@@ -78,13 +78,16 @@ select
 	b.c_cst_no as app_cst_no,-- 投保人客户号
 	b.c_cert_cde as app_id_no,-- 投保人证件号码
 	'12' as insfav_type,-- 被保人或受益人标识 11:被保险人； 12：受益人
+	/* 被保险人或受益人类型 unpass*/   -- 11: 个人; 12: 单位客户。填写数字。
 	case c.c_clnt_mrk
         when '1' then '11' -- 11:个人
         when '0' then '12' -- 12:单位
         else 
         null-- 其它
     end	as insbene_cus_pro,-- 被保人或受益人类型 11：个人；12：单位
+	/* 投保人、被保险人之间的关系 unpass*/  -- 11: 本单位; 12: 本单位董事、监事或高级管理人员; 13: 雇佣或劳务; 14: 其他填写数字。
 	'' as relation,-- 投保人、被保人之间的关系 11：本单位；12本单位董事、监事或高级管理人员；13：雇佣或劳务；14：其他
+	/* 受益人标识 unpass*/  -- 11: 法定受益人; 12: 非法定受益人。当被保险人或受益人标识Insfav_type='12'时填写。
 	'' as fav_type,-- 受益人标识 11：法定受益人；12非法定受益人 insfav_type=12时填写
 	c.c_bnfc_name as name,-- 被保人或受益人名称
 	concat(rpad(c.c_cert_cls, 6, '0') , rpad(c.c_cert_cde, 18, '0')) as insbene_cst_no,-- 被保险人或受益人客户号

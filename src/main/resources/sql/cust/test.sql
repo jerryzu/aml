@@ -3,36 +3,36 @@
 --  where fieldname != 'pt' and status = 2
 --  order by tableid, fieldid
 
-/* 金融机构编码 unpass*/
+/* 金融机构编码 */
 select distinct company_code2  -- 包括法人机构的编码和经营性机构编码, 金融机构内设部门可以不填写, 无编码的应向当地人民银行申领。
 from rpt_fxq_tb_company_ms
 
 /* 境内境外标识 */
-select distinct bord_flag -- 境内: 10、境外: 1L
+select distinct bord_flag, pt -- 境内: 10、境外: 1L
 from rpt_fxq_tb_company_ms
 
 /* 险种分类 */
-select distinct ins_type -- 财产保险公司填列规则如下: 10: 车险; 11: 财产险; 12: 船货特险; 13: 责任保险; 14: 短期健康、意外保险; 15: 信用保证保险; 16: 农业保险; 17: 其他。人身保险公司填列规则如下: 20: 普通寿险; 21: 分红寿险; 22: 投资连结保险; 23: 万能保险; 24: 健康保险; 25: 意外保险; 26: 养老保险; 27: 年金保险; 28: 其他。如某一险种同时属于多类, 需同时列明, 中间用"; "隔开, 如"10; 11; 12"。填写数字。
+select distinct ins_type, pt -- 财产保险公司填列规则如下: 10: 车险; 11: 财产险; 12: 船货特险; 13: 责任保险; 14: 短期健康、意外保险; 15: 信用保证保险; 16: 农业保险; 17: 其他。人身保险公司填列规则如下: 20: 普通寿险; 21: 分红寿险; 22: 投资连结保险; 23: 万能保险; 24: 健康保险; 25: 意外保险; 26: 养老保险; 27: 年金保险; 28: 其他。如某一险种同时属于多类, 需同时列明, 中间用"; "隔开, 如"10; 11; 12"。填写数字。
 from rpt_fxq_tb_ins_rtype_ms
 
 /* 客户号 */
-select distinct cst_no -- 填写单个客户统一客户号; 对于单客户存在多个客户号, 以及受益人或实际领款人等未开立客户号情形的, 填写"@N"。
+select distinct cst_no, pt -- 填写单个客户统一客户号; 对于单客户存在多个客户号, 以及受益人或实际领款人等未开立客户号情形的, 填写"@N"。
 from rpt_fxq_tb_ins_pers_ms
 
 /* 性别 unpass*/
-select distinct cst_sex  -- 11: 男; 12: 女。填写数字。
+select distinct cst_sex, pt  -- 11: 男; 12: 女。填写数字。
 from rpt_fxq_tb_ins_pers_ms
 
 /* 国籍（地区） unpass*/
-select distinct nation -- 按照GB/T2659-2000世界各国和地区名称代码标准填写。三字符拉丁字母缩写, 如CHN、HKG。
+select distinct nation, pt -- 按照GB/T2659-2000世界各国和地区名称代码标准填写。三字符拉丁字母缩写, 如CHN、HKG。
 from rpt_fxq_tb_ins_pers_ms
 
 /* 身份证件种类 */
-select distinct id_type  -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 16: 户口簿; 17: 出生证; 18: 其他类个人身份证件填写数字。
+select distinct id_type, pt  -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 16: 户口簿; 17: 出生证; 18: 其他类个人身份证件填写数字。
 from rpt_fxq_tb_ins_pers_ms
 
 /* 职业代码 unpass*/
-select distinct occupation_code -- 填写职业代码。
+select distinct occupation_code, pt -- 填写职业代码。
 from rpt_fxq_tb_ins_pers_ms
 
 /* 客户号 */
@@ -48,15 +48,15 @@ select distinct license -- 对应Set_file的号码, 对于多证合一的机构�
 from rpt_fxq_tb_ins_unit_ms
 
 /* 法定代表人或负责人身份证件类型 unpass*/
-select distinct id_type2 -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件填写数字。
+select distinct id_type2, pt -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件填写数字。
 from rpt_fxq_tb_ins_unit_ms
 
 /* 控股股东或者实际控制人身份证件类型 unpass*/
-select distinct id_type3 -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件21: 营业执照(含社会统一信用代码证, 多证合一); 22: 其他填写数字。
+select distinct id_type3, pt -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件21: 营业执照(含社会统一信用代码证, 多证合一); 22: 其他填写数字。
 from rpt_fxq_tb_ins_unit_ms
 
 /* 授权办理业务人员身份证件类型 unpass*/
-select distinct id_type4 -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民往来内地身份通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件填写数字。
+select distinct id_type4, pt -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民往来内地身份通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件填写数字。
 from rpt_fxq_tb_ins_unit_ms
 
 /* 行业代码 unpass*/
@@ -167,7 +167,7 @@ from rpt_fxq_tb_ins_rpol_ms
 select distinct `limit` -- 趸交为1; 终身交费填为9999。填写实际应交费的期数。
 from rpt_fxq_tb_ins_rpol_ms
 
-/* 保险标的物 *unpass/
+/* 保险标的物 unpass */ 
 select distinct subject -- 本字段适用财产保险, 填写具体的保险标的物名称, 如车牌号码; 无法明确指向保险标的统一填写替代符"@N"
 from rpt_fxq_tb_ins_rpol_ms
 
@@ -200,7 +200,7 @@ select distinct app_cst_no -- 客户唯一的标识号, 不能为空。
 from rpt_fxq_tb_ins_gpol_ms
 
 /* 投保人证件种类 unpass*/
-select distinct app_id_type -- 21: 营业执照(含社会统一信用代码证, 多证合一); 22: 其他填写数字。
+select distinct app_id_type, pt -- 21: 营业执照(含社会统一信用代码证, 多证合一); 22: 其他填写数字。
 from rpt_fxq_tb_ins_gpol_ms
 
 /* 投保人证件号码 */
@@ -212,7 +212,7 @@ select distinct state_owned -- 11: 国有企业; 12: 集体所有企业; 13: 联
 from rpt_fxq_tb_ins_gpol_ms
 
 /* 险种代码 unpass*/
-select distinct ins_no -- 一份团险保单涉及多个险种的, 本字段填写"多个险种"如: tb_ins_rtype定义
+select distinct ins_no, pt  -- 一份团险保单涉及多个险种的, 本字段填写"多个险种"如: tb_ins_rtype定义
 from rpt_fxq_tb_ins_gpol_ms
 
 ---------------------------------------------------------------
@@ -342,6 +342,16 @@ from rpt_fxq_tb_ins_rsur_ms
 
 ------------------- first check, and second check
 
+
+
+
+
+
+
+
+
+
+
 ---------- question uncheck
 /* 投保人客户号 */
 select distinct app_cst_no -- 客户唯一的标识号, 不能为空。
@@ -450,6 +460,23 @@ from rpt_fxq_tb_ins_rcla_ms
 /* 保全/批改项目 */
 select distinct item -- 11: 变更投保人; 12: 团险替换被保险人; 13: 变更受益人; 14: 变更客户(投保人、被保险人)信息如姓名、证件号、注册资本、经营范围、联系方式、地址、法定代表人等; 15: 保单转移(变更管理机构)。其他类型的保全/批改业务可不提供。填写数字。
 from rpt_fxq_tb_ins_rchg_ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /***********************down list check in second time***********************************/
 /* 风险等级 */

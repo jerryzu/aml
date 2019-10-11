@@ -93,11 +93,13 @@ SELECT
             end                 
     end as sale_type,-- 销售渠道
     -- 个人代理：为代理人名称；银保通代理点：**银行**分行等
+	/* 销售渠道名称 unpass*/   -- 对应Sale_type销售渠道填写。如销售渠道为"个人代理", 则本字段填写为个人代理人名称(如"张**"); 销售渠道为"银保通代理点", 则本字段填写为"**银行**分行"等。
     (select c_cha_nme from ods_cthx_web_cus_cha partition(pt{lastday}000000) v where v.c_cha_cde = a.c_brkr_cde) as sale_name,-- 销售渠道名称
     date_format(a.t_app_tm,'%Y%m%d')        as ins_date,-- 投保日期
     date_format(a.t_insrnc_bgn_tm,'%Y%m%d') as eff_date,-- 合同生效日期
     u.c_applicant_name                            as app_name,-- 投保人名称
     u.c_cst_no                              as app_cst_no,-- 投保人客户号
+	/* 投保人证件种类 unpass*/ -- 21: 营业执照(含社会统一信用代码证, 多证合一); 22: 其他填写数字。
     case u.c_cert_cls
     when '100111' then 11 -- 税务登记证
     when '100112' then 13 -- 统一社会信用代码
@@ -107,8 +109,10 @@ SELECT
     else 18 -- 其它
     end           as app_id_type,-- 投保人证件种类(单位客户)
     u.c_cert_cde as app_id_no,-- 投保人证件号码(单位客户)
+	/* 国有属性 unpass*/  -- 11: 国有企业; 12: 集体所有企业; 13: 联营企业; 14: 三资企业; 15: 私营企业; 16: 其他填写数字。
     ''            as state_owned,-- 国有属性(单位客户)
     v.ins_num     as ins_num,-- 被保险人数量
+	/* 险种代码 unpass*/   -- 一份团险保单涉及多个险种的, 本字段填写"多个险种"如: tb_ins_rtype定义
     case c.c_kind_no
 	when '01' then '11'
 	when '02' then '11'
@@ -143,8 +147,10 @@ SELECT
     11       as del_way,-- 交费方式 -- 11:趸交;12:期缴;13:不定期缴
     14       as del_period,-- 缴费间隔 -- 11:年缴;12:季缴;13:月缴;14:其他;
     1        as `limit`,-- 交费期数  趸交为1;终身缴费填写9999.填写实际期数.
+	/* 保险标的物 ???为啥是地址 unpass */  -- 本字段适用财产保险, 填写具体的保险标的物名称, 如车牌号码; 无法明确指向保险标的统一填写替代符"@N"
     left(t.c_tgt_addr, 100) as subject,-- 保险标的物
     -- 修改成从资金系统取以下数据
+	/* 现转标识 unpass*/  -- 10: 现金交保险公司; 11: 转账; 12: 现金缴款单(指客户向银行缴纳现金, 凭借银行开具的单据向保险机构办理交费业务); 13: 保险公司业务员代付。网银转账、银行柜面转账、POS刷卡、直接转账给总公司账户等情形, 应标识为转账。填写数字。
     ''          as tsf_flag,-- 现转标识
     mny.c_payer_nme         as acc_name,-- 交费账号名称
     mny.c_savecash_bank          as acc_no,-- 交费账号

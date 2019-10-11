@@ -32,12 +32,14 @@ SELECT
         date_format(t_open_time,'%Y%m%d')		open_time,
         date_format(t_close_time,'%Y%m%d')		close_time,
         c_acc_name		acc_name,
+		/* 性别 unpass*/  -- 11: 男; 12: 女。填写数字。
         case c_cst_sex
         when '1' then '11' -- 11:男
         when '2' then '12' -- 12:女
         else 
         null-- 其它
         end	cst_sex,
+		/* 国籍（地区） unpass*/ -- 按照GB/T2659-2000世界各国和地区名称代码标准填写。三字符拉丁字母缩写, 如CHN、HKG。
         case 
         when c_country = '1' then 'CHN' -- 居民身份证
         else 
@@ -56,6 +58,7 @@ SELECT
         end id_type,
         c_cert_cde		id_no,
         date_format(t_cert_end_date,'%Y%m%d')		id_deadline,
+		/* 职业代码 unpass*/  -- 填写职业代码。
         c_occup_cde		occupation_code,
         c_occup_sub_cde		occupation,
         n_income		income,

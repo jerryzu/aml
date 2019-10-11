@@ -43,11 +43,13 @@ SELECT
         c_clnt_addr	        address	,
         c_manage_area	        operate	,        
         '21'                           set_file,-- 依法设立的执照名称，21营业执照、22其他
+		/* 依法设立或经营的执照号码 unpass*/   -- 对应Set_file的号码, 对于多证合一的机构填写统一社会信用代码。
         c_buslicence_no	        license	,
         date_format(c_buslicence_valid,'%Y%m%d')	        id_deadline	,
         c_organization_no	        org_no	,
         c_cevenue_no	        tax_no	,
         c_legal_nme	        rep_name	,
+		/* 法定代表人或负责人身份证件类型 unpass*/   -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件填写数字。		
         case c_legal_certf_cls
         when '120001' then 11 -- 居民身份证
         when '120002' then 13 -- 护照
@@ -62,7 +64,8 @@ SELECT
         c_legal_certf_cde	        id_no2	,
         date_format(t_legal_cert_end_tm,'%Y%m%d')	        id_deadline2	,
         c_actualholding_nme	        man_name	,
-        case c_acth_certf_cls
+    	/* 控股股东或者实际控制人身份证件类型 unpass*/   -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民来往内地通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件21: 营业执照(含社会统一信用代码证, 多证合一); 22: 其他填写数字。 
+	    case c_acth_certf_cls
         when '120001' then 11 -- 居民身份证
         when '120002' then 13 -- 护照
         when '120003' then 12 -- 军人证
@@ -76,6 +79,8 @@ SELECT
         c_acth_certf_cde	        id_no3	,
         date_format(t_acth_certf_end_tm,'%Y%m%d')	        id_deadline3	,
         c_ope_name	        ope_name	,
+
+	/* 授权办理业务人员身份证件类型 unpass*/   -- 11: 居民身份证或临时身份证; 12: 军人或武警身份证件; 13: 港澳居民往来内地身份通行证, 台湾居民来往大陆通行证或其他有效旅行证件; 14、港澳台居民居住证; 15: 外国公民护照; 18: 其他类个人身份证件填写数字。
         case c_ope_certf_cls
         when '120001' then 11 -- 居民身份证
         when '120002' then 13 -- 护照
@@ -89,9 +94,11 @@ SELECT
         end id_type4,
         c_ope_certf_cde	        id_no4	,
         date_format(t_ope_certf_end_tm,'%Y%m%d')	        id_deadline4	,
+		/* 行业代码 unpass*/   -- 填写单位客户行业代码。
         c_trd_cde	        industry_code	,
         c_sub_trd_cde	        industry	,
         n_reg_amt	        reg_amt	,
+		/* 注册资本金币种 unpass*/   -- 采用国标, 如CNY、USD等; 下同。
         null	        code	,
         null	        sys_name	,
         '{lastday}000000' pt

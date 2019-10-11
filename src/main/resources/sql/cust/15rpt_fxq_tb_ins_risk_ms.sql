@@ -42,7 +42,8 @@ from (
         @u:=                             c_cst_no,
         @s:=                             score_time,
         score,	--	评分分值
-        norm,	--	划分依据
+		/* 划分依据 unpass*/  -- 填写具体划分标准及相应得分分值, 多个标准间用"; "隔开。如, 保单险种2分; 保险期间3分等, 如采用直接评级的, 填写评级理由, 如"涉及保险欺诈"等。
+		norm,	--	划分依据
         '{lastday}000000' pt	--	分区字段
     from rpt_fxq_tb_amltp_risk  partition (future) r,  (select @u:=null, @s:=null, @r:=0, @n:=0) r1
     order by app_cst_no, div_date

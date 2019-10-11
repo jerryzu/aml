@@ -24,9 +24,12 @@ select
     co.company_code2 as company_code2, -- 金融机构编码，人行科技司制定的14位金融标准化编码  暂时取“监管机构码，机构外部码，列为空”
     u.c_acc_name  as acc_name, -- 客户名称
     u.c_cst_no as cst_no, -- 客户号
+	/* 依法设立或经营的执照号码 unpass*/   -- 客户身份证件号码按表4License字段要求填写。
     u.c_buslicence_no as license,-- 营业执照号码
     p.c_acc_name as bnf_name,-- 收益所有人姓名
-    '14' as bnf_type,-- 判定受益所有人方式,14其他
+	/* 判定受益所有人方式 unpass*/  -- 11: 股权或表决权; 12: 人事、财务控制; 13: 高级管理人; 14其他
+	'14' as bnf_type,-- 判定受益所有人方式,14其他
+	/* 持股数量或表决权占比 unpass*/  -- 单位: ％。填写百分比, 保留2位小数, 如51.66, 不填写"％"符号。Bnftype=11时填写, 不等11时填写"@N"
     null as shareholding_ratio,-- 持股数量或表决权比例 ???????????????????????????????不能保存，因为是字符提供默认值
     p.c_clnt_addr as bnf_address,-- 受益所有人住址    
     case  p.c_cert_cls
