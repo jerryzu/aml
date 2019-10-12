@@ -167,3 +167,28 @@ where c.n_edr_prj_no='0'
         -- 财产保险销售渠道:11:个人代理;12:保险代理机构或经济机构;13:银邮代理;14:网销(本机构);15:电销;16:农村网点;17:营业网点;18:第三方平台;19:其他;
 		
 维度表找对应关系
+
+索引信息 
+select * from information_schema.statistics where table_schema = 'tpedw'
+
+2019-10-11
+11rpt_fxq_tb_ins_rpay_ms.sql:记录太多,记录不唯一
+		left join edw_cust_ply_party_applicant partition() b on a.c_app_no=b.c_app_no
+		left join edw_cust_ply_party_insured partition() c on a.c_app_no=c.c_app_no
+		left join edw_cust_ply_party_bnfc partition() d on  a.c_app_no=d.c_app_no
+
+12rpt_fxq_tb_ins_rcla_ms.sql:连接错误
+无数据
+
+大额交易记录多对多
+select r_cust_id, count(1)
+from ods_amltp_t_lat_data  partition(pt20190929000000);
+
+select app_no, count(1)
+from ods_amltp_t_lat_data  partition(pt20190929000000);
+
+select r_cust_id, count(1)
+from ods_amltp_t_lat_customer  partition(pt20190929000000);
+
+select app_no, count(1)
+from ods_amltp_t_ih_tsdt  partition(pt20190929000000);

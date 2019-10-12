@@ -1,14 +1,4 @@
-/*
-select count(1) from information_schema.partitions 
-where table_schema = schema() 
-    and table_name='rpt_fxq_tb_ins_rpol_ms' 
-    and partition_name = 'pt{lastday}000000';
-
-alter table rpt_fxq_tb_ins_rpol_ms add partition (partition pt{lastday}000000 values less than ('{lastday}999999'));
-
 alter table rpt_fxq_tb_ins_rpol_ms truncate partition pt{lastday}000000;
-*/
-alter table rpt_fxq_tb_ins_rpol_ms truncate partition future;
 
 INSERT INTO rpt_fxq_tb_ins_rpol_ms(
         company_code1,
@@ -207,10 +197,10 @@ select
         '{lastday}000000'		pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000)  a
         inner join ods_cthx_web_app_insured partition(pt{lastday}000000)  id on a.c_app_no=id.c_app_no
-        inner join edw_cust_ply_party_applicant   partition(future) a1 on a.c_ply_no =a1.c_ply_no and a1.c_biz_type = 21  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-        inner join edw_cust_ply_party_insured   partition(future) i on a.c_ply_no =i.c_ply_no and i.c_biz_type = 31  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人        
-        inner join edw_cust_ply_party_bnfc   partition(future) b on a.c_ply_no =b.c_ply_no and b.c_biz_type in (41, 43)  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
-        inner join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
+        inner join edw_cust_ply_party_applicant   partition(pt{lastday}000000) a1 on a.c_ply_no =a1.c_ply_no and a1.c_biz_type = 21  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
+        inner join edw_cust_ply_party_insured   partition(pt{lastday}000000) i on a.c_ply_no =i.c_ply_no and i.c_biz_type = 31  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人        
+        inner join edw_cust_ply_party_bnfc   partition(pt{lastday}000000) b on a.c_ply_no =b.c_ply_no and b.c_biz_type in (41, 43)  -- 10: 收款人, 21: 投保人, 22: 法人投保人, 31:被保人, 32:法人被保人, 33: 团单被保人，41: 受益人, 42: 法人受益人, 43: 团单受益人
+        inner join  rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde
     	inner join ods_cthx_web_fin_prm_due partition(pt{lastday}000000) due on a.c_ply_no = due.c_ply_no
     	inner join ods_cthx_web_fin_cav_mny partition(pt{lastday}000000) mny on due.c_cav_no = mny.c_cav_pk_id
 where a.t_next_edr_bgn_tm > now() 

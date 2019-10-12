@@ -1,4 +1,4 @@
-alter table rpt_fxq_tb_amltp_score truncate partition future;
+alter table rpt_fxq_tb_amltp_score truncate partition pt{lastday}000000;
 
 insert into rpt_fxq_tb_amltp_score(
 	c_clnt_cde,

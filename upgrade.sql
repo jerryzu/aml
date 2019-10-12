@@ -1,0 +1,1 @@
+ALTER TABLE    `tpedw`.`rpt_fxq_tb_ins_rcla_ms` MODIFY COLUMN `ins_date` VARCHAR(8) COMMENT '投保日期';

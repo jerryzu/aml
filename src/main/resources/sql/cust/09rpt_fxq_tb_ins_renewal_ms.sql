@@ -1,4 +1,4 @@
-alter table rpt_fxq_tb_ins_renewal_ms truncate partition future;
+alter table rpt_fxq_tb_ins_renewal_ms truncate partition pt{lastday}000000;
 
 INSERT INTO rpt_fxq_tb_ins_renewal_ms(
         company_code1,
@@ -99,9 +99,9 @@ from ods_cthx_web_ply_base partition(pt{lastday}000000) a
     inner join ods_cthx_web_fin_prm_due partition(pt{lastday}000000) due on a.c_ply_no = due.c_ply_no
     inner join ods_cthx_web_fin_cav_mny partition(pt{lastday}000000) mny on due.c_cav_no = mny.c_cav_pk_id
 
-	inner join edw_cust_ply_party_applicant partition(future) b on a.c_ply_no=b.c_ply_no
+	inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
 	inner join ods_cthx_web_bas_edr_rsn   partition(pt{lastday}000000) c on a.c_edr_rsn_bundle_cde=c.c_rsn_cde and substr(a.c_prod_no,1,2)=c.c_kind_no
 	inner join ods_cthx_web_prd_prod partition(pt{lastday}000000) p on a.c_prod_no=p.c_prod_no
-	left join rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
+	left join rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde
 where c.c_rsn_cde in ('07') and a.t_next_edr_bgn_tm > now() 
 	-- and a.t_edr_bgn_tm between and

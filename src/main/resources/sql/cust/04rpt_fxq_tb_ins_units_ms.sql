@@ -1,4 +1,4 @@
-alter table rpt_fxq_tb_ins_unit_ms truncate partition future;
+alter table rpt_fxq_tb_ins_unit_ms truncate partition pt{lastday}000000;
 
 INSERT INTO rpt_fxq_tb_ins_unit_ms(
         company_code1,
@@ -102,5 +102,5 @@ SELECT
         null	        code	,
         null	        sys_name	,
         '{lastday}000000' pt
-FROM edw_cust_units_info partition(future) a
-    left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
+FROM edw_cust_units_info partition(pt{lastday}000000) a
+    left join  rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde

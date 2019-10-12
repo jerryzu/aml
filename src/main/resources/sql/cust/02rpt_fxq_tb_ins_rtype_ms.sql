@@ -1,4 +1,4 @@
-alter table rpt_fxq_tb_ins_rtype_ms truncate partition future;
+alter table rpt_fxq_tb_ins_rtype_ms truncate partition pt{lastday}000000;
 
 INSERT INTO rpt_fxq_tb_ins_rtype_ms (
 	head_no, 
@@ -33,4 +33,4 @@ from ods_cthx_web_org_dpt partition(pt{lastday}000000) a
 	inner join ods_cthx_web_org_dpt_map partition(pt{lastday}000000) b on a.c_dpt_cde=b.c_dpt_cde
 	left join ods_cthx_web_prd_prod partition(pt{lastday}000000) c on b.c_kind_no=c.c_kind_no
 	left join ods_cthx_web_prd_kind partition(pt{lastday}000000) d on c.c_kind_no=d.c_kind_no
-    left join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
+    left join  rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde

@@ -1,6 +1,7 @@
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=10240;
-alter table edw_cust_units_info truncate partition future;
+alter table edw_cust_units_info truncate partition pt{lastday}000000;
+
 insert into edw_cust_units_info(
     c_dpt_cde,
     c_cst_no,

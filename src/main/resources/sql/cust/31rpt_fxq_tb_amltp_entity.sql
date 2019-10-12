@@ -6,7 +6,7 @@ concat('2', c_cst_no, mod(substr(c_cst_no, -7, 6), 9)) c_cst_no
 concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no
 concat(rpad(c_certf_cls, 6, '0') , rpad(c_certf_cde, 18, '0')) c_cst_no -- 客户号
 */
-alter table rpt_fxq_tb_amltp_entity truncate partition future;
+alter table rpt_fxq_tb_amltp_entity truncate partition pt{lastday}000000;
 
 insert into rpt_fxq_tb_amltp_entity(
     c_cst_no	

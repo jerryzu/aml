@@ -1,4 +1,4 @@
-alter table rpt_fxq_tb_company_ms truncate partition future;
+alter table rpt_fxq_tb_company_ms truncate partition pt{lastday}000000;
 
 insert into rpt_fxq_tb_company_ms (
     head_no, 

@@ -1,9 +1,6 @@
-/*
-ods_cthx_web_ply_bnfc,受益人客户类型为空
-*/
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=10240;
-alter table edw_cust_ply_party truncate partition future;
+alter table edw_cust_ply_party truncate partition pt{lastday}000000;
 
 INSERT INTO edw_cust_ply_party(
     c_dpt_cde,

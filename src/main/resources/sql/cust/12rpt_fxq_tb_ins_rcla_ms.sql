@@ -1,14 +1,4 @@
-/*
-select count(1) from information_schema.partitions 
-where table_schema = schema() 
-    and table_name='rpt_fxq_tb_ins_rcla_ms' 
-    and partition_name = 'pt{lastday}000000';
-
-alter table rpt_fxq_tb_ins_rcla_ms add partition (partition pt{lastday}000000 values less than ('{lastday}999999'));
-
 alter table rpt_fxq_tb_ins_rcla_ms truncate partition pt{lastday}000000;
-*/
-alter table rpt_fxq_tb_ins_rcla_ms truncate partition future;
 
 INSERT INTO rpt_fxq_tb_ins_rcla_ms(
         company_code1,
@@ -77,29 +67,46 @@ select
 	e.c_rptman_nme as cla_app_name,-- 理赔申请人名称 11:居民身份证或临时身份证;12:军人或武警身份证件;13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;14:港澳台居民居住证;15:外国公民护照;16:户口簿;17:出生证;18:其他类个人身份证件;21:营业执照;22:其他,
 	'' as  cla_id_type,-- 理赔申请人身份证件类型
 	'' as  cla_id_no,-- 理赔申请人身份证件号码
-	e.c_insured_rel as cla_pro,-- 理赔申请人类型 11:被保险人;12:受益人;13其他;
+	-- e.c_insured_rel as cla_pro,-- 理赔申请人类型 11:被保险人;12:受益人;13其他;
+	null as cla_pro,-- 理赔申请人类型 11:被保险人;12:受益人;13其他;
 	date_format(u.t_endcase_tm,'%Y%m%d') as cla_date,-- 理赔日期 web_clmnv_endcase.t_endcase_tm
 	date_format(g.t_pay_tm,'%Y%m%d') as pay_date,-- 理赔日期 web_clmnv_endcase.t_endcase_tm
 	'' as cur_code,-- 币种 CNY,USD
 	-- u.n_due_amt as cla_amt,-- 理赔金额 same as n_paid_amt --web_clm_bank.n_amt
 	g.n_amt as cla_amt,-- 理赔金额 same as n_paid_amt --web_clm_bank.n_amt 保留2位小数
-	'' as cla_usd_amt,-- 折合美元金额
+	null as cla_usd_amt,-- 折合美元金额
 	u.c_clm_no cla_no,-- 赔案号
 	'' as tsf_flag,-- 支付方式 10:现金;11:银行转账;12:其他
 	g.c_payee_nme as acc_name,-- 实际领款人名称
 	g.c_bank_num as acc_no,-- 实际领款人账号
 	g.c_bank_cde as acc_bank,-- 实际领款人开户机构
-	g.c_pub_piv as acc_type,-- 实际领款人类型 11:个人;12:单位客户
-	g.c_card_type as acc_id_type,-- 实际领款人身份证件类型 11:居民身份证或临时身份证;12:军人或武警身份证件;13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;14:港澳台居民居住证;15:外国公民护照;16:户口簿;17:出生证;18:其他类个人身份证件;21:营业执照;22:其他,
+	g.c_pub_piv as acc_type,-- 实际领款人类型 11:个人;12:单位客户	
+	case g.c_card_type
+		when '100111' then 11 -- 税务登记证
+		when '100112' then 13 -- 统一社会信用代码
+		when '110001' then 12 -- 组织机构代码
+		when '110002' then 13 -- 工商注册号码
+		when '110003' then 14 -- 营业执照
+		when  '120001' then 11 -- 居民身份证
+		when  '120002' then 13 -- 护照
+		when  '120003' then 12 -- 军人证
+		when  '120004' then 13 -- 回乡证
+		when  '120005' then 14 -- 港澳居民居住证
+		when  '120006' then 14 -- 台湾居民居住证
+		when  '120009' then 18 -- 其它
+	else 
+		18 -- 其它
+	end as acc_id_type,-- 实际领款人身份证件类型 11:居民身份证或临时身份证;12:军人或武警身份证件;13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;14:港澳台居民居住证;15:外国公民护照;16:户口簿;17:出生证;18:其他类个人身份证件;21:营业执照;22:其他,
 	g.c_id_card as acc_id_no,-- 实际领款人身份证件号码
-	'' as receipt_no,-- 作业流水号,唯一标识号	
+	cm.c_clm_no as receipt_no,-- 作业流水号,唯一标识号	
     '{lastday}000000' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	 inner join edw_cust_ply_party_applicant partition(future) b on a.c_ply_no=b.c_ply_no
-	 inner join edw_cust_ply_party_insured partition(future) c on a.c_app_no=c.c_app_no
-	 inner join edw_cust_ply_party_bnfc partition(future) d on  a.c_ply_no=d.c_ply_no -- 多个受益人相应生成多条记录
-	 inner join ods_cthx_web_clmnv_endcase partition(pt{lastday}000000) u on a.c_ply_no = u.c_clm_no -- and u.c_feetyp_cde ='CPPK'
+	 inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
+	 inner join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
+	 inner join edw_cust_ply_party_bnfc partition(pt{lastday}000000) d on  a.c_ply_no=d.c_ply_no -- 多个受益人相应生成多条记录
+	 inner join ods_cthx_web_clm_main partition(pt{lastday}000000) cm on a.c_ply_no = cm.c_ply_no
+	 inner join ods_cthx_web_clmnv_endcase partition(pt{lastday}000000) u on cm.c_clm_no = u.c_clm_no
 	 inner join ods_cthx_web_clm_bank partition(pt{lastday}000000) g on u.c_clm_no=g.c_clm_no
 	 inner join ods_cthx_web_clm_rpt partition(pt{lastday}000000) e on g.c_clm_no=e.c_clm_no
-    inner join  rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
-where a.t_next_edr_bgn_tm > now() 
+	 inner join  rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde
+where a.t_next_edr_bgn_tm > now()

@@ -1,7 +1,4 @@
-/**
-本段取法人投保，团单受益人是个人的单子???????????????
-**/
-alter table rpt_fxq_tb_ins_fav_cst_ms truncate partition future;
+alter table rpt_fxq_tb_ins_fav_cst_ms truncate partition pt{lastday}000000;
 
 INSERT INTO rpt_fxq_tb_ins_fav_cst_ms(
         company_code1,
@@ -63,9 +60,9 @@ select
 	c.c_cert_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
     '{lastday}000000' pt
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	inner join edw_cust_ply_party_applicant partition(future) b on a.c_app_no=b.c_app_no
-	inner join edw_cust_ply_party_insured partition(future) c on a.c_app_no=c.c_app_no
-	inner join rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
+	inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_app_no=b.c_app_no
+	inner join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
+	inner join rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now() and b.c_clnt_mrk = 1
 union all
 select
@@ -94,7 +91,7 @@ select
 	c.c_cert_cde as insbene_id_no,-- 被保险人或受益人身份证件号码
 	'{lastday}000000' pt	
 from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	inner join edw_cust_ply_party_applicant partition(future) b on a.c_app_no=b.c_app_no
-	inner join edw_cust_ply_party_bnfc partition(future) c on a.c_app_no=c.c_app_no
-	inner join rpt_fxq_tb_company_ms partition (future) co on co.company_code1 = a.c_dpt_cde
+	inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_app_no=b.c_app_no
+	inner join edw_cust_ply_party_bnfc partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
+	inner join rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now() and b.c_clnt_mrk = 1
