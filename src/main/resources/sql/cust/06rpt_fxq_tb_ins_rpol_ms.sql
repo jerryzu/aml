@@ -1,19 +1,24 @@
 -- *********************************************************************************
 --  文件名称: 06rpt_fxq_tb_ins_rpol_ms.sql
 --  所属主题: 理赔
---  功能描述: 从 edw_web_clm_main &
---               edw_web_clm_adjust, edw_WEB_CLM_CHECKCLM_OPIN, edw_WEB_CLM_CHECKCLM
---               edw_web_clm_pend
---               edw_web_ply_base 表提取数据
+--  功能描述: 从 ods_cthx_web_ply_base
+--  ods_cthx_web_app_insured
+--  edw_cust_ply_party_applicant
+--  edw_cust_ply_party_insured   
+--  edw_cust_ply_party_bnfc
+--  rpt_fxq_tb_company_ms
+--  ods_cthx_web_fin_prm_due
+--  ods_cthx_web_fin_cav_mny 表提取数据
 --            导入到 理赔案件表(rpt_fxq_tb_ins_rpol_ms) 表
 --  创建者: yhwang
---  输入: edw_web_clm_main &
---        edw_web_clm_adjust, edw_WEB_CLM_CHECKCLM_OPIN, edw_WEB_CLM_CHECKCLM
---        edw_web_clm_pend
---        edw_web_ply_base 1010
---       edw_web_clm_back_conclu_opin 1612
---       edw_web_clmnv_rgst       1613
---       edw_web_clm_counter_sign 1614
+--  输入: ods_cthx_web_ply_base
+--  ods_cthx_web_app_insured
+--  edw_cust_ply_party_applicant
+--  edw_cust_ply_party_insured   
+--  edw_cust_ply_party_bnfc
+--  rpt_fxq_tb_company_ms
+--  ods_cthx_web_fin_prm_due
+--  ods_cthx_web_fin_cav_mny 
 --  输出: rpt_fxq_tb_ins_rpol_ms 
 --  创建日期: 2017/6/7
 --  修改日志: 
