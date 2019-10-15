@@ -1,3 +1,18 @@
+-- *********************************************************************************
+--  文件名称: .sql
+--  所属主题: 理赔
+--  功能描述: 从 
+--   表提取数据
+--            导入到 () 表
+--  创建者: 
+--  输入: 
+--  输出:  
+--  创建日期: 2017/6/7
+--  修改日志: 
+--  修改日期: 
+--  修改人: 
+--  修改内容：
+
 alter table rpt_fxq_tb_ins_rpay_ms truncate partition pt{lastday}000000;
 
 INSERT INTO rpt_fxq_tb_ins_rpay_ms(
@@ -54,13 +69,12 @@ select
     b.c_cst_no as app_cst_no,-- 投保人客户号
     b.c_cert_cde as app_id_no,-- 投保人证件号码
     b.c_clnt_mrk as app_cus_pro,-- 投保人客户类型 11:个人;12:单位;
-    c.c_insured_name as ins_name,-- 被保险人客户名称
-    c.c_cst_no as ins_cst_no,-- 被保险人客户号
-    c.c_cert_cde as ins_id_no,-- 被保险人证件号码
-    c.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位;
+    i.c_insured_name as ins_name,-- 被保险人客户名称
+    i.c_cst_no as ins_cst_no,-- 被保险人客户号
+    i.c_cert_cde as ins_id_no,-- 被保险人证件号码
+    i.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位;
     d.c_bnfc_name as benefit_name,-- 受益人名称
-    -- d.c_bnfc_cert_no   as benefit_id_no,-- 受益人身份证件号码,无此字段
-    ''   as benefit_id_no,-- 受益人身份证件号码
+    d.c_cert_cde   as benefit_id_no,-- 受益人身份证件号码
     '' as benefit_pro,-- 受益人类型 11:个人;12:单位;
     -- d.c_app_relation as relation_1,-- 投保人被保人之间的关系,无此字段
     '' as relation_1,-- 投保人被保人之间的关系 11:本人;12:配偶;13:父母;14:子女;15:其他近亲属;16:雇佣或劳务;17:其他;
@@ -82,7 +96,7 @@ from ods_cthx_web_ply_base partition(pt{lastday}000000) a
     inner join ods_cthx_web_fin_prm_due partition(pt{lastday}000000) due on a.c_ply_no = due.c_ply_no
     inner join ods_cthx_web_fin_cav_mny partition(pt{lastday}000000) mny on due.c_cav_no = mny.c_cav_pk_id
 	left join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_app_no=b.c_app_no
-	left join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
+	left join edw_cust_ply_party_insured partition(pt{lastday}000000) i on a.c_app_no=i.c_app_no
 	left join edw_cust_ply_party_bnfc partition(pt{lastday}000000) d on  a.c_app_no=d.c_app_no
     left join  rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now() 

@@ -1,4 +1,4 @@
-alter table rpt_fxq_tb_ins_rpay_ms truncate partition pt20190903000000;
+alter table rpt_fxq_tb_ins_rpay_ms truncate partition pt20191013000000;
 
 INSERT INTO rpt_fxq_tb_ins_rpay_ms(
         company_code1,
@@ -22,7 +22,7 @@ INSERT INTO rpt_fxq_tb_ins_rpay_ms(
         ins_cus_pro,
         benefit_name,
         benefit_id_no,
-        benefit_cus_pro,
+        benefit_pro,
         relation_1,
         relation_2,
         pay_type,
@@ -54,14 +54,13 @@ select
     b.c_cst_no as app_cst_no,-- 投保人客户号
     b.c_cert_cde as app_id_no,-- 投保人证件号码
     b.c_clnt_mrk as app_cus_pro,-- 投保人客户类型 11:个人;12:单位;
-    c.c_insured_name as ins_name,-- 被保险人客户名称
-    c.c_cst_no as ins_cst_no,-- 被保险人客户号
-    c.c_cert_cde as ins_id_no,-- 被保险人证件号码
-    c.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位;
+    i.c_insured_name as ins_name,-- 被保险人客户名称
+    i.c_cst_no as ins_cst_no,-- 被保险人客户号
+    i.c_cert_cde as ins_id_no,-- 被保险人证件号码
+    i.c_clnt_mrk as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位;
     d.c_bnfc_name as benefit_name,-- 受益人名称
-    -- d.c_bnfc_cert_no   as benefit_id_no,-- 受益人身份证件号码,无此字段
-    ''   as benefit_id_no,-- 受益人身份证件号码
-    '' as benefit_cus_pro,-- 受益人类型 11:个人;12:单位;
+    d.c_cert_cde   as benefit_id_no,-- 受益人身份证件号码
+    '' as benefit_pro,-- 受益人类型 11:个人;12:单位;
     -- d.c_app_relation as relation_1,-- 投保人被保人之间的关系,无此字段
     '' as relation_1,-- 投保人被保人之间的关系 11:本人;12:配偶;13:父母;14:子女;15:其他近亲属;16:雇佣或劳务;17:其他;
     '' as relation_2,-- 受益人被保人之间的关系 11:本人;12:配偶;13:父母;14:子女;15:其他近亲属;16:雇佣或劳务;18:其他;
@@ -77,12 +76,12 @@ select
     mny.c_savecash_bank          as acc_no,-- 交费账号
     mny.c_bank_nme	          as acc_bank,-- 交费账户开户机构名称
     a.c_app_no  as receipt_no,-- 作业流水号,唯一标识号
-    '20190903000000' pt
-from ods_cthx_web_ply_base partition(pt20190903000000) a
-    inner join ods_cthx_web_fin_prm_due partition(pt20190903000000) due on a.c_ply_no = due.c_ply_no
-    inner join ods_cthx_web_fin_cav_mny partition(pt20190903000000) mny on due.c_cav_no = mny.c_cav_pk_id
-	left join edw_cust_ply_party_applicant partition(pt20190903000000) b on a.c_app_no=b.c_app_no
-	left join edw_cust_ply_party_insured partition(pt20190903000000) c on a.c_app_no=c.c_app_no
-	left join edw_cust_ply_party_bnfc partition(pt20190903000000) d on  a.c_app_no=d.c_app_no
-    left join  rpt_fxq_tb_company_ms partition (pt20190903000000) co on co.company_code1 = a.c_dpt_cde
+    '20191013000000' pt
+from ods_cthx_web_ply_base partition(pt20191013000000) a
+    inner join ods_cthx_web_fin_prm_due partition(pt20191013000000) due on a.c_ply_no = due.c_ply_no
+    inner join ods_cthx_web_fin_cav_mny partition(pt20191013000000) mny on due.c_cav_no = mny.c_cav_pk_id
+	left join edw_cust_ply_party_applicant partition(pt20191013000000) b on a.c_app_no=b.c_app_no
+	left join edw_cust_ply_party_insured partition(pt20191013000000) i on a.c_app_no=i.c_app_no
+	left join edw_cust_ply_party_bnfc partition(pt20191013000000) d on  a.c_app_no=d.c_app_no
+    left join  rpt_fxq_tb_company_ms partition (pt20191013000000) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now() 

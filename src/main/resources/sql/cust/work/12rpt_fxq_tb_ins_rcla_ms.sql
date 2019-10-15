@@ -1,19 +1,4 @@
--- *********************************************************************************
---  文件名称: .sql
---  所属主题: 理赔
---  功能描述: 从 
---   表提取数据
---            导入到 () 表
---  创建者: 
---  输入: 
---  输出:  
---  创建日期: 2017/6/7
---  修改日志: 
---  修改日期: 
---  修改人: 
---  修改内容：
-
-alter table rpt_fxq_tb_ins_rcla_ms truncate partition pt{lastday}000000;
+alter table rpt_fxq_tb_ins_rcla_ms truncate partition pt20191013000000;
 
 INSERT INTO rpt_fxq_tb_ins_rcla_ms(
         company_code1,
@@ -114,14 +99,14 @@ select
 	end as acc_id_type,-- 实际领款人身份证件类型 11:居民身份证或临时身份证;12:军人或武警身份证件;13:港澳居民来往内地通行证,台湾居民来往大陆通行证或其他有效旅游证件;14:港澳台居民居住证;15:外国公民护照;16:户口簿;17:出生证;18:其他类个人身份证件;21:营业执照;22:其他,
 	g.c_id_card as acc_id_no,-- 实际领款人身份证件号码
 	cm.c_clm_no as receipt_no,-- 作业流水号,唯一标识号	
-    '{lastday}000000' pt
-from ods_cthx_web_ply_base partition(pt{lastday}000000) a
-	 inner join edw_cust_ply_party_applicant partition(pt{lastday}000000) b on a.c_ply_no=b.c_ply_no
-	 inner join edw_cust_ply_party_insured partition(pt{lastday}000000) c on a.c_app_no=c.c_app_no
-	 inner join edw_cust_ply_party_bnfc partition(pt{lastday}000000) d on  a.c_ply_no=d.c_ply_no -- 多个受益人相应生成多条记录
-	 inner join ods_cthx_web_clm_main partition(pt{lastday}000000) cm on a.c_ply_no = cm.c_ply_no
-	 inner join ods_cthx_web_clmnv_endcase partition(pt{lastday}000000) u on cm.c_clm_no = u.c_clm_no
-	 inner join ods_cthx_web_clm_bank partition(pt{lastday}000000) g on u.c_clm_no=g.c_clm_no
-	 inner join ods_cthx_web_clm_rpt partition(pt{lastday}000000) e on g.c_clm_no=e.c_clm_no
-	 inner join  rpt_fxq_tb_company_ms partition (pt{lastday}000000) co on co.company_code1 = a.c_dpt_cde
+    '20191013000000' pt
+from ods_cthx_web_ply_base partition(pt20191013000000) a
+	 inner join edw_cust_ply_party_applicant partition(pt20191013000000) b on a.c_ply_no=b.c_ply_no
+	 inner join edw_cust_ply_party_insured partition(pt20191013000000) c on a.c_app_no=c.c_app_no
+	 inner join edw_cust_ply_party_bnfc partition(pt20191013000000) d on  a.c_ply_no=d.c_ply_no -- 多个受益人相应生成多条记录
+	 inner join ods_cthx_web_clm_main partition(pt20191013000000) cm on a.c_ply_no = cm.c_ply_no
+	 inner join ods_cthx_web_clmnv_endcase partition(pt20191013000000) u on cm.c_clm_no = u.c_clm_no
+	 inner join ods_cthx_web_clm_bank partition(pt20191013000000) g on u.c_clm_no=g.c_clm_no
+	 inner join ods_cthx_web_clm_rpt partition(pt20191013000000) e on g.c_clm_no=e.c_clm_no
+	 inner join  rpt_fxq_tb_company_ms partition (pt20191013000000) co on co.company_code1 = a.c_dpt_cde
 where a.t_next_edr_bgn_tm > now()

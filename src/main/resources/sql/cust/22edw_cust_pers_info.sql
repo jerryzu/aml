@@ -1,3 +1,18 @@
+-- *********************************************************************************
+--  文件名称: .sql
+--  所属主题: 理赔
+--  功能描述: 从 
+--   表提取数据
+--            导入到 () 表
+--  创建者: 
+--  输入: 
+--  输出:  
+--  创建日期: 2017/6/7
+--  修改日志: 
+--  修改日期: 
+--  修改人: 
+--  修改内容：
+
 SELECT @@global.group_concat_max_len;
 SET SESSION group_concat_max_len=1024000;
 alter table edw_cust_pers_info truncate partition pt{lastday}000000;
