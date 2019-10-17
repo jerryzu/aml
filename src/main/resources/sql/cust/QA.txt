@@ -192,3 +192,75 @@ from ods_amltp_t_lat_customer  partition(pt20190929000000);
 
 select app_no, count(1)
 from ods_amltp_t_ih_tsdt  partition(pt20190929000000);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+10:收款人	836
+21:投保人	3975
+22:法人投保人	880
+31:被保人	3813
+32:法人被保人	615
+33:团单被保人	20793
+41:受益人	91
+42:法人受益人	9
+43:团单受益人	14876
+
+/*
+06rpt_fxq_tb_ins_rpol_ms.sql  
+11rpt_fxq_tb_ins_rpay_ms.sql  
+12rpt_fxq_tb_ins_rcla_ms.sql
+
+        b.c_bnfc_name as  benefit_name,-- 受益人名称 受益人为法定受益人的一人或若干人时不填写本字段
+        b.c_cst_no as  benefit_cst_no,-- 受益人客户号
+        b.c_cert_cde as benefit_id_no,-- 受益人身份证号码
+	  b.c_ply_no
+        b.c_biz_type in (41, 43) 
+edw_cust_ply_party_bnfc
+
+        i.c_insured_name as ins_name,-- 被保险人名称
+        i.c_cst_no as ins_cst_no,-- 被保险人客户号
+        i.c_cert_cde as ins_id_no,-- 被保险人证件号码
+        case i.c_clnt_mrk when '1' then '11' when '0' then '12' else null end	as ins_cus_pro,-- 被保险人客户类型 11:个人;12:单位
+        i.c_app_relation as relation_1,-- 投保人被保人之间的关系 11:本人;12:配偶;13:父母;14:子女;15:其他近亲属;16:雇佣或劳务;17:其他;
+	  i.c_ply_no
+        i.c_biz_type = 31 
+edw_cust_ply_party_insured
+*/
+
+
+/*
+drop table  edw_cust_ply_insured_bnfc;
+CREATE TABLE `edw_cust_ply_insured_bnfc` (
+  `c_dpt_cde` varchar(20) DEFAULT NULL COMMENT '机构网点代码',
+  `c_ply_no` varchar(50) DEFAULT NULL COMMENT '保单编号',
+  `c_app_no` varchar(50) DEFAULT NULL COMMENT '申请单号，批改申请单号',
+  `c_insured_no` varchar(32) DEFAULT NULL COMMENT '被保人客户编号',
+  `c_insured_name` varchar(40) DEFAULT NULL COMMENT '被保人名称',
+  `c_insured_cert_cls` varchar(8) DEFAULT NULL COMMENT '被保人身份证件种类',
+  `c_insured_cert_cde` varchar(50) DEFAULT NULL COMMENT '被保人身份证件号码',
+  `c_bnfc_no` varchar(32) DEFAULT NULL COMMENT '受益人客户编号',
+  `c_bnfc_name` varchar(40) DEFAULT NULL COMMENT '受益人名称',
+  `c_bnfc_cert_cls` varchar(8) DEFAULT NULL COMMENT '受益人身份证件种类',
+  `c_bnfc_cert_cde` varchar(50) DEFAULT NULL COMMENT '受益人身份证件号码',
+  `c_clnt_mrk` varchar(1) DEFAULT NULL COMMENT '客户类型: 0: 法人,1: 个人',
+  `c_biz_type` varchar(2) DEFAULT NULL COMMENT '客户角色',
+  `c_app_relation` varchar(30) DEFAULT NULL COMMENT '与被保人关系',
+  `pt` varchar(15) DEFAULT NULL COMMENT '分区字段',
+  KEY `edw_cust_ply_party_insured_pk` (`c_ply_no`,`pt`),
+  KEY `edw_cust_ply_party_insured_pk1` (`c_app_no`,`pt`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='保单相关方关系表'
+ PARTITION BY RANGE  COLUMNS(`pt`)
+(PARTITION `pt20190903000000` VALUES LESS THAN ('20190903999999') ENGINE = InnoDB,
+ PARTITION `future` VALUES LESS THAN (MAXVALUE) ENGINE = InnoDB)
+*/
